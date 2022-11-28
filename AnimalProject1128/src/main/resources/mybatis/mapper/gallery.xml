@@ -25,7 +25,7 @@
 			(ANI_BRD_GALL_SEQ.NEXTVAL, #{id}, #{gallTitle}, #{gallContent}, 0, SYSDATE, SYSDATE, #{gallIp})
 	</insert>
 	
-	<update id="updateGallHit">
+	<update id="updateGallHit" parameterType="int">
 		UPDATE ANI_BRD_GALL
 		   SET GALL_HIT = GALL_HIT + 1
 		 WHERE GALL_NO = #{gallNo}
@@ -37,9 +37,19 @@
 		 WHERE GALL_NO = #{gallNo}
 	</select>
 	
+	<select id="updateGallBrd" parameterType="GallBoardDTO">
+		UPDATE ANI_BRD_GALL
+		   SET GALL_TITLE = #{gallTitle}
+		     , GALL_CONTENT = #{gallContent}
+		     , GALL_MODIFY_DATE = SYSDATE
+		 WHERE GALL_NO = #{gallNo}
+	</select>
 	
-	
-	
+	<delete id="deleteGallBrd" parameterType="int">
+		DELETE
+		  FROM ANI_BRD_GALL
+		 WHERE GALL_NO = #{gallNo}
+	</delete>
 	
 	
 	

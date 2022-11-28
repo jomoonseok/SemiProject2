@@ -4,14 +4,14 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <c:set var="contextPath" value="${pageContext.request.contextPath}" />
 
+<!-- header.jsp로 parameter 넘기기 -->
 <jsp:include page="../layout/header.jsp">
-	<jsp:param value="갤러리게시판목록" name="title"/>
+	<jsp:param value="게시글 수정" name="title"/>
 </jsp:include>
 
 <script>
 	
 	// contextPath를 반환하는 자바스크립트 함수
-	// taglib방식 대신 사용 
 	function getContextPath() {
 		var begin = location.href.indexOf(location.origin) + location.origin.length;
 		var end = location.href.indexOf("/", begin + 1);
@@ -20,6 +20,7 @@
 	
 	$(document).ready(function(){
 		
+		// summernote
 		$('#content').summernote({
 			width: 800,
 			height: 400,
@@ -35,28 +36,22 @@
 			    ['insert', ['link', 'picture', 'video']]
 			],
 			callbacks: {
-				
-				onImageUpload: function(files) {
-
+				onImageUpload: function(files){
 					var formData = new FormData();
-					
-					formData.append('file', files[0]); 
-					
+					formData.append('file', files[0]);
 					$.ajax({
 						type: 'post',
 						url: getContextPath() + '/gall/uploadImage',
 						data: formData,
-						contentType: false,  
-						processData: false,  
-						dataType: 'json',    
-						success: function(resData) {
-							
-							$('#content').summernote('insertImage', resData.src);  // src라는 이름은 serviceimpl에서 결정
-							
+						contentType: false,
+						processData: false,
+						dataType: 'json',
+						success: function(resData){
+							$('#content').summernote('insertImage', resData.src);
 						}
-					});  // ajax
-				}  // onImageUpload
-			}  // callbacks
+					});
+				}
+			}
 		});
 		
 		// 목록
@@ -65,11 +60,11 @@
 		});
 		
 		// 서브밋
-		$('#frm_write').submit(function(event){
+		$('#frm_edit').submit(function(event){
 			if($('#title').val() == ''){
 				alert('제목은 필수입니다.');
-				event.preventDefault();  // 서브밋 취소
-				return;  // 더 이상 코드 실행할 필요 없음
+				event.preventDefault();
+				return;
 			}
 		});
 		
@@ -78,30 +73,32 @@
 </script>
 
 <div>
-	
+
 	<h1>작성 화면</h1>
+
+	<form id="frm_edit" action="${contextPath}/gall/modify" method="post">
 	
-	<form id="frm_write" action="${contextPath}/gall/add" method="post">
+		<input type="hidden" name="gallNo" value="${gall.gallNo}">
 	
 		<div>
 			<label for="title">제목</label>
-			<input type="text" name="title" id="title">
+			<input type="text" name="title" id="title" value="${gall.gallTitle}">
 		</div>
-		
-		<!-- 세미에선 작성자 : userId -->
 		
 		<div>
 			<label for="content">내용</label>
-			<textarea name="content" id="content"></textarea>				
+			<textarea name="content" id="content">${gall.gallContent}</textarea>				
 		</div>
 		
 		<div>
-			<button>작성완료</button>
-			<input type="reset" value="입력초기화">
+			<button>수정완료</button>
+			<input type="reset" value="작성초기화">
 			<input type="button" value="목록" id="btn_list">
 		</div>
+		
 	</form>
-</div>
 
+
+</div>
 </body>
 </html>

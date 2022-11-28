@@ -14,4 +14,6 @@ public interface GallBrdMapper {
 	public int insertGallBrd(GallBoardDTO gallbroard);
 	public int updateGallHit(int gallNo);
 	public GallBoardDTO selectGallBrdByNo(int gallNo);
+	public int updateGallBrd(GallBoardDTO gallboard);
+	public int deleteGallBrd(int gallNo);
 }

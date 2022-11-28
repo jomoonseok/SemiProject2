@@ -60,7 +60,27 @@ public class GallBrdController {
 		}
 	}
 	
+	@GetMapping("/gall/detail")
+	public String detail(@RequestParam(value="gallNo", required=false, defaultValue="0") int gallNo, Model model) {
+		model.addAttribute("gall", gallBrdService.getGallbrdByNo(gallNo));
+		return "gall/detail";
+	}
 	
+	@PostMapping("/gall/edit")
+	public String edit(int gallNo, Model model) {
+		model.addAttribute("gall", gallBrdService.getGallbrdByNo(gallNo));
+		return "gall/edit";
+	}
+	
+	@PostMapping("/gall/modify")
+	public void modify(HttpServletRequest request, HttpServletResponse response) {
+		gallBrdService.modifyGallBrd(request, response);
+	}
+	
+	@PostMapping("/gall/remove")
+	public void remove(HttpServletRequest request, HttpServletResponse response) {
+		gallBrdService.removeGallBrd(request, response);
+	}
 	
 	
 	

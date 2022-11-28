@@ -16,4 +16,6 @@ public interface GallBrdService {
 	public Map<String, Object> saveSummernoteImage(MultipartHttpServletRequest mutipartRequest);
 	public int increaseGallHit(int gallNo);
 	public GallBoardDTO getGallbrdByNo(int gallNo);
+	public void modifyGallBrd(HttpServletRequest request, HttpServletResponse response);
+	public void removeGallBrd(HttpServletRequest request, HttpServletResponse response);
 }
