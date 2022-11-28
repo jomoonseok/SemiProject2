@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.semi.animal.mapper.gallery.GallBrdMapper">
+
+	<select id="selectGallBrdListCount" resultType="int">
+		SELECT COUNT(*)
+		  FROM ANI_BRD_GALL
+	</select>
+
+	<select id="selectGallBrdListByMap" parameterType="Map" resultType="GallBoardDTO">
+		SELECT A.ROW_NUM, A.GALL_NO, A.ID, A.GALL_TITLE, A.GALL_CONTENT, A.GALL_HIT, A.GALL_CREATE_DATE, A.GALL_MODIFY_DATE, A.GALL_IP
+		  FROM (SELECT ROW_NUMBER() OVER(ORDER BY GALL_NO DESC) AS ROW_NUM, GALL_NO, ID, GALL_TITLE, GALL_CONTENT, GALL_HIT, GALL_CREATE_DATE, GALL_MODIFY_DATE, GALL_IP
+		  		  FROM ANI_BRD_GALL) A
+		 WHERE A.ROW_NUM BETWEEN #{begin} AND #{end}
+	</select>
+	
+	<insert id="insertGallBrd" parameterType="GallBoardDTO">
+		INSERT INTO ANI_BRD_GALL
+			(GALL_NO, ID, GALL_TITLE, GALL_CONTENT, GALL_HIT, GALL_CREATE_DATE, GALL_MODIFY_DATE, GALL_IP)
+		VALUES
+			(ANI_BRD_GALL_SEQ.NEXTVAL, #{id}, #{gallTitle}, #{gallContent}, 0, SYSDATE, SYSDATE, #{gallIp})
+	</insert>
+	
+	<update id="updateGallHit">
+		UPDATE ANI_BRD_GALL
+		   SET GALL_HIT = GALL_HIT + 1
+		 WHERE GALL_NO = #{gallNo}
+	</update>
+	
+	<select id="selectGallBrdByNo" parameterType="int" resultType="GallBoardDTO">
+		SELECT GALL_NO, ID, GALL_TITLE, GALL_CONTENT, GALL_HIT, GALL_CREATE_DATE, GALL_MODIFY_DATE, GALL_IP
+		  FROM ANI_BRD_GALL
+		 WHERE GALL_NO = #{gallNo}
+	</select>
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+</mapper>

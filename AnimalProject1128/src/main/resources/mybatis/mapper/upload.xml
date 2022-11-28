@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  
+ <mapper namespace="com.semi.animal.mapper.upload.UploadMapper">
+
+	<select id="selectUploadList" resultType="UploadDTO">
+		SELECT UPLOAD_NO, ID, UPLOAD_TITLE, UPLOAD_CONTENT, UPLOAD_HIT, UPLOAD_CREATE_DATE, UPLOAD_MODIFY_DATE, UPLOAD_IP
+		  FROM ANI_BRD_UD
+	</select>
+	<select id="selectAttachList" parameterType="long" resultType="AttachDTO">
+		SELECT ATTACH_NO, UPLOAD_NO, PATH, ORIGIN, FILESYSTEM, DOWNLOAD_CNT
+		  FROM ANI_BRD_UD_ATTACH
+		 WHERE UPLOAD_NO = #{uploadNo}
+	</select>
+	
+	<select id="selectUploadByNo" parameterType="long" resultType="UploadDTO">
+		SELECT UPLOAD_NO, ID, UPLOAD_TITLE, UPLOAD_CONTENT, UPLOAD_HIT, UPLOAD_CREATE_DATE, UPLOAD_MODIFY_DATE, UPLOAD_IP
+		  FROM ANI_BRD_UD
+		 WHERE UPLOAD_NO = #{uploadNo}
+	</select>
+	<select id="selectAttachByNo" parameterType="long" resultType="AttachDTO">
+		SELECT ATTACH_NO, UPLOAD_NO, PATH, ORIGIN, FILESYSTEM, DOWNLOAD_CNT
+		  FROM ANI_BRD_UD_ATTACH
+		 WHERE ATTACH_NO = #{attachNo}
+	</select>
+	
+	
+	
+	<insert id="insertUpload" parameterType="UploadDTO">
+		<selectKey keyProperty="uploadNo" resultType="long" order="BEFORE">
+			SELECT ANI_BRD_UD_SEQ.NEXTVAL
+			  FROM DUAL
+		</selectKey>
+		INSERT INTO ANI_BRD_UD
+			(UPLOAD_NO, ID, UPLOAD_TITLE, UPLOAD_CONTENT, UPLOAD_HIT, UPLOAD_CREATE_DATE, UPLOAD_MODIFY_DATE, UPLOAD_IP)
+		VALUES
+			(#{uploadNo}, #{id}, #{uploadTitle}, #{uploadContent}, 0, SYSDATE, SYSDATE, #{uploadIp})
+	</insert>
+	
+	<insert id="insertAttach" parameterType="AttachDTO">
+		INSERT INTO ANI_BRD_UD_ATTACH
+			(ATTACH_NO, UPLOAD_NO, PATH, ORIGIN, FILESYSTEM, DOWNLOAD_CNT)
+		VALUES
+			(ANI_BRD_UD_ATTACH_SEQ.NEXTVAL, #{uploadNo}, #{path}, #{origin}, #{filesystem}, 0)
+	</insert>
+	
+	
+	
+	<update id="updateUpload" parameterType="UploadDTO">
+		UPDATE ANI_BRD_UD
+		   SET UPLOAD_IP = #{uploadIp}, UPLOAD_TITLE = #{uploadTitle}, UPLOAD_CONTENT = #{uploadContent}, UPLOAD_MODIFY_DATE = SYSDATE
+		 WHERE UPLOAD_NO = #{uploadNo}
+	</update>
+	
+	
+	
+	<delete id="deleteAttach" parameterType="long">
+		DELETE
+		  FROM ANI_BRD_UD_ATTACH
+		 WHERE ATTACH_NO = #{attachNo}
+	</delete>
+	
+	<delete id="deleteUpload" parameterType="long">
+		DELETE
+		  FROM ANI_BRD_UD
+		 WHERE UPLOAD_NO = #{uploadNo}
+	</delete>
+	
+	
+	
+	
+	
+	
+	<select id="selectAttachCnt" parameterType="long" resultType="long">
+		SELECT COUNT(*)
+		  FROM ANI_BRD_UD_ATTACH
+		 WHERE UPLOAD_NO = ${uploadNo}
+	</select>
+	
+	<update id="updateUploadHit" parameterType="long">
+		UPDATE ANI_BRD_UD
+		   SET UPLOAD_HIT = UPLOAD_HIT + 1
+		 WHERE UPLOAD_NO = #{uploadNo}
+	</update>
+	
+	<update id="updateDownloadCnt" parameterType="long">
+		UPDATE ANI_BRD_UD_ATTACH
+		   SET DOWNLOAD_CNT = DOWNLOAD_CNT + 1
+		 WHERE ATTACH_NO = #{attachNo}
+	</update>
+		
+	
+	
+	<!-- <select id="selectByOption" resultType="uploadDTO">
+		SELECT UPLOAD_NO, ID, UPLOAD_TITLE, UPLOAD_CONTENT, UPLOAD_HIT, UPLOAD_CREATE_DATE, UPLOAD_MODIFY_DATE, UPLOAD_IP
+		  FROM ANI_BRD_UD
+		  <c:where>
+		  	<c:if></c:if>
+		  <c:/where>
+	</select> -->
+
+</mapper>

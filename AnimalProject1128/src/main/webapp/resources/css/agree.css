@@ -1,0 +1,15 @@
+@charset "UTF-8";
+
+
+ .blind {
+    display: none;  /* 화면에서 영역을 차지하지 않고 완전히 삭제된 것처럼 보임 */
+ }
+ .lbl_all, .lbl_one {
+    padding-left: 20px;
+    background-image: url(../images/uncheck.png);
+    background-size: 18px 18px;
+    background-repeat: no-repeat;  /* 이미지가 반복 배열되지 않음 */
+ }
+ .lbl_checked { 
+    background-image: url(../images/check.png);
+ }

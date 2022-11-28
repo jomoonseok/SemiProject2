@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.semi.animal.mapper.freeboard.FreeBoardMapper">
+
+	<!-- 1. 게시글 카운트 -->
+	<select id="selectFreeListCount" resultType="int">
+		SELECT COUNT(*)
+		  FROM ANI_BRD_FREE
+	</select>
+
+	<!-- 2. 게시글 조회 -->
+	<select id="selectFreeListByMap" parameterType="Map" resultType="FreeBoardDTO">
+		SELECT A.ROW_NUM, A.FREE_NO, A.ID, A.FREE_TITLE, A.FREE_CONTENT, A.FREE_CREATE_DATE, A.FREE_MODIFY_DATE, A.FREE_IP, A.FREE_HIT
+		  FROM (SELECT ROW_NUMBER() OVER(ORDER BY FREE_NO DESC) AS ROW_NUM, FREE_NO, ID, FREE_TITLE, FREE_CONTENT, FREE_CREATE_DATE, FREE_MODIFY_DATE, FREE_IP, FREE_HIT
+		  		  FROM ANI_BRD_FREE) A
+		 WHERE A.ROW_NUM BETWEEN #{begin} AND #{end}
+	</select>
+	
+	<!-- 3. 조회수 -->
+	<update id="updateHit" parameterType="int">
+		UPDATE ANI_BRD_FREE
+		   SET HIT = HIT + 1
+		 WHERE FREE_NO = #{freeNo}
+	</update>
+	
+	<!-- 4. 게시글 추가 -->
+	<insert id="insertFreeBoard" parameterType="FreeBoardDTO"  useGeneratedKeys="true" keyProperty="freeNo">
+
+		<selectKey keyProperty="freeNo" resultType="int" order="BEFORE">			   
+			SELECT ANI_BRD_FREE_SEQ.NEXTVAL FROM DUAL
+		</selectKey>
+
+      INSERT INTO ANI_BRD_FREE
+         (FREE_NO, ID, FREE_TITLE, FREE_CONTENT, FREE_CREATE_DATE, FREE_MODIFY_DATE, FREE_IP, FREE_HIT)
+      VALUES
+         (${freeNo}, #{id}, #{freeTitle}, #{freeContent}, SYSDATE, SYSDATE, #{freeIp}, 0)
+   </insert>
+
+	
+	<!-- 5. 특정 게시글 선택 -->
+	<select id="selectFreeBoardByNo" parameterType="int" resultType="FreeBoardDTO">
+		SELECT FREE_NO, ID, FREE_TITLE, FREE_CONTENT, FREE_CREATE_DATE, FREE_MODIFY_DATE, FREE_IP, FREE_HIT
+		  FROM ANI_BRD_FREE
+		 WHERE FREE_NO = #{freeNo}
+	
+	</select>
+	
+	<!-- . 게시글 삭제 -->
+	<delete id="deleteFreeBoard" parameterType="int">
+		DELETE
+		  FROM ANI_BOARD_FREE
+		 WHERE FREE_NO = #{freeNo}
+	
+	</delete>
+
+
+</mapper>

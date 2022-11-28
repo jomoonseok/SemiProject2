@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.semi.animal.mapper.admin.AdminMapper">
+
+	<select id="selectUserListCount" resultType="int">
+		SELECT COUNT(*)
+		  FROM ANI_USER
+	</select>
+	
+	<select id="selectUserListByMap" parameterType="Map" resultType="AdminUserDTO">
+		SELECT A.ROW_NUM, A.USER_NO, A.ID, A.PW, A.NAME, A.GENDER, A.EMAIL, A.MOBILE, A.BIRTH_YEAR, A.BIRTH_DAY, A.POSTCODE, A.ROAD_ADDRESS, A.JIBUN_ADDRESS, A.DETAIL_ADDRESS, A.EXTRA_ADDRESS, A.PROFILE_PICTURE, A.NICKNAME, A.AGE, A.AGREE_CODE, A.SNS_TYPE, A.JOIN_DATE, A.PW_MODIFY_DATE, A.INFO_MODIFY_DATE, A.SESSION_ID, A.SESSION_LIMIT_DATE, A.POINT
+		  FROM (SELECT ROW_NUMBER() OVER(ORDER BY USER_NO DESC) AS ROW_NUM, USER_NO, ID, PW, NAME, GENDER, EMAIL, MOBILE, BIRTH_YEAR, BIRTH_DAY, POSTCODE, ROAD_ADDRESS, JIBUN_ADDRESS, DETAIL_ADDRESS, EXTRA_ADDRESS, PROFILE_PICTURE, NICKNAME, AGE, AGREE_CODE, SNS_TYPE, JOIN_DATE, PW_MODIFY_DATE, INFO_MODIFY_DATE, SESSION_ID, SESSION_LIMIT_DATE, POINT
+		          FROM ANI_USER) A
+		 WHERE A.ROW_NUM BETWEEN #{begin} AND #{end}
+	</select>
+	
+	<delete id="deleteUser" parameterType="String">
+		DELETE 
+		  FROM ANI_USER
+		 WHERE ID = #{id} 
+	</delete>
+
+</mapper>
