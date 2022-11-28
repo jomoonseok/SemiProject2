@@ -8,7 +8,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.semi.animal.service.freeboard.FreeBoardService;
@@ -19,11 +18,6 @@ public class FreeBoardController {
 	@Autowired
 	private FreeBoardService freeBoardService;
 	
-//	@GetMapping("/")
-//	public String index() {
-//		return "index";
-//
-//	}
 	
 	@GetMapping("/freeboard/list")
 	public String list(HttpServletRequest request, Model model) {
@@ -37,6 +31,16 @@ public class FreeBoardController {
 		return "freeboard/write";
 	}
 	
+	@GetMapping("/freeboard/increse/hit")
+	public String increseHit(@RequestParam(value="freeNo", required=false, defaultValue="0") int freeNo) {
+		int result = freeBoardService.increseFreeBoardHit(freeNo);
+		if(result > 0) {
+			return "redirect:/freeboard/detail?freeNo=" + freeNo;
+		} else {
+			return "redirect:/freeboard/list";
+		}
+	}
+	
 	@PostMapping("/freeboard/add")
 	public void add(HttpServletRequest request, HttpServletResponse response) {
 		freeBoardService.addFreeBoard(request, response);
@@ -45,12 +49,23 @@ public class FreeBoardController {
 	@GetMapping("/freeboard/detail")
 	public String detail(@RequestParam(value="freeNo", required=false, defaultValue="0") int freeNo, Model model) {
 		
-		model.addAttribute("free", freeBoardService.getBlogByNo(freeNo));
+		model.addAttribute("free", freeBoardService.getFreeBoardByNo(freeNo));
 		return "freeboard/detail";
 	}
 	
+	@PostMapping("/freeboard/edit")
+	public String edit(int freeNo, Model model) {
+		model.addAttribute("free", freeBoardService.getFreeBoardByNo(freeNo));
+		return "freeboard/edit";
+	}
 	
-	@GetMapping("/freeboard/remove")
+	@PostMapping("/freeboard/modify")
+	public void modify(HttpServletRequest request, HttpServletResponse response) {
+		freeBoardService.modifyFreeBoard(request, response);
+	}
+	
+	
+	@PostMapping("/freeboard/remove")
 	public void remove(HttpServletRequest request, HttpServletResponse response) {
 		freeBoardService.removeFreeBoard(request, response);
 	}

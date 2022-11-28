@@ -35,7 +35,7 @@
 					<tr>
 						<td>${free.freeNo}</td>
 						<td>${free.id}</td>
-						<td><a href="${contextPath}/freeboard/detail?freeNo=${free.freeNo}">${free.freeTitle}</a></td>
+						<td><a href="${contextPath}/freeboard/increse/hit?freeNo=${free.freeNo}">${free.freeTitle}</a></td>
 						<td>${free.freeCreateDate}</td>
 						<td>${free.freeHit}</td>
 					</tr>
