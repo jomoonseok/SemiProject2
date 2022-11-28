@@ -44,7 +44,7 @@
 			}
 			
 			*/
-			if(confirm('정말 삭제하시겠습니까?')) {
+			if(confirm('첨부된 파일까지 전부 삭제됩니다. 정말 삭제하시겠습니까?')) {
 				$('#frm_edit').attr('action', '${contextPath}/upload/remove');
 				$('#frm_edit').submit();
 			}

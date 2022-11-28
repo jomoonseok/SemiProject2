@@ -6,6 +6,25 @@
 <jsp:include page="../layout/header.jsp">
 	<jsp:param value="파일 업로드 게시판" name="title" />
 </jsp:include>
+<script>
+	$(document).ready(function() {
+		
+		$('#content').summernote({
+			width: 800,
+			height: 400,
+			lang: 'ko-KR',
+			toolbar: [
+			    ['style', ['bold', 'italic', 'underline', 'clear']],
+			    ['font', ['strikethrough', 'superscript', 'subscript']],
+			    ['fontsize', ['fontsize']],
+			    ['color', ['color']],
+			    ['para', ['ul', 'ol', 'paragraph']],
+			    ['height', ['height']]
+			]
+		})
+	})
+</script>
+		
 
 
 	<form method='post' enctype="multipart/form-data" action="${contextPath}/upload/add" >
@@ -14,7 +33,7 @@
 			<input type="text" name="title" id="title">
 	 	</div>
 	 	<div>
-	 		<label for="content">내용</label>
+	 		<label for="content"></label>
 			<textarea id="content" name="content"></textarea>
 		</div>
 		<div>

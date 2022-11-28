@@ -3,7 +3,10 @@ package com.semi.animal.service.upload;
 import java.io.File;
 import java.io.PrintWriter;
 import java.net.URLEncoder;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -24,6 +27,7 @@ import com.semi.animal.domain.upload.AttachDTO;
 import com.semi.animal.domain.upload.UploadDTO;
 import com.semi.animal.mapper.upload.UploadMapper;
 import com.semi.animal.util.MyFileUtil;
+import com.semi.animal.util.PageUtil;
 
 @Service
 public class UploadServiceImpl implements UploadService {
@@ -34,10 +38,27 @@ public class UploadServiceImpl implements UploadService {
 	@Autowired
 	private MyFileUtil myFileUtil;
 	
+	@Autowired
+	private PageUtil pageUtil;
+	
 	@Override
-	public List<UploadDTO> getUploadList() {
+	public void getUploadList(HttpServletRequest request, Model model) {
 		
-		return uploadMapper.selectUploadList();
+		Optional<String> opt = Optional.ofNullable(request.getParameter("page"));
+		int page = Integer.parseInt(opt.orElse("1"));
+		int totalRecord = uploadMapper.selectUploadCount();
+		
+		pageUtil.setPageUtil(page, totalRecord);
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("begin", pageUtil.getBegin());
+		map.put("end", pageUtil.getEnd());
+		
+		List<UploadDTO> uploadList = uploadMapper.selectUploadListPage(map);
+		
+		model.addAttribute("uploadList", uploadList);
+		model.addAttribute("paging", pageUtil.getPaging(request.getContextPath() + "/upload"));
+		
 	}
 	
 	@Transactional
@@ -85,7 +106,8 @@ public class UploadServiceImpl implements UploadService {
 							.origin(origin)
 							.filesystem(filesystem)
 							.build();
-					attachResult += uploadMapper.insertAttach(attach);
+					System.out.println(attach);
+					attachResult += uploadMapper.insertAttach(attach);  // 여기~~~~~~~~~~~~~~~~~~~~~~~~~~~
 				}
 			} catch(Exception e) { 
 				e.printStackTrace();
@@ -95,7 +117,9 @@ public class UploadServiceImpl implements UploadService {
 		try {
 			response.setContentType("text/html; charset=UTF-8");
 			PrintWriter out = response.getWriter();
-			
+			System.out.println("uploadResult :" + uploadResult);
+			System.out.println("attachResult :" + attachResult);
+			System.out.println("files.size() :" + files.size());
 			if(uploadResult > 0 && attachResult == files.size()) {
 				out.println("<script>");
 				out.println("alert('업로드 되었습니다.');");

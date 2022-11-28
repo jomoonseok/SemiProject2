@@ -15,7 +15,7 @@ import com.semi.animal.domain.upload.UploadDTO;
 
 public interface UploadService {
 
-	public List<UploadDTO> getUploadList();  // upload 게시글 리스트 전체조회
+	public void getUploadList(HttpServletRequest request, Model model);  // upload 게시글 리스트 전체조회
 	
 	public void addUpload(MultipartHttpServletRequest request, HttpServletResponse response);  // upload 게시글 삽입
 	

@@ -1,6 +1,7 @@
 package com.semi.animal.mapper.upload;
 
 import java.util.List;
+import java.util.Map;
 
 import org.apache.ibatis.annotations.Mapper;
 
@@ -11,7 +12,7 @@ import com.semi.animal.domain.upload.UploadDTO;
 public interface UploadMapper {
 
 	
-	public List<UploadDTO> selectUploadList();  			// upload 게시글 리스트 전체조회
+	public List<UploadDTO> selectUploadListPage(Map<String, Object> map); 	// upload 게시글 리스트 전체조회
 	public List<AttachDTO> selectAttachList(long uploadNo);  // attach 게시글 리스트 전체조회
 	
 	public UploadDTO selectUploadByNo(long uploadNo);  		// upload 게시글 조회(번호 받아서)
@@ -31,7 +32,7 @@ public interface UploadMapper {
 	public long updateUploadHit(long uploadNo);				// upload 게시글 조회수 증가
 	public long updateDownloadCnt(long attachNo);				// attach 다운로드수 증가
 	
-	
+	public int selectUploadCount();						// upload 게시글 수
 	
 	
 	

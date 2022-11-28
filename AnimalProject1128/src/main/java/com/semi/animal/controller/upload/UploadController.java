@@ -10,6 +10,7 @@ import org.springframework.core.io.Resource;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -34,7 +35,7 @@ public class UploadController {
 
 	@GetMapping("/upload")
 	public String upload(HttpServletRequest request ,Model model) {
-		model.addAttribute("uploadList", uploadService.getUploadList());
+		uploadService.getUploadList(request, model);
 		return "upload/upload_list";
 	}
 	

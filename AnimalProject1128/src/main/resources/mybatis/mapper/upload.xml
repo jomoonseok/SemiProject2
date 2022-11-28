@@ -10,6 +10,14 @@
 		SELECT UPLOAD_NO, ID, UPLOAD_TITLE, UPLOAD_CONTENT, UPLOAD_HIT, UPLOAD_CREATE_DATE, UPLOAD_MODIFY_DATE, UPLOAD_IP
 		  FROM ANI_BRD_UD
 	</select>
+
+	<select id="selectUploadListPage" parameterType="Map" resultType="UploadDTO">
+		SELECT A.RN, A.UPLOAD_NO, A.ID, A.UPLOAD_TITLE, A.UPLOAD_CONTENT, A.UPLOAD_HIT, A.UPLOAD_CREATE_DATE, A.UPLOAD_MODIFY_DATE, A.UPLOAD_IP
+		  FROM (SELECT ROW_NUMBER() OVER(ORDER BY UPLOAD_NO DESC) AS RN, UPLOAD_NO, ID, UPLOAD_TITLE, UPLOAD_CONTENT, UPLOAD_HIT, UPLOAD_CREATE_DATE, UPLOAD_MODIFY_DATE, UPLOAD_IP
+		  		  FROM ANI_BRD_UD) A
+		 WHERE A.RN BETWEEN #{begin} AND #{end}
+	</select>
+	
 	<select id="selectAttachList" parameterType="long" resultType="AttachDTO">
 		SELECT ATTACH_NO, UPLOAD_NO, PATH, ORIGIN, FILESYSTEM, DOWNLOAD_CNT
 		  FROM ANI_BRD_UD_ATTACH
@@ -25,6 +33,11 @@
 		SELECT ATTACH_NO, UPLOAD_NO, PATH, ORIGIN, FILESYSTEM, DOWNLOAD_CNT
 		  FROM ANI_BRD_UD_ATTACH
 		 WHERE ATTACH_NO = #{attachNo}
+	</select>
+	
+	<select id="selectUploadCount" resultType="int">
+		SELECT COUNT(*)
+		  FROM ANI_BRD_UD
 	</select>
 	
 	
@@ -71,9 +84,6 @@
 	
 	
 	
-	
-	
-	
 	<select id="selectAttachCnt" parameterType="long" resultType="long">
 		SELECT COUNT(*)
 		  FROM ANI_BRD_UD_ATTACH
@@ -91,6 +101,8 @@
 		   SET DOWNLOAD_CNT = DOWNLOAD_CNT + 1
 		 WHERE ATTACH_NO = #{attachNo}
 	</update>
+		
+		
 		
 	
 	

@@ -67,9 +67,9 @@
 				</c:forEach>
 				</tbody>
 				<tfoot>
-					
-					
-				
+					<tr>
+						<td colspan="6">${paging}</td>
+					</tr>
 				</tfoot>
 			</table>
 		</div>
