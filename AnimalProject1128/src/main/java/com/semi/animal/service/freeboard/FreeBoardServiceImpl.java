@@ -107,8 +107,8 @@ public class FreeBoardServiceImpl implements FreeBoardService {
 	@Override
 	public void modifyFreeBoard(HttpServletRequest request, HttpServletResponse response) {
 		
-		String freeTitle = request.getParameter("title");
-		String freeContent = request.getParameter("content");
+		String freeTitle = request.getParameter("freeTitle");
+		String freeContent = request.getParameter("freeContent");
 		int freeNo = Integer.parseInt(request.getParameter("freeNo"));
 		
 		FreeBoardDTO freeBoard = FreeBoardDTO.builder()
