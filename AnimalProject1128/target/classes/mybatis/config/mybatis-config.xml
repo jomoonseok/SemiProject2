@@ -21,7 +21,6 @@
 		<typeAlias type="com.semi.animal.domain.gallery.GallLikeDTO" alias="GallLikeDTO" />
 		<typeAlias type="com.semi.animal.domain.upload.UploadDTO" alias="UploadDTO" />
 		<typeAlias type="com.semi.animal.domain.upload.AttachDTO" alias="AttachDTO" />
-		<typeAlias type="com.semi.animal.domain.admin.AdminUserDTO" alias="AdminUserDTO" />
 	</typeAliases>
 
 </configuration>

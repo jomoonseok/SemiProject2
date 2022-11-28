@@ -27,21 +27,31 @@
    <beans:bean id="keepLoginInterceptor" class="com.semi.animal.interceptor.KeepLoginInterceptor" />
    
    <interceptors>
+   
       <interceptor>
          <mapping path="/**"/>
          <beans:ref bean="keepLoginInterceptor" />
       </interceptor>
+      
       <interceptor>
          <mapping path="/user/login/form"/>
          <mapping path="/user/join/write"/>
          <mapping path="/user/agree"/>
          <beans:bean class="com.semi.animal.interceptor.PreventLoginInterceptor" />
       </interceptor>
+      
       <!-- SleepUserCheckingInterceptor : @Component로 컨테이너에 등록 -->
       <interceptor>
          <mapping path="/user/login"/>
          <beans:bean class="com.semi.animal.interceptor.SleepUserCheckingInterceptor" />
       </interceptor>
+      
+      <!-- AdminIdCheckInterceptor -->
+      <interceptor>
+			<mapping path="/admin/removeUser"/>
+			<beans:bean class="com.semi.animal.interceptor.AdminIdCheckInterceptor" />
+		</interceptor>
+		
    </interceptors>
 	
 </beans:beans>

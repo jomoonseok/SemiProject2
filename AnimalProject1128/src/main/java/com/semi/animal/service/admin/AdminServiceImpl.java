@@ -13,7 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
 
-import com.semi.animal.domain.admin.AdminUserDTO;
+import com.semi.animal.domain.user.UserDTO;
 import com.semi.animal.mapper.admin.AdminMapper;
 import com.semi.animal.util.PageUtil;
 
@@ -38,7 +38,7 @@ public class AdminServiceImpl implements AdminService {
 		map.put("begin", pageUtil.getBegin());
 		map.put("end", pageUtil.getEnd());
 		
-		List<AdminUserDTO> userList = adminMapper.selectUserListByMap(map);
+		List<UserDTO> userList = adminMapper.selectUserListByMap(map);
 		
 		model.addAttribute("userList", userList);
 		model.addAttribute("paging", pageUtil.getPaging(request.getContextPath() + "/admin/user"));

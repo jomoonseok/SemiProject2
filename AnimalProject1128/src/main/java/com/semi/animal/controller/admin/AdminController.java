@@ -15,14 +15,9 @@ public class AdminController {
 	
 	@Autowired
 	private AdminService adminService;
-
-//	@GetMapping("/")
-//	public String index() {
-//		return "index";
-//	}
 	
 	@GetMapping("admin/main")
-	public String list() {
+	public String main() {
 		return "admin/main";
 	}
 	

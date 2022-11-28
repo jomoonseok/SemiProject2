@@ -3,7 +3,7 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <c:set var="contextPath" value="${pageContext.request.contextPath}" />
 
-<jsp:include page="../layout/header.jsp">
+<jsp:include page="../../layout/header.jsp">
 	<jsp:param value="메인게시판" name="title" />
 </jsp:include>
 <script>
@@ -12,6 +12,13 @@
 		$('#btn_remove').click(function(){
 			location.href='${contextPath}/admin/removeUser?id=' + $(this).data('id');
 		})
+		
+		$.ajax({
+			
+			type:'get',
+			url:'${contextPath}/'
+			
+		});
 		
 	});
 </script>
@@ -32,7 +39,7 @@
 					<td>이메일</td>
 					<td>핸드폰</td>
 					<td>가입일</td>
-					<td>닉네임</td>
+					<td>보유포인트</td>
 					<td></td>
 				</tr>
 			</thead>
@@ -46,7 +53,7 @@
 						<td>${user.email}</td>
 						<td>${user.mobile}</td>
 						<td>${user.joinDate}</td>
-						<td>${user.nickname}</td>
+						<td>${user.point}</td>
 						<td><input type="button" value="삭제" id="btn_remove" data-id="${user.id}"></td>
 					</tr>
 				</c:forEach>
