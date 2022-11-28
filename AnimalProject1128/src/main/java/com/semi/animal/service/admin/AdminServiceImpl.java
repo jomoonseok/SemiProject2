@@ -26,7 +26,7 @@ public class AdminServiceImpl implements AdminService {
 	private PageUtil pageUtil;
 	
 	@Override
-	public void getUserList(HttpServletRequest request, Model model) {
+	public List<UserDTO> getUserList(HttpServletRequest request, Model model) {
 		Optional<String> opt1 = Optional.ofNullable(request.getParameter("page"));
 		int page = Integer.parseInt(opt1.orElse("1"));
 		
@@ -43,6 +43,8 @@ public class AdminServiceImpl implements AdminService {
 		model.addAttribute("userList", userList);
 		model.addAttribute("paging", pageUtil.getPaging(request.getContextPath() + "/admin/user"));
 		model.addAttribute("beginNo", totalRecord - (page - 1) * pageUtil.getRecordPerPage());
+		
+		return userList;
 		
 	}
 	
