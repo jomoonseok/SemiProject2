@@ -25,9 +25,8 @@ public interface UserMapper {
 	public SleepUserDTO selectSleepUserById(String id);
 	public int insertRestoreUser(String id);
 	public int deleteSleepUser(String id);
-	
+	public int insertNaverUser(UserDTO user);
 }
 	
-	// resultType이 생략되면 무조건 int
-	// 업뎃 딜릿 인서트면 인트
+
 

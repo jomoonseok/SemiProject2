@@ -57,9 +57,6 @@
 
 	<div>
 
-		<!-- post는 URL파라미터로 데이터 전송x, 보안 유지할 때 사용, 속도가 느림 -->
-		<!-- get은 URL파라미터로 데이터 전송, 서버상의 데이터 값이나 상태를 바꾸지 않음. -->
-		<!-- 활용: 글의 목록이나 내용을 보는 경우에는 get방식, 글의 내용을 저장하고 수정할 때는 post방식 사용 -->
 		
 		<form id="frm_login" action="${contextPath}/user/login" method="post">  
 			
