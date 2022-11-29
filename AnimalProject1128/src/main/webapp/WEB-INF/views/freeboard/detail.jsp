@@ -13,6 +13,7 @@
 	<div>작성자 : ${free.id}</div>
 	<div>제목 : ${free.freeTitle}</div>
 	<div>내용 : ${free.freeContent}</div>
+	안녕
 	
 	<div>
 		<form id="frm_btn" method="post">
