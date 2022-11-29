@@ -38,7 +38,7 @@
 	</select>
 	
 	<!-- 일반회원가입 -->
-	<!-- 칼럼이 NOT NULL이면 #{}, 아니면 NULL -->
+	<!-- 칼럼이 NOT NULL이면 #{}, 아니면 NULL --> <!-- 여기 -->
 	<insert id="insertUser" parameterType="UserDTO">
 		INSERT INTO ANI_USER
 			(USER_NO, ID, PW, NAME, GENDER, EMAIL, MOBILE, BIRTH_YEAR, BIRTH_DAY, POSTCODE, ROAD_ADDRESS, JIBUN_ADDRESS, DETAIL_ADDRESS, EXTRA_ADDRESS, AGREE_CODE, SNS_TYPE, JOIN_DATE, PW_MODIFY_DATE, INFO_MODIFY_DATE, SESSION_ID, SESSION_LIMIT_DATE, POINT)
@@ -51,7 +51,7 @@
 		INSERT INTO ANI_USER
 			(USER_NO, ID, PW, NAME, GENDER, EMAIL, MOBILE, BIRTH_YEAR, BIRTH_DAY, POSTCODE, ROAD_ADDRESS, JIBUN_ADDRESS, DETAIL_ADDRESS, EXTRA_ADDRESS, AGREE_CODE, SNS_TYPE, JOIN_DATE, PW_MODIFY_DATE, INFO_MODIFY_DATE, SESSION_ID, SESSION_LIMIT_DATE, POINT)
 		VALUES
-			(USERS_SEQ.NEXTVAL, #{id}, #{pw}, #{name}, #{gender}, #{email}, #{mobile}, #{birthYear}, #{birthDay}, NULL, NULL, NULL, NULL, NULL, #{agreeCode}, #{snsType}, SYSDATE, SYSDATE, SYSDATE, NULL, NULL, 0)
+			(USERS_SEQ.NEXTVAL, #{id}, #{pw}, #{name}, #{gender}, #{email}, #{mobile}, #{birthYear}, #{birthDay}, NULL, NULL, NULL, NULL, NULL, #{agreeCode}, #{snsType}, SYSDATE, SYSDATE, SYSDATE, SYSDATE, NULL, 0)
 	</insert>
 	
 	<!-- 로그인 기록(ACCESS_LOG) 남기기 -->
@@ -141,5 +141,11 @@
   		   FROM ANI_USER_SLEEP
  		  WHERE ID = #{id}
 	 </delete>
+	 
+	 <!-- 포인트 적립 -->
+	 <update id="updatePoint">
+	 	UPDATE ANI_USER SET POINT = POINT + #{point}
+	 	 WHERE ID = #{id}
+	 </update>
 	
 </mapper>

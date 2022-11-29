@@ -26,6 +26,7 @@ public interface UserMapper {
 	public int insertRestoreUser(String id);
 	public int deleteSleepUser(String id);
 	public int insertNaverUser(UserDTO user);
+	public void updatePoint(String id, int point);
 }
 	
 

@@ -56,6 +56,7 @@ public class UserServiceImpl implements UserService {
 	@Autowired
 	private SecurityUtil securityUtil;
 	
+	
 	@Override
 	public Map<String, Object> isReduceId(String id) {
 		
@@ -162,6 +163,7 @@ public class UserServiceImpl implements UserService {
 		String email = request.getParameter("email");
 		String location = request.getParameter("location");
 		String promotion = request.getParameter("promotion");
+		
 		
 		// 일부 파라미터는 DB에 넣을 수 있도록 가공
 		pw = securityUtil.sha256(pw);
@@ -892,6 +894,13 @@ public class UserServiceImpl implements UserService {
 		} catch(Exception e) {
 			e.printStackTrace();
 		}
-		
+	
 	}
+	
+	
+	
+	
+	
+	
+	
 }

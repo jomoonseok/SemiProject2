@@ -116,7 +116,10 @@ public class UserController {
 	}
 	
 
-		
+	@PostMapping("/user/naver/join")
+	public void naverJoin(HttpServletRequest request, HttpServletResponse response) {
+		userService.naverJoin(request, response);
+	}
 	
 
 	
@@ -155,7 +158,7 @@ public class UserController {
 	}
 	
 	
-	@PostMapping("/user/restore")
+	@GetMapping("/user/restore")
 	public void restore(HttpServletRequest request, HttpServletResponse response) {
 		userService.restoreUser(request, response);
 	}

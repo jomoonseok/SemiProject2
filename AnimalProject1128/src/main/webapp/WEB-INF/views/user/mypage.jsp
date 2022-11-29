@@ -100,14 +100,29 @@
 		});
 		
 	}
+	
+	function fn_abc(){
+		$('#lnk_retire').click(function(){
+			fn_abc();
+		});
+	}
 
 </script>
 </head>
 <body>
 
+
+
+
+
 	<div>
 	
 		<h1>마이페이지</h1>
+		
+		<span>${loginUser.name}님 반갑습니다.</span><br>
+		<span>${loginUser.name}님의 포인트는 ${loginUser.point}p 입니다.</span>
+		
+		<hr>
 		
 		<div>
 			<input type="button" value="비밀번호변경" id="btn_edit_pw">
@@ -133,7 +148,18 @@
 				</div>
 			</form>
 		</div>
-	
+		
+		<hr>
+		
+		<a href="javascript:fn_abc()">회원탈퇴</a>
+		<form id="lnk_retire" action="${contextPath}/user/retire" method="post"></form>
+		<script>
+			function fn_abc(){
+				if(confirm('탈퇴하시겠습니까?')){
+					$('#lnk_retire').submit();
+				}
+			}
+		</script>
 		
 	
 	</div>

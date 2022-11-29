@@ -92,7 +92,8 @@
 			
 		<div>
 			<a href="${contextPath}/user/agree">회원가입페이지</a> |
-			<a href="${contextPath}/member/findIdPw">아이디/비밀번호 찾기</a>  
+			<a href="${contextPath}/user/findId">아이디 찾기</a> | 
+			<a href="${contextPath}/user/findPw">비밀번호 찾기</a> 
 		</div>
 		
 		<hr>

@@ -19,9 +19,9 @@
 			안녕하세요!<br>
 			${sleepUser.id}님은 1년 이상 로그인하지 않아 관련 법령에 의해 휴면계정으로 어쩌구저쩌구
 			<ul>
-				<li>가입일 ${sleepUser.joinDate }</li>
-				<li>마지막 로그인 ${sleepUser.lastLoginDate }</li>
-				<li>휴면전환일 ${sleepUser.sleepDate }</li>
+				<li>가입일 ${sleepUser.joinDate}</li>
+				<li>마지막 로그인 ${sleepUser.lastLoginDate}</li>
+				<li>휴면전환일 ${sleepUser.sleepDate}</li>
 			</ul>
 		</div>
 	
@@ -31,7 +31,7 @@
 			<div>
 				휴면해제를 위해 버튼을 클릭해 주세요.
 			</div>
-			<form action="${contextPath}/user/restore" method="post">
+			<form action="${contextPath}/user/restore" method="get">
 				<div>
 					<button>휴면해제</button>
 					<input type="button" value="취소" onclick="location.href='${contextPath}'">
