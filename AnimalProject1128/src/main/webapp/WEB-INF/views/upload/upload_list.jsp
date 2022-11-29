@@ -34,8 +34,10 @@
 	td:nth-of-type(5) {
 		width: 10%;
 	}
+	.table_head {
+		background-color: #EBEBEB;
+	}
 	
-		
 	tbody > tr:hover {
 		background-color: #ECEDF1;
 		
@@ -45,17 +47,33 @@
 </style>
 
 <script>
-
-	$('#btn_find').click(function() {
-		
+	
+	$(function() {
+		$('#btn_write').click(function(event) {
+			if(${loginUser.id == null}) {  // 세션에 담긴 id가 없으면 로그인 여부 확인
+				
+				if(confirm('게시글 작성은 로그인이 필요한 서비스입니다. 로그인 하시겠습니까?')) {  // 로그인 동의 - 로그인 화면으로
+					 location.href="${contextPath}/user/login/form";
+					event.preventDefault();
+					return;
+				} else {  // 로그인 거부 - 리스트 화면으로
+					location.href="${contextPath}/upload";
+				}
+			} else {  // // 세션에 담긴 id가 있으면 게시글 작성으로
+				location.href="${contextPath}/upload/write";
+			}
+			
+		});
 	});
+	
+	
 </script>
 	
 	<div id="upload_list_body">
 	
 		<div id="upload_list_body_top">
 			
-			<input type="button" value="글쓰기" id="btn_write" onclick="location.href='${contextPath}/upload/write'">
+			<input type="button" value="글쓰기" id="btn_write">
 			<input type="button" value="목록보기" id="btn_list">
 			
 			<form id="frm_find" action="${contextPath}/upload/find">
@@ -77,7 +95,7 @@
 		<div id="upload_list_body_body">
 			<table>
 				<thead>
-					<tr>
+					<tr class="table_head">
 						<td>번호</td>
 						<td>작성자</td>
 						<td>제목</td>

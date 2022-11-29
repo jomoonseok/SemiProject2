@@ -34,7 +34,8 @@ public interface UploadMapper {
 	
 	public int selectUploadCount();						// upload 게시글 수
 	
-	
+	public int updateAddPoint(String id);
+	public int updateAttachPoint(String id);
 	
 	
 	

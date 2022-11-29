@@ -15,46 +15,74 @@
 
 <script>
 	
-	
 	$(function() {
 		
-		$('#btn_edit').click(function() {
-			
-			
-			/* 
-			
-			if(${upload.id} == sessionid?) {
-				
-			}
-			
-			*/
-			$('#frm_edit').attr('action', '${contextPath}/upload/edit');
-			$('#frm_edit').submit();
-			
-			
-		});
-		
-			$('#btn_remove').click(function() {
-			
-			
-			/* 
-			
-			if(${upload.id} == sessionid?) {
-				
-			}
-			
-			*/
-			if(confirm('첨부된 파일까지 전부 삭제됩니다. 정말 삭제하시겠습니까?')) {
-				$('#frm_edit').attr('action', '${contextPath}/upload/remove');
-				$('#frm_edit').submit();
-			}
-			
-			
-		});
+		fn_summernote();
+		fn_prevent();
+		fn_edit();
+		fn_remove();
 		
 		
 		
 	});
+	
+	function fn_summernote() {
+		$('#content').summernote({
+			width: 800,
+			height: 400,
+			lang: 'ko-KR',
+			toolbar: [
+			    ['style', ['bold', 'italic', 'underline', 'clear']],
+			    ['font', ['strikethrough', 'superscript', 'subscript']],
+			    ['fontsize', ['fontsize']],
+			    ['color', ['color']],
+			    ['para', ['ul', 'ol', 'paragraph']],
+			    ['height', ['height']]
+			]
+		})
+		$('#content').summernote('disable');
+	}
+	
+	function fn_prevent() {
+		$('#frm_edit').submit(function(event) {
+			if($('#title').val() == '') {
+				alert('제목과 내용은 필수입니다.');
+				event.preventDefault();
+				return;
+			}
+			
+			if($('#content').summernote('isEmpty')) {
+				alert('제목과 내용은 필수입니다.');
+				event.preventDefault();
+				return;
+			}
+		});
+	};
+		
+	function fn_edit() {
+		$('#btn_edit').click(function() {
+			$('#frm_edit').attr('action', '${contextPath}/upload/edit');
+			$('#frm_edit').submit();
+		});
+	};
+		
+	function fn_remove() {
+		$('#btn_remove').click(function() {
+			if(${attachCnt > 0}) {
+				if(confirm('첨부된 파일까지 모두 삭제됩니다. 게시글을 삭제하시겠습니까?')) {
+					$('#frm_edit').attr('action', '${contextPath}/upload/remove');
+					$('#frm_edit').submit();
+					return;
+				}
+			} else {
+				if(confirm('게시글을 삭제하시겠습니까?')) {
+					$('#frm_edit').attr('action', '${contextPath}/upload/remove');
+					$('#frm_edit').submit();
+				}
+			}
+		});
+	};
+		
 
 	
 	
@@ -88,8 +116,7 @@
 			<input type="hidden" name="title" value="${upload.uploadTitle}">
 	 	</div>
 	 	<div>
-	 		내용
-			<textarea readonly="readonly">${upload.uploadContent}</textarea>
+			<textarea id="content" readonly="readonly">${upload.uploadContent}</textarea>
 			<input type="hidden" name="content" value="${upload.uploadContent}">
 		</div>
 		<div><br>
@@ -104,8 +131,11 @@
 				 다운로드 ${attach.downloadCnt} 
 			</div>
 			</c:forEach>
+			
 			<div>
-				<a href="${contextPath}/upload/downloadAll?uploadNo=${upload.uploadNo}">모두 다운로드</a>
+				<c:if test="${attachCnt != 0}">
+					<a href="${contextPath}/upload/downloadAll?uploadNo=${upload.uploadNo}">모두 다운로드</a>
+				</c:if>
 			</div>	
 		</div>
 		<div>

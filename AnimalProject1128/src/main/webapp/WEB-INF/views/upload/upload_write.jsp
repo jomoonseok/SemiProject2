@@ -7,9 +7,14 @@
 	<jsp:param value="파일 업로드 게시판" name="title" />
 </jsp:include>
 <script>
-	$(document).ready(function() {
+	$(function() {
+		fn_summernote();
 		fn_prevent();
+		fn_fileCheck();
 		
+	});
+	
+	function fn_summernote() {
 		$('#content').summernote({
 			width: 800,
 			height: 400,
@@ -23,7 +28,7 @@
 			    ['height', ['height']]
 			]
 		})
-	})
+	}
 	
 	function fn_prevent() {
 		$('#frm_add').submit(function(event) {
@@ -41,6 +46,22 @@
 		});
 	}
 	
+	function fn_fileCheck(){
+		$('#file').change(function(){
+			let maxSize = 1024 * 1024 * 10;
+			let files = this.files;
+			
+			for(let i = 0; i < files.length; i++){
+				if(files[i].size > maxSize){
+					alert('10MB 이하의 파일만 첨부할 수 있습니다.');
+					$(this).val('');  // 첨부된 파일을 모두 없애줌
+					return;
+				}
+			}
+		});
+	}
+	
+	
 </script>
 		
 
@@ -54,8 +75,8 @@
 			<textarea id="content" name="content"></textarea>
 		</div>
 		<div>
-			<label for="files">첨부</label>
-			<input type="file" name="files" value="파일선택" multiple="multiple">
+			<label for="file">첨부</label>
+			<input type="file" id="file" name="files" value="파일선택" multiple="multiple">
 		</div>
 		<div>	
 			<button>작성완료</button>

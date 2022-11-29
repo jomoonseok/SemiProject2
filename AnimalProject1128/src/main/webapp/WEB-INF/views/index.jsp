@@ -81,7 +81,24 @@
         </section>
         <section class="right_section">
             <article class="right_article">
-                <h2><a href="${contextPath}/user/login/form">로그인</a></h2>
+                <c:if test="${loginUser == null}">
+					<h2><a href="${contextPath}/user/login/form">로그인</a></h2>
+				</c:if>
+				<c:if test="${loginUser != null}">
+					<div>
+						<h2><a href="${contextPath}/user/check/form">${loginUser.name}</a> 님</h2>
+					</div>
+					<a href="${contextPath}/user/logout">로그아웃</a>
+					<a href="javascript:fn_abc()">회원탈퇴</a>
+					<form id="lnk_retire" action="${contextPath}/user/retire" method="post"></form>
+					<script>
+						function fn_abc(){
+							if(confirm('탈퇴하시겠습니까?')){
+								$('#lnk_retire').submit();
+							}
+						}
+					</script>
+				</c:if>
             </article>
             <article class="right_article">
                 <h2>포인트</h2>
@@ -99,6 +116,9 @@
             </article>
         </section>
     </section>
+    
+    
+
 
 </body>
 </html>

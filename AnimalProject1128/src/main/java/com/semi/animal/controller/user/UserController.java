@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.semi.animal.domain.user.UserDTO;
 import com.semi.animal.service.user.UserService;
 
 @Controller
@@ -22,9 +23,9 @@ public class UserController {
 	@Autowired
 	private UserService userService;
 	
-	@GetMapping("/")         // http://localhost:9090/animal/의 맨 뒤 / 부분을 매핑한다.
-	public String index() {  // 웰컴 파일
-		return "index";      // index.jsp로 이동
+	@GetMapping("/")         
+	public String index() {  
+		return "index";     
 	}
 	
 	@GetMapping("/user/come")
@@ -32,9 +33,9 @@ public class UserController {
 		return "user/come";
 	}
 	
-	@GetMapping("/user/login")  // 파라미터 경로이기 때문에 맨 앞에 / 필수
+	@GetMapping("/user/login") 
 	public String login() {     
-		return "user/login";    // view 경로 login.jsp로 이동한다.
+		return "user/login";  
 	}
 	
 	@GetMapping("/user/agree")
@@ -73,6 +74,7 @@ public class UserController {
 	@PostMapping("/user/join")
 	public void join(HttpServletRequest request, HttpServletResponse response) {
 		userService.join(request, response);
+		
 	}
 	
 	@PostMapping("/user/retire")
@@ -97,10 +99,25 @@ public class UserController {
 		userService.login(request, response);
 	}
 	
+	
 	@GetMapping("/user/naver/login")
-	   public void naverLogin(HttpServletRequest request) {
-	      userService.getNaverLoginTokenNProfile(request);
-	   }
+	public String naverLogin(HttpServletRequest request, Model model) {
+		String access_token = userService.getNaverLoginToken(request);
+		UserDTO profile = userService.getNaverLoginProfile(access_token);
+		UserDTO naverUser = userService.getNaverUserById(profile.getId());
+		
+		if(naverUser == null) {
+			model.addAttribute("profile", profile);
+			return "user/naver_join";
+		} else {
+			userService.naverLogin(request, naverUser);
+			return "redirect:/";
+		}
+	}
+	
+
+		
+	
 
 	
 	@GetMapping("/user/logout")
