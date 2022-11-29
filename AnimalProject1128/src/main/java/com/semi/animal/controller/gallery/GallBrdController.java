@@ -39,15 +39,15 @@ public class GallBrdController {
 		return "gall/write";
 	}
 	
-	@PostMapping("/gall/add")
-	public void add(HttpServletRequest request, HttpServletResponse response) {
-		gallBrdService.saveGallBrd(request, response);
-	}
-	
 	@ResponseBody
 	@PostMapping(value="/gall/uploadImage", produces="application/json")
 	public Map<String, Object> uploadImage(MultipartHttpServletRequest multipartRequest) {
 		return gallBrdService.saveSummernoteImage(multipartRequest);
+	}
+	
+	@PostMapping("/gall/add")
+	public void add(HttpServletRequest request, HttpServletResponse response) {
+		gallBrdService.saveGallBrd(request, response);
 	}
 	
 	@GetMapping("/gall/increase/hit")

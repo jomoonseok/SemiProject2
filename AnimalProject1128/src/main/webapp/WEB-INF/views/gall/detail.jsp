@@ -45,7 +45,6 @@
 			});
 			$('#btn_remove_gallbrd').click(function(){
 				if(confirm('게시글을 삭제하시겠습니까?')) {
-					// cascade가 아닌 set null이기 때문에 함께 삭제 되진 않음
 					$('#frm_btn').attr('action', '${contextPath}/gall/remove');
 					$('#frm_btn').submit();
 				}

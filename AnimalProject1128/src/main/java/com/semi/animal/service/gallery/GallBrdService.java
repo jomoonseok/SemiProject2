@@ -12,8 +12,8 @@ import com.semi.animal.domain.gallery.GallBoardDTO;
 
 public interface GallBrdService {
 	public void getGallBoardList(HttpServletRequest request, Model model);
-	public void saveGallBrd(HttpServletRequest request, HttpServletResponse response);
 	public Map<String, Object> saveSummernoteImage(MultipartHttpServletRequest mutipartRequest);
+	public void saveGallBrd(HttpServletRequest request, HttpServletResponse response);
 	public int increaseGallHit(int gallNo);
 	public GallBoardDTO getGallbrdByNo(int gallNo);
 	public void modifyGallBrd(HttpServletRequest request, HttpServletResponse response);

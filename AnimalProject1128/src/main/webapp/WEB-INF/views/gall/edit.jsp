@@ -21,7 +21,7 @@
 	$(document).ready(function(){
 		
 		// summernote
-		$('#content').summernote({
+		$('#gallContent').summernote({
 			width: 800,
 			height: 400,
 			lang: 'ko-KR',
@@ -47,7 +47,7 @@
 						processData: false,
 						dataType: 'json',
 						success: function(resData){
-							$('#content').summernote('insertImage', resData.src);
+							$('#gallContent').summernote('insertImage', resData.src);
 						}
 					});
 				}
@@ -61,7 +61,7 @@
 		
 		// 서브밋
 		$('#frm_edit').submit(function(event){
-			if($('#title').val() == ''){
+			if($('#gallTitle').val() == ''){
 				alert('제목은 필수입니다.');
 				event.preventDefault();
 				return;
@@ -81,14 +81,16 @@
 		<input type="hidden" name="gallNo" value="${gall.gallNo}">
 	
 		<div>
-			<label for="title">제목</label>
-			<input type="text" name="title" id="title" value="${gall.gallTitle}">
+			<label for="gallTitle">제목</label>
+			<input type="text" name="gallTitle" id="gallTitle" value="${gall.gallTitle}">
 		</div>
 		
 		<div>
-			<label for="content">내용</label>
-			<textarea name="content" id="content">${gall.gallContent}</textarea>				
+			<label for="gallContent">내용</label>
+			<textarea name="gallContent" id="gallContent">${gall.gallContent}</textarea>				
 		</div>
+		
+		<div id="summernote_image_list"></div>
 		
 		<div>
 			<button>수정완료</button>

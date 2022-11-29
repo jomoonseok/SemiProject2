@@ -20,7 +20,7 @@
 	
 	$(document).ready(function(){
 		
-		$('#content').summernote({
+		$('#gallContent').summernote({
 			width: 800,
 			height: 400,
 			lang: 'ko-KR',
@@ -38,23 +38,25 @@
 				
 				onImageUpload: function(files) {
 
-					var formData = new FormData();
-					
-					formData.append('file', files[0]); 
-					
-					$.ajax({
-						type: 'post',
-						url: getContextPath() + '/gall/uploadImage',
-						data: formData,
-						contentType: false,  
-						processData: false,  
-						dataType: 'json',    
-						success: function(resData) {
-							
-							$('#content').summernote('insertImage', resData.src);  // src라는 이름은 serviceimpl에서 결정
-							
-						}
-					});  // ajax
+					for(let i = 0; i < files.length; i++) {
+						
+						var formData = new FormData();
+						
+						formData.append('file', files[i]); 
+						
+						$.ajax({
+							type: 'post',
+							url: getContextPath() + '/gall/uploadImage',
+							data: formData,
+							contentType: false,  
+							processData: false,  
+							dataType: 'json',    
+							success: function(resData) {
+								$('#gallContent').summernote('insertImage', resData.src);  // src라는 이름은 serviceimpl에서 결정
+								$('#summernote_image_list').append($('<input type="hidden" name="summernoteImageNames" value="' + resData.filesystem + '">'));
+							}
+						});  // ajax
+					}  // for
 				}  // onImageUpload
 			}  // callbacks
 		});
@@ -66,7 +68,7 @@
 		
 		// 서브밋
 		$('#frm_write').submit(function(event){
-			if($('#title').val() == ''){
+			if($('#gallTitle').val() == ''){
 				alert('제목은 필수입니다.');
 				event.preventDefault();  // 서브밋 취소
 				return;  // 더 이상 코드 실행할 필요 없음
@@ -84,16 +86,18 @@
 	<form id="frm_write" action="${contextPath}/gall/add" method="post">
 	
 		<div>
-			<label for="title">제목</label>
-			<input type="text" name="title" id="title">
+			<label for="gallTitle">제목</label>
+			<input type="text" name="gallTitle" id="gallTitle">
 		</div>
 		
-		<!-- 세미에선 작성자 : userId -->
+		<!-- 여기에 작성자의 이름을 받아와야함 -->
 		
 		<div>
-			<label for="content">내용</label>
-			<textarea name="content" id="content"></textarea>				
+			<label for="gallContent">내용</label>
+			<textarea name="gallContent" name="filesystemList" id="gallContent"></textarea>				
 		</div>
+		
+		<div id="summernote_image_list"></div>
 		
 		<div>
 			<button>작성완료</button>

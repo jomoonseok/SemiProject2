@@ -11,7 +11,7 @@
 
 <div>
 	
-	<h1>게시판 목록(전체 ${totalRecord}개)</h1>
+	<h3>게시판 목록(전체 ${totalRecord}개)</h3>
 	
 	<div>
 		<input type="button" value="게시글 작성하기" onclick="location.href='${contextPath}/gall/write'">
@@ -31,7 +31,7 @@
 			<tbody>
 				<c:forEach items="${gallList}" var="gall" varStatus="vs">
 					<tr>
-						<td>${gallNo - vs.index}</td>
+						<td>${(gallNo + 1) + vs.index}</td>
 						<td><a href="${contextPath}/gall/increse/hit?gallNo=${gall.gallNo}"> ${gall.gallTitle}</a></td>
 						<td>${gall.id}</td>						
 						<td>${gall.gallHit}</td>
@@ -48,9 +48,6 @@
 			</tfoot>
 		</table>
 	</div>
-	
-	
-	
 	
 </div>
 
