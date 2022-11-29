@@ -11,18 +11,19 @@
 		display: inline;
 		padding: 0 10px;
 	}
+	
+	.note-editable[contenteditable=false] {background-color: white !important;}
+	
 </style>
 
 <script>
 	
 	$(function() {
-		
+		fn_preventDownload();
 		fn_summernote();
-		fn_prevent();
+		fn_preventWrite();
 		fn_edit();
 		fn_remove();
-		
-		
 		
 	});
 	
@@ -39,11 +40,12 @@
 			    ['para', ['ul', 'ol', 'paragraph']],
 			    ['height', ['height']]
 			]
-		})
+			
+		});
 		$('#content').summernote('disable');
 	}
 	
-	function fn_prevent() {
+	function fn_preventWrite() {
 		$('#frm_edit').submit(function(event) {
 			if($('#title').val() == '') {
 				alert('제목과 내용은 필수입니다.');
@@ -82,6 +84,20 @@
 			}
 		});
 	};
+	
+	function fn_preventDownload() {
+		$('.downloadClass').click(function(event){
+			if(${loginUser.id == null}) {
+				event.preventDefault();
+				if(confirm('다운로드는 회원만 이용 가능합니다. 로그인 페이지로 이동할까요?')) {
+					location.href="${contextPath}/user/login/form";
+					return;
+				}
+			} else {
+				location.href='${contextPath}/upload/downloadAll?uploadNo=${upload.uploadNo}';
+			}
+		})
+	}
 		
 
 	
@@ -108,6 +124,9 @@
 				작성자 IP : ${upload.uploadIp}
 				<input type="hidden" name="ip" value="${upload.uploadIp}">
 			</div>
+			<div>
+				<input type="button" value="목록으로이동" onclick="location.href='${contextPath}/upload'">
+			</div>
 		</div>
 		<hr>
 		<div>
@@ -121,28 +140,28 @@
 		</div>
 		<div><br>
 			<c:choose>
-				<c:when test="${attachCnt == 0}">첨부파일 없음</c:when>
-				<c:otherwise>첨부파일 ${attachCnt}개</c:otherwise>
+				<c:when test="${attachCnt == 0}">
+					첨부파일 없음
+				</c:when>
+				<c:otherwise>
+					첨부파일 ${attachCnt}개 / 
+					<input class="downloadClass" type="button" value="모두 다운로드">
+				</c:otherwise>
 			</c:choose>
-			<c:forEach items="${attachList}" var="attach">
+			<hr>
+			<c:forEach items="${attachList}" var="attach" varStatus="vs" >
 			<div>
-				<a href="${contextPath}/upload/download?attachNo=${attach.attachNo}">${attach.origin}</a>
-				 / 
-				 다운로드 ${attach.downloadCnt} 
+				<a class="downloadClass" href="${contextPath}/upload/download?attachNo=${attach.attachNo}">${vs.count}. ${attach.origin} </a>
+				/ <span>다운로드 ${attach.downloadCnt}회</span>
 			</div>
 			</c:forEach>
-			
+		</div>
+		<c:if test="${loginUser.id == upload.id}">
 			<div>
-				<c:if test="${attachCnt != 0}">
-					<a href="${contextPath}/upload/downloadAll?uploadNo=${upload.uploadNo}">모두 다운로드</a>
-				</c:if>
-			</div>	
-		</div>
-		<div>
-			<input type="button" value="게시글 수정" id="btn_edit">
-			<input type="button" value="게시글 삭제" id="btn_remove">
-			<input type="button" value="목록" onclick="location.href='${contextPath}/upload'">
-		</div>
+				<input type="button" value="게시글 수정" id="btn_edit">
+				<input type="button" value="게시글 삭제" id="btn_remove">
+			</div>
+		</c:if>
 	</form>
 </body>
 </html>

@@ -25,6 +25,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 
@@ -149,9 +151,17 @@ public class UploadServiceImpl implements UploadService {
 	
 	@Override
 	public void getUploadAttachByNo(long uploadNo, Model model) {
+		
+		HttpServletRequest req = ((ServletRequestAttributes)RequestContextHolder.getRequestAttributes()).getRequest();  // request 없이 session 받아오는 코드
+		HttpSession session = req.getSession();
+		UserDTO loginUser = (UserDTO)session.getAttribute("loginUser");  // 로그인 후 세션에 담긴 loginUser 가져오기
+		
+		System.out.println(loginUser);
+		
 		model.addAttribute("upload", uploadMapper.selectUploadByNo(uploadNo));
 		model.addAttribute("attachList", uploadMapper.selectAttachList(uploadNo));
 		model.addAttribute("attachCnt", uploadMapper.selectAttachCnt(uploadNo));
+		model.addAttribute("loginUser", loginUser);
 	}
 	
 	@Override
@@ -378,6 +388,12 @@ public class UploadServiceImpl implements UploadService {
 	
 	@Override
 	public void removeUploadByUploadNo(HttpServletRequest request, HttpServletResponse response) {
+		
+		HttpSession session = request.getSession();
+		UserDTO loginUser = (UserDTO)session.getAttribute("loginUser");  // 로그인 후 세션에 담긴 loginUser 가져오기
+		System.out.println(loginUser);
+		String id = loginUser.getId(); 
+		System.out.println(id);
 		long uploadNo = Long.parseLong(request.getParameter("uploadNo"));
 		
 		List<AttachDTO> attachList = uploadMapper.selectAttachList(uploadNo);
@@ -401,6 +417,7 @@ public class UploadServiceImpl implements UploadService {
 			PrintWriter out = response.getWriter();
 			
 			if(result > 0) {
+				uploadMapper.updateSubtractPoint(id);
 				out.println("<script>");
 				out.println("alert('삭제 되었습니다.');");
 				out.println("location.href='" + request.getContextPath() + "/upload'");

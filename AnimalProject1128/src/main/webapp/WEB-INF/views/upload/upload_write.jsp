@@ -26,8 +26,9 @@
 			    ['color', ['color']],
 			    ['para', ['ul', 'ol', 'paragraph']],
 			    ['height', ['height']]
-			]
-		})
+			],
+			placeholder: '내용을 입력해주세요'
+		});
 	}
 	
 	function fn_prevent() {

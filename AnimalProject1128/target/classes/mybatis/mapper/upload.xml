@@ -107,6 +107,14 @@
 		   SET POINT = POINT + 10
 		 WHERE ID = #{id}
 	</update>
+	
+	<update id="updateSubtractPoint" parameterType="String">
+		UPDATE ANI_USER
+		   SET POINT = POINT - 10
+		 WHERE ID = #{id}
+	</update>
+	
+	
 
 	<update id="updateAttachPoint" parameterType="String">
 		UPDATE ANI_USER
