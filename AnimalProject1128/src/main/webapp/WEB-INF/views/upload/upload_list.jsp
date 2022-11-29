@@ -8,10 +8,40 @@
 </jsp:include>
 
 <style>
-	tbody > tr:hover {
-		cursor: pointer;
 	
+	table {
+		text-align: center;
+		width: 1200px;
+		margin: 30px auto 30px;
 	}
+	
+	tbody > tr > td:nth-of-type(3):hover {
+		cursor: pointer;
+	}
+	
+	td:nth-of-type(1) {
+		width: 10%;
+	}
+	td:nth-of-type(2) {
+		width: 20%;
+	}
+	td:nth-of-type(3) {
+		width: 45%;
+	}
+	td:nth-of-type(4) {
+		width: 15%;
+	}
+	td:nth-of-type(5) {
+		width: 10%;
+	}
+	
+		
+	tbody > tr:hover {
+		background-color: #ECEDF1;
+		
+	}
+	
+	
 </style>
 
 <script>
@@ -45,7 +75,7 @@
 		</div>
 		
 		<div id="upload_list_body_body">
-			<table border="1">
+			<table>
 				<thead>
 					<tr>
 						<td>번호</td>
@@ -57,20 +87,22 @@
 				</thead>
 				<tbody>
 					<c:forEach items="${uploadList}" var="upload">
-					<tr onclick="location.href='${contextPath}/upload/detail?uploadNo=${upload.uploadNo}'">
+					<tr>
 						<td>${upload.uploadNo}</td>
 						<td>${upload.id}</td>
-						<td>${upload.uploadTitle}</td>
+						<td onclick="location.href='${contextPath}/upload/detail?uploadNo=${upload.uploadNo}'">${upload.uploadTitle}</td>
 						<td>${upload.uploadCreateDate}</td>
 						<td>${upload.uploadHit}</td>
 					</tr> 
 				</c:forEach>
 				</tbody>
-				<tfoot>
-					<tr>
-						<td colspan="6">${paging}</td>
-					</tr>
-				</tfoot>
+			</table>
+		</div>
+		<div id="upload_list_body_foot">
+			<table>
+				<tr>
+					<td colspan="6">${paging}</td>
+				</tr>
 			</table>
 		</div>
 	

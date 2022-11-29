@@ -1,12 +1,16 @@
 package com.semi.animal.service.upload;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.PrintWriter;
 import java.net.URLEncoder;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipOutputStream;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -76,11 +80,12 @@ public class UploadServiceImpl implements UploadService {
 		long uploadResult = uploadMapper.insertUpload(upload);
 		
 		List<MultipartFile> files = request.getFiles("files");
+		System.out.println("files:" + files);
 		int attachResult;
-		if(files.get(0).getSize() == 0) {  
+		if(files.get(1).getSize() != 0) {  
 			attachResult = 1;
 		} else { 
-			attachResult = 0;
+			attachResult = 2;
 		}
 		
 		for(MultipartFile multipartFile : files) {
@@ -106,8 +111,7 @@ public class UploadServiceImpl implements UploadService {
 							.origin(origin)
 							.filesystem(filesystem)
 							.build();
-					System.out.println(attach);
-					attachResult += uploadMapper.insertAttach(attach);  // 여기~~~~~~~~~~~~~~~~~~~~~~~~~~~
+					attachResult += uploadMapper.insertAttach(attach);
 				}
 			} catch(Exception e) { 
 				e.printStackTrace();
@@ -117,9 +121,6 @@ public class UploadServiceImpl implements UploadService {
 		try {
 			response.setContentType("text/html; charset=UTF-8");
 			PrintWriter out = response.getWriter();
-			System.out.println("uploadResult :" + uploadResult);
-			System.out.println("attachResult :" + attachResult);
-			System.out.println("files.size() :" + files.size());
 			if(uploadResult > 0 && attachResult == files.size()) {
 				out.println("<script>");
 				out.println("alert('업로드 되었습니다.');");
@@ -186,6 +187,78 @@ public class UploadServiceImpl implements UploadService {
 		return new ResponseEntity<Resource>(resource, header, HttpStatus.OK);
 		
 	}
+	
+	@Override
+	public ResponseEntity<Resource> downloadAll(String userAgent, int uploadNo) {
+		
+		List<AttachDTO> attachList = uploadMapper.selectAttachList(uploadNo);
+		
+		FileOutputStream fout = null;
+		ZipOutputStream zout = null;  
+		FileInputStream fin = null;
+		
+		String tmpPath = "storage" + File.separator + "temp";
+		
+		File tmpDir = new File(tmpPath);
+		if(tmpDir.exists() == false) {
+			tmpDir.mkdirs();
+		}
+		
+		String tmpName =  System.currentTimeMillis() + ".zip";
+		
+		try {
+			
+			fout = new FileOutputStream(new File(tmpPath, tmpName));
+			zout = new ZipOutputStream(fout);
+			
+			if(attachList != null && attachList.isEmpty() == false) {
+
+				for(AttachDTO attach : attachList) {
+					
+					ZipEntry zipEntry = new ZipEntry(attach.getOrigin());
+					zout.putNextEntry(zipEntry);
+					
+					fin = new FileInputStream(new File(attach.getPath(), attach.getFilesystem()));
+					byte[] buffer = new byte[1024];
+					int length;
+					while((length = fin.read(buffer)) != -1){
+						zout.write(buffer, 0, length);
+					}
+					zout.closeEntry();
+					fin.close();
+
+					uploadMapper.updateDownloadCnt(attach.getAttachNo());
+					
+				}
+				
+				zout.close();
+
+			}
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		
+		// 반환할 Resource
+		File file = new File(tmpPath, tmpName);
+		Resource resource = new FileSystemResource(file);
+		
+		// Resource가 없으면 종료 (다운로드할 파일이 없음)
+		if(resource.exists() == false) {
+			return new ResponseEntity<Resource>(HttpStatus.NOT_FOUND);
+		}
+		
+		// 다운로드 헤더 만들기
+		HttpHeaders header = new HttpHeaders();
+		header.add("Content-Disposition", "attachment; filename=" + tmpName);  // 다운로드할 zip파일명은 타임스탬프로 만든 이름을 그대로 사용
+		header.add("Content-Length", file.length() + "");
+		
+		return new ResponseEntity<Resource>(resource, header, HttpStatus.OK);
+		
+	}
+	
+	
 	
 	@Transactional
 	@Override

@@ -104,6 +104,9 @@
 				 다운로드 ${attach.downloadCnt} 
 			</div>
 			</c:forEach>
+			<div>
+				<a href="${contextPath}/upload/downloadAll?uploadNo=${upload.uploadNo}">모두 다운로드</a>
+			</div>	
 		</div>
 		<div>
 			<input type="button" value="게시글 수정" id="btn_edit">

@@ -8,6 +8,7 @@
 </jsp:include>
 <script>
 	$(document).ready(function() {
+		fn_prevent();
 		
 		$('#content').summernote({
 			width: 800,
@@ -23,17 +24,33 @@
 			]
 		})
 	})
+	
+	function fn_prevent() {
+		$('#frm_add').submit(function(event) {
+			if($('#title').val() == '') {
+				alert('제목과 내용은 필수입니다.');
+				event.preventDefault();
+				return;
+			}
+			
+			if($('#content').summernote('isEmpty')) {
+				alert('제목과 내용은 필수입니다.');
+				event.preventDefault();
+				return;
+			}
+		});
+	}
+	
 </script>
 		
 
 
-	<form method='post' enctype="multipart/form-data" action="${contextPath}/upload/add" >
+	<form id='frm_add' method='post' enctype="multipart/form-data" action="${contextPath}/upload/add" >
 		<div>
 			<label for="title">제목</label>
 			<input type="text" name="title" id="title">
 	 	</div>
 	 	<div>
-	 		<label for="content"></label>
 			<textarea id="content" name="content"></textarea>
 		</div>
 		<div>

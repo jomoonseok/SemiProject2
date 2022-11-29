@@ -25,6 +25,8 @@ public interface UploadService {
 	
 	public ResponseEntity<Resource> download(String userAgent, long attachNo);  // attach 다운로드
 	
+	public ResponseEntity<Resource> downloadAll(String userAgent, int uploadNo);
+	
 	public void modifyUpload(MultipartHttpServletRequest request, HttpServletResponse response);   // 게시글 수정
 	
 	public UploadDTO getUploadByNo(long uploadNo);

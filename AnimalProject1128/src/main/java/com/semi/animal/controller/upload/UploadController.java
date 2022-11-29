@@ -68,6 +68,12 @@ public class UploadController {
 		return uploadService.download(userAgent, attachNo);
 	}
 	
+	@ResponseBody
+	@GetMapping("/upload/downloadAll")
+	public ResponseEntity<Resource> downloadAll(@RequestHeader("User-Agent") String userAgent, @RequestParam("uploadNo") int uploadNo) {
+		return uploadService.downloadAll(userAgent, uploadNo);
+	}
+	
 	@PostMapping("/upload/modify")
 	public void modify(MultipartHttpServletRequest request, HttpServletResponse response) {
 		uploadService.modifyUpload(request, response);
