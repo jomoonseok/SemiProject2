@@ -1,15 +1,10 @@
 package com.semi.animal.service.admin;
 
-import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import org.springframework.ui.Model;
-
-import com.semi.animal.domain.user.UserDTO;
 
 public interface AdminService {
-	public List<UserDTO> getUserList(HttpServletRequest request, Model model);
-	public void removeUser(HttpServletRequest request, HttpServletResponse response);
+	public Map<String, Object> getUserList(HttpServletRequest request);
+	public Map<String, Object> removeUser(int userNo, String id, String joinDate);
 }

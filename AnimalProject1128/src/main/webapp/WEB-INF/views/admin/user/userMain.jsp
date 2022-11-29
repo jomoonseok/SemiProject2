@@ -6,11 +6,17 @@
 <jsp:include page="../../layout/header.jsp">
 	<jsp:param value="메인게시판" name="title" />
 </jsp:include>
+<style>
+	.enable_link:hover {
+		cursor:pointer;
+	}
+</style>
 <script>
 
 	$(document).ready(function(){
 		fn_getUserList();
-		
+		fn_changePage();
+		fn_removeUser();
 	});
 	
 	
@@ -19,34 +25,91 @@
 		$.ajax({
 			type: 'get',
 			url: '${contextPath}/admin/userList',
+			data: 'page=' + $('#page').val(),
 			dataType: 'json',
 			success: function(resData){
+				console.log(resData);
+				//var remove = '';
+				
+				//$('#remove').append()
 				$('#list').empty();
-				$.each(resData, function(i, user){
-					$('<tr>')
-					.append( $('<td>').text(user.userNo) )
-					.append( $('<td>').text(user.id) )
-					.append( $('<td>').text(user.name) )
-					.append( $('<td>').text(user.gender) )
-					.append( $('<td>').text(user.email) )
-					.append( $('<td>').text(user.mobile) )
-					.append( $('<td>').text(user.joinDate) )
-					.append( $('<td>').text(user.point) )
-					.append( $('<td>').append( $('<input>').prop('type', 'button').prop('value', '탈퇴').prop('id', 'btn_remove') ))
-					.appendTo('#list');
+				$.each(resData.list, function(i, user){
+					var tr = '';
+					tr += '<tr>';
+					tr += '<td>'+ user.userNo +'</td>';
+					tr += '<td>'+ user.id +'</td>';
+					tr += '<td>'+ user.name +'</td>';
+					tr += '<td>'+ user.gender +'</td>';
+					tr += '<td>'+ user.email +'</td>';
+					tr += '<td>'+ user.mobile +'</td>';
+					tr += '<td>'+ user.joinDate +'</td>';
+					tr += '<td>'+ user.point +'</td>';
+					tr += '<td>'; // form
+					tr += '<form class="frm_remove">';
+					tr += '<input type="hidden" name="userNo" value="' + user.userNo + '">';
+					tr += '<input type="hidden" name="id" value="' + user.id + '">';
+					tr += '<input type="hidden" name="joinDate" value="' + user.joinDate + '">';
+					tr += '<button class="btn_remove">탈퇴</button>';
+					tr += '</form>';
+					tr += '</td>';
+					tr += '</tr>';
+					$('#list').append(tr);
+				});
+				// 페이징
+				$('#paging').empty();
+				var pageUtil = resData.pageUtil;
+				var paging = '';
+				// 이전 블록
+				if(pageUtil.beginPage != 1) {
+					paging += '<span class="enable_link" data-page="'+ (pageUtil.beginPage - 1) +'">◀</span>';
+				}
+				// 페이지번호
+				for(let p = pageUtil.beginPage; p <= pageUtil.endPage; p++) {
+					if(p == $('#page').val()){
+						paging += '<strong>' + p + '</strong>';
+					} else {
+						paging += '<span class="enable_link" data-page="'+ p +'">' + p + '</span>';
+					}
+				}
+				// 다음 블록
+				if(pageUtil.endPage != pageUtil.totalPage){
+					paging += '<span class="enable_link" data-page="'+ (pageUtil.endPage + 1) +'">▶</span>';
+				}
+				$('#paging').append(paging);
+			}
+		});
+	}
+	
+	function fn_changePage(){
+		/* enable_link는 동적으로 만들었기 때문에 지금까지 사용한 방법으로는 이벤트를 사용할 수 없다. */
+		$(document).on('click', '.enable_link', function(){
+			$('#page').val( $(this).data('page') );
+			fn_getUserList();
+		});
+	}
+	
+	function fn_removeUser(){
+		$(document).on('click', '.btn_remove', function(){
+			if(confirm('유저를 삭제할까요?')){
+				$.ajax({
+					type: 'post',
+					url: '${contextPath}/admin/removeUser',
+					data: $(this).parent().serialize(),
+					dataType: 'json',
+					success: function(resData){
+						if(resData.isRemove){
+							alert('삭제되었습니다.');
+							fn_getUserList();
+						}
+					}
 				});
 			}
 		});
 	}
 	
-	function fn_removeUser(){
-		$('#btn_remove').click(function(){
-			location.href='${contextPath}/admin/removeUser?id=' + $(this).data('id');
-		})
-	}
-	
 </script>
-
+	
+	
 	<div>
 		<input type="text" name="searchUser">
 		<input type="button" value="검색">
@@ -64,17 +127,14 @@
 					<td>핸드폰</td>
 					<td>가입일</td>
 					<td>보유포인트</td>
-					<td></td>
+					<td id="remove"></td>
 				</tr>
 			</thead>
 			<tbody id="list"></tbody>
-			<tfoot>
-				<tr>
-					<td colspan="9">${paging}</td>
-				</tr>
-			</tfoot>
+			<tfoot id="paging"></tfoot>
 		</table>
 	</div>
+	<input type="hidden" id="page" value="1">
 
 </body>
 </html>

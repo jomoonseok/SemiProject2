@@ -37,6 +37,12 @@
 			(#{userNo}, #{id}, #{joinDate}, SYSDATE)
 	</insert>
 	
+	<select id="selectJoinDate" parameterType="String" resultType="Date">
+		SELECT JOIN_DATE
+		  FROM ANI_USER
+		 WHERE ID = #{id} 
+	</select>
+	
 	
 
 	

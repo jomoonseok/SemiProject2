@@ -1,17 +1,17 @@
 package com.semi.animal.controller.admin;
 
-import java.util.List;
+import java.sql.Date;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.semi.animal.domain.user.UserDTO;
 import com.semi.animal.service.admin.AdminService;
 
 @Controller
@@ -32,14 +32,14 @@ public class AdminController {
 	
 	@ResponseBody
 	@GetMapping(value="/admin/userList", produces="application/json")
-	public List<UserDTO> userList(HttpServletRequest request, Model model){
-		return adminService.getUserList(request, model);
+	public Map<String, Object> userList(HttpServletRequest request){
+		return adminService.getUserList(request);
 	}
 	
-	
-	@GetMapping("/admin/removeUser")
-	public void removeUser(HttpServletRequest request, HttpServletResponse response) {
-		adminService.removeUser(request, response);
+	@ResponseBody
+	@PostMapping(value="/admin/removeUser", produces="application/json")
+	public Map<String, Object> removeUser(@RequestParam("userNo") int userNo, @RequestParam("id") String id, @RequestParam("joinDate") String joinDate) {
+		return adminService.removeUser(userNo, id, joinDate);
 	}
 	
 }

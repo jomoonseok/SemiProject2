@@ -1,19 +1,15 @@
 package com.semi.animal.service.admin;
 
-import java.io.PrintWriter;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.ui.Model;
 
-import com.semi.animal.domain.user.UserDTO;
+import com.semi.animal.domain.user.RetireUserDTO;
 import com.semi.animal.mapper.admin.AdminMapper;
 import com.semi.animal.util.PageUtil;
 
@@ -26,7 +22,7 @@ public class AdminServiceImpl implements AdminService {
 	private PageUtil pageUtil;
 	
 	@Override
-	public List<UserDTO> getUserList(HttpServletRequest request, Model model) {
+	public Map<String, Object> getUserList(HttpServletRequest request) {
 		Optional<String> opt1 = Optional.ofNullable(request.getParameter("page"));
 		int page = Integer.parseInt(opt1.orElse("1"));
 		
@@ -38,41 +34,33 @@ public class AdminServiceImpl implements AdminService {
 		map.put("begin", pageUtil.getBegin());
 		map.put("end", pageUtil.getEnd());
 		
-		List<UserDTO> userList = adminMapper.selectUserListByMap(map);
+		Map<String, Object> result = new HashMap<String, Object>();
+		result.put("list", adminMapper.selectUserListByMap(map));
+		result.put("pageUtil", pageUtil);
+		result.put("beginNo", totalRecord - (page - 1) * pageUtil.getRecordPerPage());
 		
-		model.addAttribute("userList", userList);
-		model.addAttribute("paging", pageUtil.getPaging(request.getContextPath() + "/admin/user"));
-		model.addAttribute("beginNo", totalRecord - (page - 1) * pageUtil.getRecordPerPage());
-		
-		return userList;
+		return result;
 		
 	}
 	
 	
 	
 	@Override
-	public void removeUser(HttpServletRequest request, HttpServletResponse response) {
-		String id = request.getParameter("id");
+	public Map<String, Object> removeUser(int userNo, String id, String joinDate) {
+		/*
+		RetireUserDTO retireUser = RetireUserDTO.builder()
+				.userNo(userNo)
+				.id(id)
+				.joinDate(joinDate) // String -> Util.Date -> SQL.Date
+				.build();
+		*/
+		int deleteResult = adminMapper.deleteUser(id);
+		//int insertresult = adminMapper.insertRetireUser(retireUser);
+		 
 		
-		int result = adminMapper.deleteUser(id);
-		
-		try {
-			response.setContentType("text/html; charset=UTF-8");
-			PrintWriter out = response.getWriter();
-			
-			out.println("<script>");
-			if(result>0) {
-				out.println("alert('삭제 성공');");
-				out.println("location.href='" + request.getContextPath() + "/admin/userList';");
-			} else {
-				out.println("alert('삭제 실패');");
-				out.println("history.back();");
-			}
-			out.println("</script>");
-			out.close();
-		} catch(Exception e) {
-			e.printStackTrace();
-		}
+		Map<String, Object> result = new HashMap<String, Object>();
+		result.put("isRemove", deleteResult == 1 );
+		return result;
 		
 	}
 	
