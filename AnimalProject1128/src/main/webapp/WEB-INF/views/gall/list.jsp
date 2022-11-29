@@ -31,8 +31,8 @@
 			<tbody>
 				<c:forEach items="${gallList}" var="gall" varStatus="vs">
 					<tr>
-						<td>${(gallNo + 1) + vs.index}</td>
-						<td><a href="${contextPath}/gall/increse/hit?gallNo=${gall.gallNo}"> ${gall.gallTitle}</a></td>
+						<td>${beginNo - vs.index}</td>
+						<td><a href="${contextPath}/gall/increase/hit?gallNo=${gall.gallNo}"> ${gall.gallTitle}</a></td>
 						<td>${gall.id}</td>						
 						<td>${gall.gallHit}</td>
 						<td>${gall.gallCreateDate}</td>

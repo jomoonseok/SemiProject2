@@ -37,7 +37,7 @@
 		INSERT INTO ANI_BRD_GALL
 			(GALL_NO, ID, GALL_TITLE, GALL_CONTENT, GALL_HIT, GALL_CREATE_DATE, GALL_MODIFY_DATE, GALL_IP)
 		VALUES
-			(ANI_BRD_GALL_SEQ.NEXTVAL, 'admin', #{gallTitle}, #{gallContent}, 0, SYSDATE, SYSDATE, #{gallIp})
+			(#{gallNo}, 'admin', #{gallTitle}, #{gallContent}, 0, SYSDATE, SYSDATE, #{gallIp})
 	</insert>
 	
 	<update id="updateGallHit" parameterType="int">

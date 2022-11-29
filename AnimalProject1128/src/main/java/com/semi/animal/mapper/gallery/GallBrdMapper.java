@@ -14,10 +14,10 @@ public interface GallBrdMapper {
 	public int selectGallBrdListCount();
 	public List<GallBoardDTO> selectGallBrdListByMap(Map<String, Object> map);
 	public int insertSummernoteImage(SummernoteImageDTO summernote);
-	public int insertGallBrd(GallBoardDTO gallbroard);
+	public int insertGallBrd(GallBoardDTO gallBroard);
 	public int updateGallHit(int gallNo);
 	public GallBoardDTO selectGallBrdByNo(int gallNo);
-	public int updateGallBrd(GallBoardDTO gallboard);
+	public int updateGallBrd(GallBoardDTO gallBoard);
 	public int deleteGallBrd(int gallNo);
 	public List<SummernoteImageDTO> selectSummernoteImageListInGallBrd(int gallNo);
 	public List<SummernoteImageDTO> selectAllSummernoteImageList();
