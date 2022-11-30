@@ -7,12 +7,14 @@ import java.util.Optional;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
 
 import com.semi.animal.domain.freeboard.FreeBoardDTO;
+import com.semi.animal.domain.user.UserDTO;
 import com.semi.animal.mapper.freeboard.FreeBoardMapper;
 import com.semi.animal.util.PageUtil;
 
@@ -60,8 +62,10 @@ public class FreeBoardServiceImpl implements FreeBoardService {
 	@Override
 	public void addFreeBoard(HttpServletRequest request, HttpServletResponse response) {
 		
-		String id = "admin";
+		HttpSession session = request.getSession();
+		UserDTO userDTO = (UserDTO)session.getAttribute("loginUser"); 
 		
+		String id = userDTO.getId();
 		String freeTitle = request.getParameter("title");
 		String freeContent = request.getParameter("content");
 		String freeIp = request.getRemoteAddr();
@@ -72,6 +76,8 @@ public class FreeBoardServiceImpl implements FreeBoardService {
 				.freeContent(freeContent)
 				.freeIp(freeIp)
 				.build();
+		
+		
 		
 		int result = freeBoardMapper.insertFreeBoard(freeBoard);
 			
@@ -103,6 +109,8 @@ public class FreeBoardServiceImpl implements FreeBoardService {
 	public FreeBoardDTO getFreeBoardByNo(int freeNo) {
 		return freeBoardMapper.selectFreeBoardByNo(freeNo);
 	}
+	
+	
 	
 	@Override
 	public void modifyFreeBoard(HttpServletRequest request, HttpServletResponse response) {

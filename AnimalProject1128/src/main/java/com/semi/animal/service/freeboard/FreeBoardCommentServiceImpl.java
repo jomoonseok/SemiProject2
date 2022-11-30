@@ -4,11 +4,14 @@ import java.util.HashMap;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.semi.animal.domain.freeboard.FreeBoardCommentDTO;
+import com.semi.animal.domain.freeboard.FreeBoardDTO;
+import com.semi.animal.domain.user.UserDTO;
 import com.semi.animal.mapper.freeboard.FreeBoardCommentMapper;
 import com.semi.animal.util.PageUtil;
 
@@ -32,10 +35,20 @@ public class FreeBoardCommentServiceImpl implements FreeBoardCommentService {
 	}
 	
 	@Override
-	public Map<String, Object> addComment(FreeBoardCommentDTO freeComment) {
+	public Map<String, Object> addComment(FreeBoardCommentDTO freeComment, HttpServletRequest request) {
+		HttpSession session = request.getSession();
+		UserDTO userDTO = (UserDTO)session.getAttribute("loginUser");
+		String freeCmtIp = request.getRemoteAddr();
+		
+		System.out.println();
+		System.out.println("유저아이디 내놔!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!" + userDTO);
+		System.out.println();
+		
+		freeComment.setId(userDTO.getId());
+		freeComment.setFreeCmtIp(freeCmtIp);
+				
 		Map<String, Object> result = new HashMap<String, Object>();
-		result.put("isAdd", freeBoardCmdMapper.insertComment(freeComment) == 1);
-		System.out.println("serviceImpl(addComment) : " + result);
+		result.put("isAdd", freeBoardCmdMapper.insertComment(freeComment));
 
 		return result;
 	}
@@ -64,8 +77,11 @@ public class FreeBoardCommentServiceImpl implements FreeBoardCommentService {
 	
 	@Override
 	public Map<String, Object> addReply(FreeBoardCommentDTO freeComment) {
+		Map<String, Object> result = new HashMap<String, Object>();
+		result.put("isAddReply", freeBoardCmdMapper.insertCommentReply(freeComment) == 1);
+		System.out.println("serviceImpl(addReply) : " + result);
 		
-		return null;
+		return result;
 	}
 
 	

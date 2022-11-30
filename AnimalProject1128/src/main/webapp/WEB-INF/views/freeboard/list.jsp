@@ -10,34 +10,50 @@
 
 	
 	<div>
-		<a href="${contextPath}/freeboard/write">글쓰기</a>
+		<input type="button" value="글쓰기" id="write">
+		<c:if test="${loginUser != null}">
+			<script>
+				$('#write').click(function(){
+					location.href = "${contextPath}/freeboard/write";
+				});
+			</script>
+		</c:if>
+		
+		<c:if test="${loginUser == null}">
+			<script>
+				$('#write').click(function(){
+					if(confirm('글을 작성하려면 로그인이 필요합니다. 로그인 페이지로 이동 하시겠습니까?')) {
+						location.href = "${contextPath}/user/login/form";
+					}
+				});
+			</script>
+		</c:if>
+		
 		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 		전체 글 (${totalRecord})
 	</div>
 	
-	
-	<!-- c:if test="${loginUser != null}" 로그인이 되어있다면 -->
 	<!-- c:if test="${loginUser.id == 'admin'}"  관리자가 로그인이라면 -->
-	
+
 	<div>
 		<table border="1">
 			<thead>
-				<tr>
-					<td>순번</td>
-					<td>작성자</td>
-					<td>제목</td>
-					<td>작성날짜</td>
-					<td>조회수</td>
+				<tr style="text-align: center; color: rgb(78, 78, 78);">
+					<td><strong>순번</strong></td>
+					<td><strong>작성자</strong></td>
+					<td><strong>제목</strong></td>
+					<td><strong>작성날짜</strong></td>
+					<td><strong>조회수</strong></td>
 				</tr>
 			</thead>
 			<tbody>
 				<c:forEach items="${freeBoardList}" var="free">
 					<tr>
-						<td>${free.freeNo}</td>
-						<td>${free.id}</td>
+						<td style="text-align: center;">${free.freeNo}</td>
+						<td style="text-align: center;">${free.id}</td>
 						<td><a href="${contextPath}/freeboard/increse/hit?freeNo=${free.freeNo}">${free.freeTitle}</a></td>
-						<td>${free.freeCreateDate}</td>
-						<td>${free.freeHit}</td>
+						<td style="text-align: center;">${free.freeCreateDate}</td>
+						<td style="text-align: center;">${free.freeHit}</td>
 					</tr>
 				</c:forEach>
 			</tbody>

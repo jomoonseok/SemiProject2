@@ -20,6 +20,9 @@
 	<div><i class="fa-solid fa-check"></i>&nbsp; ${free.freeNo}번 게시글</div>
 	<div><i class="fa-solid fa-check"></i>&nbsp; 조회수 : ${free.freeHit}</div>
 	<div><i class="fa-solid fa-check"></i>&nbsp; 작성자 : ${free.id}</div>
+	<div><i class="fa-solid fa-check"></i>&nbsp; 작성일 : ${free.freeCreateDate}</div>
+	<div><i class="fa-solid fa-check"></i>&nbsp; 수정일 : ${free.freeModifyDate}</div>
+	<div><i class="fa-solid fa-check"></i>&nbsp; 아이피 : ${free.freeIp}</div>
 	<div><i class="fa-solid fa-check"></i>&nbsp; 제목 : ${free.freeTitle}</div>
 	<hr>
 	<div>내용 ${free.freeContent}</div>
@@ -40,8 +43,7 @@
 			</div>
 			<input type="hidden" name="freeNo" value="${free.freeNo}">
 		</form>
-	</div>
-	
+	</div>	
 	
 	<hr>
 	<!-- 3. 댓글 리스트 -->
@@ -66,6 +68,8 @@
 		fn_switchCommentList();
 		fn_addComment();
 		fn_commentList();
+		fn_addCommentReply
+		fn_addCommentReply();
 		
 		var page = 1;
 	
@@ -92,14 +96,14 @@
 		// 3. 댓글 추가
 		function fn_addComment(){
 			$('#btn_add_comment').click(function(){
-				if($('#comment').val() == ''){
+				if($('#content').val() == ''){
 					alert('댓글을 입력하세요.');
 					return;
 				}
 				$.ajax({
 					type: 'post',
 					url: '${contextPath}/freecomment/add',
-					data: $('#frm_add_comment').serialize(),
+					data: $('#frm_add_comment').serialize(),					
 					dataType: 'json',
 					success: function(resData){
 						if(resData.isAdd) {
@@ -107,11 +111,13 @@
 							$('#content').val('');
 							fn_commentList();
 							fn_commentCount();
-							
 						}
 					}
 				});
 			});
+			
+			
+			
 		}
 
 		
@@ -192,11 +198,46 @@
 					
 			});
 		}
+		
+		function fn_switchReplyArea(){
+			$(document).on('click', '.btn_reply_area', function(){
+				$(this).parent().next().next().toggleClass('blind');
+			});
+		}
+		
+		// 5. 대댓글 추가
+		function fn_addCommentReply(){
+			$(document).on('click', '.btn_reply_add', function(){
+				if($(this).prev().val() == ''){
+					alert('답글 내용을 입력하세요.');
+					return;
+				}
+				$.ajax({
+					type: 'post',
+					url: '${contextPath}/freecomment/addReply',
+					data: $(this).closest('.frm_reply').serialize(),
+					dataType: 'json',
+					success: function(resData) {
+						if(resData.isAddReply){
+							alert('답글이 등록되었습니다.');
+							fn_commentList();
+							fn_commentCount();
+						}
+					}
+				}); // ajax		
+			});
+			
+		} // fn_addCommentReply()
+		
+		
+
+		
+		
 
 	</script>
 	
 	
-	<!-- 4. 게시판 관련 버튼 -->
+	<!-- . 게시판 관련 버튼(제일 하단 배치 예정) -->
 	<div>
 		<form id="frm_btn" method="post">
 			<input type="hidden" name="freeNo" value="${free.freeNo}">

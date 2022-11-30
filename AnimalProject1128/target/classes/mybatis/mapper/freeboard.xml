@@ -51,7 +51,9 @@
 	<!-- 6. 게시글 수정 -->
 	<update id="updateFreeBoard" parameterType="FreeBoardDTO">
 		UPDATE ANI_BRD_FREE
-		   SET FREE_TITLE = #{freeTitle}, FREE_CONTENT = #{freeContent}, FREE_MODIFY_DATE = SYSDATE
+		   SET FREE_TITLE = #{freeTitle}, 
+		   FREE_CONTENT = #{freeContent},
+		   FREE_MODIFY_DATE = SYSDATE
 		 WHERE FREE_NO = #{freeNo}
 	</update>
 	

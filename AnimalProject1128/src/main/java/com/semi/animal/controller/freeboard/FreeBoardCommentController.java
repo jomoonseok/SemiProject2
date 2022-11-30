@@ -29,9 +29,9 @@ public class FreeBoardCommentController {
 	
 	@ResponseBody
 	@PostMapping(value="/freecomment/add", produces="application/json")
-	public Map<String, Object> add(FreeBoardCommentDTO freeComment){
+	public Map<String, Object> add(FreeBoardCommentDTO freeComment, HttpServletRequest request){
 		System.out.println("controller(add) : " + freeComment);
-		return freeBoardCmdService.addComment(freeComment);
+		return freeBoardCmdService.addComment(freeComment, request);
 	}
 	
 	@ResponseBody
@@ -41,7 +41,13 @@ public class FreeBoardCommentController {
 	}
 
 	
-
+	@ResponseBody
+	@PostMapping(value="/freecomment/addReply", produces="apllication/json")
+	public Map<String, Object> addReply(FreeBoardCommentDTO freeComment){
+		System.out.println("controller(addReply) : " + freeComment);
+		return freeBoardCmdService.addReply(freeComment);
+	}
+	
 	
 		
 	
