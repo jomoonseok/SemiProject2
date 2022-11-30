@@ -38,7 +38,8 @@ public interface UploadMapper {
 	public int updateAttachPoint(String id);        // 게시글 등록 포인트 증가
 	public int updateSubtractPoint(String id);		// 게시글 삭제 포인트 차감
 	
-	
+	public List<UploadDTO> selectFindBoardsByQuery(Map<String, Object> map);  // 조건별 검색 쿼리
+	public int selectFindBoardsCount(Map<String, Object> map);	 // 조건별 검색 쿼리에 이용할 카운트 수
 	
 	
 	

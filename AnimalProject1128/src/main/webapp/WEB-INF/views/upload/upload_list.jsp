@@ -12,7 +12,7 @@
 	table {
 		text-align: center;
 		width: 1200px;
-		margin: 30px auto 30px;
+		margin: 5px auto 30px;
 	}
 	
 	tbody > tr > td:nth-of-type(3):hover {
@@ -43,12 +43,34 @@
 		
 	}
 	
+	#frm_find {
+		width: 1200px;
+		margin: auto;
+	}
+	
+	#option_left {
+		text-align: left;
+	}
+	#option_right {
+		float: right;
+	}
+	
 	
 </style>
 
 <script>
 	
 	$(function() {
+		
+		fn_write();
+		fn_query();
+		
+		
+		
+		
+	});
+	
+	function fn_write() {
 		$('#btn_write').click(function(event) {
 			if(${loginUser.id == null}) {  // 세션에 담긴 id가 없으면 로그인 여부 확인
 				
@@ -64,7 +86,34 @@
 			}
 			
 		});
-	});
+	}
+	
+	function fn_query() {
+		$('#find_list').click(function() {
+			$('.table_list').hide();
+			$.ajax({
+				method: 'get',
+				url: '${contextPath}/upload/find',
+				data: 'column=' + $('#column').val() + '&query=' + $('#query').val(),
+				dataType: 'json',
+				success: function(resData) {
+					if(resData.status == 200) {
+						$.each(resData.UploadDTO, function(i, upload) {
+							var tr = $('<tr>');
+							tr.append( $('<td>').(upload.uploadNo) )
+							
+						});
+					}
+					
+					
+					
+				}
+					
+			});
+		});
+		
+	}
+	
 	
 	
 </script>
@@ -72,28 +121,28 @@
 	<div id="upload_list_body">
 	
 		<div id="upload_list_body_top">
-			
-			<input type="button" value="글쓰기" id="btn_write">
-			<input type="button" value="목록보기" id="btn_list">
-			
-			<form id="frm_find" action="${contextPath}/upload/find">
-				
-				<select id="opt_column" name="opt_column">
-					<option value="find_all">전체검색</option>
-					<option value="find_name">이름검색</option>
-					<option value="find_title">제목검색</option>
-					<option value="find_content">내용검색</option>
-					<option value="find_id">아이디검색</option>
-				</select>
-				
-				<input type="text" name="query">
-				<input type="submit" value="검색">
-			</form>
-		
+			<div id="option">
+				<form id="frm_find" action="${contextPath}/upload/find">
+					<span id="option_left">
+						<select id="column" name="column">
+							<option value="ALL">전체검색</option>
+							<option value="ID">작성자검색</option>
+							<option value="UPLOAD_TITLE">제목검색</option>
+							<option value="UPLOAD_CREATE_DATE">게시일자검색</option>
+						</select>
+						<input type="text" name="query">
+						<input type="submit" id="find_list" value="검색">
+					</span>
+					<span id="option_right">
+						<input type="button" value="글쓰기" id="btn_write">
+						<input type="button" value="목록보기" id="btn_list">
+					</span>
+				</form>
+			</div>
 		</div>
 		
 		<div id="upload_list_body_body">
-			<table>
+			<table class="table_list">
 				<thead>
 					<tr class="table_head">
 						<td>번호</td>
@@ -104,20 +153,20 @@
 					</tr>
 				</thead>
 				<tbody>
-					<c:forEach items="${uploadList}" var="upload">
-					<tr>
-						<td>${upload.uploadNo}</td>
-						<td>${upload.id}</td>
-						<td onclick="location.href='${contextPath}/upload/detail?uploadNo=${upload.uploadNo}'">${upload.uploadTitle}</td>
-						<td>${upload.uploadCreateDate}</td>
-						<td>${upload.uploadHit}</td>
-					</tr> 
-				</c:forEach>
+					<c:forEach items="${uploadList}" var="upload" varStatus="vs">
+						<tr>
+							<td>${upload.uploadNo}</td>
+							<td>${upload.id}</td>
+							<td onclick="location.href='${contextPath}/upload/detail?uploadNo=${upload.uploadNo}'">${upload.uploadTitle}</td>
+							<td>${upload.uploadCreateDate}</td>
+							<td>${upload.uploadHit}</td>
+						</tr> 
+					</c:forEach>
 				</tbody>
 			</table>
 		</div>
 		<div id="upload_list_body_foot">
-			<table>
+			<table class="table_list">
 				<tr>
 					<td colspan="6">${paging}</td>
 				</tr>

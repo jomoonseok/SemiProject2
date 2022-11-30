@@ -1,6 +1,9 @@
 package com.semi.animal.controller.upload;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -20,6 +23,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import com.semi.animal.domain.upload.AttachDTO;
+import com.semi.animal.domain.upload.UploadDTO;
 import com.semi.animal.service.upload.UploadService;
 
 @Controller
@@ -88,6 +92,11 @@ public class UploadController {
 	@PostMapping("/upload/remove")
 	public void remove(HttpServletRequest request, HttpServletResponse response) {
 		uploadService.removeUploadByUploadNo(request, response);
+	}
+	
+	@GetMapping(value="/upload/find", produces = MediaType.APPLICATION_JSON_VALUE)
+	public List<UploadDTO> findUploadList(HttpServletRequest request, Model model) {
+		return uploadService.findUploadListByQuery(request, model);
 	}
 	
 	

@@ -18,6 +18,34 @@
 		 WHERE A.RN BETWEEN #{begin} AND #{end}
 	</select>
 	
+	<select id="selectFindBoardsCount" parameterType="Map" resultType="int">
+		SELECT COUNT(*)
+		  FROM ANI_BRD_UD A
+		 <where>
+		 	<if test="column == 'ALL'">(A.UPLOAD_NO || A.ID || A.UPLOAD_TITLE || A.UPLOAD_CREATE_DATE) LIKE '%' || #{query} || '%'</if>
+		 	<if test="column == 'ID'">${column} LIKE '%' || #{query} || '%'</if>
+		 	<if test="column == 'UPLOAD_TITLE'">${column} LIKE '%' || #{query} || '%'</if>
+<!-- 		 	<if test="opt_column == 'UPLOAD_CREATE_DATE'">${column} LIKE '%' || #{query} || '%'</if> -->
+		 </where>
+	</select>
+	
+	<select id="selectFindBoardsByQuery" parameterType="Map" resultType="UploadDTO">
+		SELECT A.RN, A.UPLOAD_NO, A.ID, A.UPLOAD_TITLE, A.UPLOAD_CONTENT, A.UPLOAD_HIT, A.UPLOAD_CREATE_DATE, A.UPLOAD_MODIFY_DATE, A.UPLOAD_IP
+		  FROM (SELECT ROW_NUMBER() OVER(ORDER BY UPLOAD_NO DESC) AS RN, UPLOAD_NO, ID, UPLOAD_TITLE, UPLOAD_CONTENT, UPLOAD_HIT, UPLOAD_CREATE_DATE, UPLOAD_MODIFY_DATE, UPLOAD_IP
+		  		  FROM ANI_BRD_UD
+		 <where>
+		 	<if test="column == 'ALL'">UPLOAD_NO || ID || UPLOAD_TITLE || UPLOAD_CREATE_DATE LIKE '%' || #{query} || '%') A</if>
+		 	<if test="column == 'ID'">${column} LIKE '%' || #{query} || '%') A</if>
+		 	<if test="column == 'UPLOAD_TITLE'">${column} LIKE '%' || #{query} || '%') A</if>
+		 	<if test="opt_column == 'UPLOAD_CREATE_DATE'">${column} LIKE '%' || #{query} || '%') A</if>
+		 </where>
+		 WHERE A.RN BETWEEN #{begin} AND #{end}
+	</select>
+	
+	
+	
+	
+	
 	<select id="selectAttachList" parameterType="long" resultType="AttachDTO">
 		SELECT ATTACH_NO, UPLOAD_NO, PATH, ORIGIN, FILESYSTEM, DOWNLOAD_CNT
 		  FROM ANI_BRD_UD_ATTACH
@@ -40,6 +68,17 @@
 		  FROM ANI_BRD_UD
 	</select>
 	
+	<!-- <select id="selectFindBoards" parameterType="Map" resultType="UploadDTO">
+		SELECT UPLOAD_NO, ID, UPLOAD_TITLE, UPLOAD_CONTENT, UPLOAD_HIT, UPLOAD_CREATE_DATE, UPLOAD_MODIFY_DATE, UPLOAD_IP
+		  FROM ANI_BRD_UD
+		 <where>
+		 	<if test="opt_column == 'find_all'"></if>
+		 </where>
+	</select>
+	
+	<select id="selectFindBoardsCount">
+		
+	</select> -->
 	
 	
 	<insert id="insertUpload" parameterType="UploadDTO">

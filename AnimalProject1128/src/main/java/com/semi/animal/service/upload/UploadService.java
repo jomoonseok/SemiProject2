@@ -1,6 +1,7 @@
 package com.semi.animal.service.upload;
 
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -35,7 +36,7 @@ public interface UploadService {
 	
 	public void removeUploadByUploadNo(HttpServletRequest request, HttpServletResponse response);
 	
-	
+	public List<UploadDTO> findUploadListByQuery(HttpServletRequest request, Model model);
 	
 	
 //	public List<UploadDTO> getUploadListByOption();

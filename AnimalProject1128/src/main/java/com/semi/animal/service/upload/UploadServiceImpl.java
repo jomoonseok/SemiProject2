@@ -5,6 +5,7 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.PrintWriter;
 import java.net.URLEncoder;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -437,6 +438,40 @@ public class UploadServiceImpl implements UploadService {
 		
 	}
 	
+	@Override
+	public List<UploadDTO> findUploadListByQuery(HttpServletRequest request, Model model) {
+		
+		Optional<String> opt = Optional.ofNullable(request.getParameter("page"));
+		int page = Integer.parseInt(opt.orElse("1"));
+		
+		String column = request.getParameter("column");
+		String query = request.getParameter("query");
+		
+		Map<String, Object> pageUtilMap = new HashMap<String, Object>();
+		pageUtilMap.put("column", column);
+		pageUtilMap.put("query", query);
+		
+		pageUtil.setPageUtil(page, uploadMapper.selectFindBoardsCount(pageUtilMap));
+		
+//		System.out.println("count : " + uploadMapper.selectFindBoardsCount(pageUtilMap));
+		
+		Map<String, Object> findBoardsMap = new HashMap<String, Object>();
+		findBoardsMap.put("begin", pageUtil.getBegin());
+		findBoardsMap.put("end", pageUtil.getEnd());
+		findBoardsMap.put("column", column);
+		findBoardsMap.put("query", query);
+//		System.out.println("findBoardsMap" + findBoardsMap);
+		
+		List<UploadDTO> uploadList = uploadMapper.selectFindBoardsByQuery(findBoardsMap);
+		
+		Map<String, Object> result = new HashMap<String, Object>();
+		result.put("uploadList", uploadList);
+		result.put("paging", pageUtil.getPaging(request.getContextPath() + "/upload/find"));
+		
+		model.addAttribute("result", result);
+		
+		return uploadList;
+	}
 	
 	
 	
