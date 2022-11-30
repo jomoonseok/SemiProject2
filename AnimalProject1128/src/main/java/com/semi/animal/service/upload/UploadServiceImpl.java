@@ -37,6 +37,7 @@ import com.semi.animal.domain.user.UserDTO;
 import com.semi.animal.mapper.upload.UploadMapper;
 import com.semi.animal.util.MyFileUtil;
 import com.semi.animal.util.PageUtil;
+import com.semi.animal.util.SecurityUtil;
 
 @Service
 public class UploadServiceImpl implements UploadService {
@@ -49,6 +50,9 @@ public class UploadServiceImpl implements UploadService {
 	
 	@Autowired
 	private PageUtil pageUtil;
+	
+	@Autowired
+	private SecurityUtil securityUtil;
 	
 	@Override
 	public void getUploadList(HttpServletRequest request, Model model) {
@@ -83,6 +87,7 @@ public class UploadServiceImpl implements UploadService {
 		String id = loginUser.getId();   																	
 		
 		String title = request.getParameter("title"); 
+		title = securityUtil.preventXSS(title);
 		String content = request.getParameter("content");
 		String ip = request.getRemoteAddr(); 
 		
@@ -285,6 +290,7 @@ public class UploadServiceImpl implements UploadService {
 		long no = Long.parseLong(request.getParameter("uploadNo"));
 		String ip = request.getRemoteAddr();
 		String title = request.getParameter("title");
+		title = securityUtil.preventXSS(title);
 		String content = request.getParameter("content");
 		
 		UploadDTO upload = UploadDTO.builder()
@@ -392,7 +398,6 @@ public class UploadServiceImpl implements UploadService {
 		
 		HttpSession session = request.getSession();
 		UserDTO loginUser = (UserDTO)session.getAttribute("loginUser");  // 로그인 후 세션에 담긴 loginUser 가져오기
-		System.out.println(loginUser);
 		String id = loginUser.getId(); 
 		System.out.println(id);
 		long uploadNo = Long.parseLong(request.getParameter("uploadNo"));

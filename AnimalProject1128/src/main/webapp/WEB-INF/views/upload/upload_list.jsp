@@ -100,7 +100,7 @@
 					if(resData.status == 200) {
 						$.each(resData.UploadDTO, function(i, upload) {
 							var tr = $('<tr>');
-							tr.append( $('<td>').(upload.uploadNo) )
+							tr.append( $('<td>').text(upload.uploadNo) )
 							
 						});
 					}

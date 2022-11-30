@@ -1,9 +1,6 @@
 package com.semi.animal.controller.upload;
 
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -13,7 +10,6 @@ import org.springframework.core.io.Resource;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -44,12 +40,12 @@ public class UploadController {
 	}
 	
 	@GetMapping("/upload/write")
-	public String write() {
+	public String requiredLogin_write() {
 		return "upload/upload_write";
 	}
 	
 	@PostMapping("/upload/add")
-	public void add(MultipartHttpServletRequest request, HttpServletResponse response) {
+	public void requiredLogin_add(MultipartHttpServletRequest request, HttpServletResponse response) {
 		uploadService.addUpload(request, response);
 	}
 	
@@ -61,39 +57,40 @@ public class UploadController {
 	}
 	
 	@PostMapping("/upload/edit")
-	public String edit(@RequestParam(value="uploadNo", required=true) long uploadNo, Model model) {
+	public String requiredLogin_edit(@RequestParam(value="uploadNo", required=true) long uploadNo, Model model) {
 		uploadService.getUploadAttachByNo(uploadNo, model);
 		return "upload/upload_edit";
 	}
 	
 	@ResponseBody
 	@GetMapping("/upload/download")
-	public ResponseEntity<Resource> download(@RequestHeader("User-Agent") String userAgent, @RequestParam("attachNo") long attachNo) {
+	public ResponseEntity<Resource> requiredLogin_download(@RequestHeader("User-Agent") String userAgent, @RequestParam("attachNo") long attachNo) {
 		return uploadService.download(userAgent, attachNo);
 	}
 	
 	@ResponseBody
 	@GetMapping("/upload/downloadAll")
-	public ResponseEntity<Resource> downloadAll(@RequestHeader("User-Agent") String userAgent, @RequestParam("uploadNo") int uploadNo) {
+	public ResponseEntity<Resource> requiredLogin_downloadAll(@RequestHeader("User-Agent") String userAgent, @RequestParam("uploadNo") int uploadNo) {
 		return uploadService.downloadAll(userAgent, uploadNo);
 	}
 	
 	@PostMapping("/upload/modify")
-	public void modify(MultipartHttpServletRequest request, HttpServletResponse response) {
+	public void requiredLogin_modify(MultipartHttpServletRequest request, HttpServletResponse response) {
 		uploadService.modifyUpload(request, response);
 	}
 	
 	@ResponseBody
 	@PostMapping(value="/upload/attach/remove", produces = MediaType.APPLICATION_JSON_VALUE)
-	public List<AttachDTO> attachRemove(HttpServletRequest request) {
+	public List<AttachDTO> requiredLogin_attachRemove(HttpServletRequest request) {
 		return uploadService.removeAttachByAttachNo(request);
 	}
 	
 	@PostMapping("/upload/remove")
-	public void remove(HttpServletRequest request, HttpServletResponse response) {
+	public void requiredLogin_remove(HttpServletRequest request, HttpServletResponse response) {
 		uploadService.removeUploadByUploadNo(request, response);
 	}
 	
+	@ResponseBody
 	@GetMapping(value="/upload/find", produces = MediaType.APPLICATION_JSON_VALUE)
 	public List<UploadDTO> findUploadList(HttpServletRequest request, Model model) {
 		return uploadService.findUploadListByQuery(request, model);

@@ -41,7 +41,7 @@ public interface UploadMapper {
 	public List<UploadDTO> selectFindBoardsByQuery(Map<String, Object> map);  // 조건별 검색 쿼리
 	public int selectFindBoardsCount(Map<String, Object> map);	 // 조건별 검색 쿼리에 이용할 카운트 수
 	
-	
+	public List<AttachDTO> selectAttachListInYesterday();
 	
 	
 	

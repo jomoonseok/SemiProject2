@@ -161,7 +161,11 @@
 		 WHERE ID = #{id}
 	</update>
 	
-	
+	<select id="selectAttachListInYesterday" resultType="AttachDTO">
+		SELECT ATTACH_NO, PATH, ORIGIN, FILESYSTEM, DOWNLOAD_CNT, UPLOAD_NO
+		  FROM ANI_BRD_UD_ATTACH
+		 WHERE PATH = CONCAT('storage\\', TO_CHAR(SYSDATE - 1, 'yyyy\\mm\\dd'))
+	</select>
 		
 	
 	

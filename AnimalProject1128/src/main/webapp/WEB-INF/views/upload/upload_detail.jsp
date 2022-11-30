@@ -125,6 +125,8 @@
 				<input type="hidden" name="ip" value="${upload.uploadIp}">
 			</div>
 			<div>
+			</div>
+			<div>
 				<input type="button" value="목록으로이동" onclick="location.href='${contextPath}/upload'">
 			</div>
 		</div>
