@@ -33,6 +33,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.ui.Model;
 
 import com.semi.animal.domain.user.RetireUserDTO;
 import com.semi.animal.domain.user.SleepUserDTO;
@@ -466,7 +467,7 @@ public class UserServiceImpl implements UserService {
 	}
 	
 	@Override
-	public void modifyPassword(HttpServletRequest request, HttpServletResponse response) {
+	public void modifyUser(HttpServletRequest request, HttpServletResponse response) {
 		
 		// 현재 로그인 된 사용자
 		HttpSession session = request.getSession();
@@ -474,7 +475,15 @@ public class UserServiceImpl implements UserService {
 
 		// 파라미터
 		String pw = securityUtil.sha256(request.getParameter("pw"));
-
+		String mobile = request.getParameter("mobile");
+		String email = request.getParameter("email");
+		String postcode = request.getParameter("postcode");
+		String roadAddress = request.getParameter("roadAddress");
+		String jibunAddress = request.getParameter("jibunAddress");
+		String detailAddress = request.getParameter("detailAddress");
+		String extraAddress = request.getParameter("extraAddress");
+		
+		/*
 		// 동일한 비밀번호로 변경 금지
 		if(pw.equals(loginUser.getPw())) {
 			
@@ -495,6 +504,7 @@ public class UserServiceImpl implements UserService {
 			}
 			
 		}
+		*/
 
 		// 사용자 번호
 		int userNo = loginUser.getUserNo();
@@ -503,10 +513,17 @@ public class UserServiceImpl implements UserService {
 		UserDTO user = UserDTO.builder()
 				.userNo(userNo)
 				.pw(pw)
+				.mobile(mobile)
+				.email(email)
+				.postcode(postcode)
+				.roadAddress(roadAddress)
+				.jibunAddress(jibunAddress)
+				.detailAddress(detailAddress)
+				.extraAddress(extraAddress)
 				.build();
 		
 		// 비밀번호 수정
-		int result = userMapper.updateUserPassword(user);
+		int result = userMapper.updateUserData(user);
 		
 		// 응답
 		try {
@@ -518,16 +535,23 @@ public class UserServiceImpl implements UserService {
 				
 				// session에 저장된 loginUser 업데이트
 				loginUser.setPw(pw);
+				loginUser.setMobile(mobile);
+				loginUser.setEmail(email);
+				loginUser.setPostcode(postcode);
+				loginUser.setRoadAddress(roadAddress);
+				loginUser.setJibunAddress(jibunAddress);
+				loginUser.setDetailAddress(detailAddress);
+				loginUser.setExtraAddress(extraAddress);
 				
 				out.println("<script>");
-				out.println("alert('비밀번호가 수정되었습니다.');");
+				out.println("alert('개인정보가 수정되었습니다.');");
 				out.println("location.href='" + request.getContextPath() + "';");
 				out.println("</script>");
 				
 			} else {
 				
 				out.println("<script>");
-				out.println("alert('비밀번호가 수정되지 않았습니다.');");
+				out.println("alert('개인정보가 수정되지 않았습니다.');");
 				out.println("history.back();");
 				out.println("</script>");
 				
@@ -564,12 +588,21 @@ public class UserServiceImpl implements UserService {
 		SleepUserDTO sleepUser = (SleepUserDTO)session.getAttribute("sleepUser");
 		String id = sleepUser.getId();
 		
+		// post 방식은 request의 
+		
+//		String id = request.getParameter("id");
+		
 		// 계정복구진행
 		int insertCount = userMapper.insertRestoreUser(id);
 		int deleteCount = 0;
 		if(insertCount > 0) {
 			deleteCount = userMapper.deleteSleepUser(id);
 		}
+		
+//		Map<String, Object> map = new HashMap<>();
+//		map.put("id", id);
+//		HttpSession session = request.getSession();
+//		session.setAttribute("loginUser", userMapper.selectUserByMap(map));
 		
 		// 응답
 		try {
@@ -584,7 +617,7 @@ public class UserServiceImpl implements UserService {
 				
 				out.println("<script>");
 				out.println("alert('휴면 계정이 복구되었습니다. 휴면 계정 활성화를 위해 곧바로 로그인을 해 주세요.');");
-				out.println("location.href='" + request.getContextPath() + "/user/login/form';");
+				out.println("location.href='" + request.getContextPath() + "/';");
 				out.println("</script>");
 				
 			} else {
@@ -897,9 +930,28 @@ public class UserServiceImpl implements UserService {
 	
 	}
 	
+	@Override
+	public void getSessionForwardUser(HttpServletRequest request, Model model) {
+		HttpSession session = request.getSession();
+		UserDTO loginUser = (UserDTO)session.getAttribute("loginUser");
+		model.addAttribute("loginUser", loginUser);
+		
+	}
 	
+	@Override
+	public UserDTO findId(UserDTO user) {
+		return userMapper.findId(user);
+	}
 	
+	@Override
+	public UserDTO findPw(UserDTO user) {
+		return userMapper.findPw(user);
+	}
 	
+	@Override
+	public void modifyPw(UserDTO user) {
+		userMapper.updatePw(user);
+	}
 	
 	
 	

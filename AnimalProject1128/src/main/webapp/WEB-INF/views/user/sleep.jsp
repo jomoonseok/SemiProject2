@@ -35,6 +35,7 @@
 				<div>
 					<button>휴면해제</button>
 					<input type="button" value="취소" onclick="location.href='${contextPath}'">
+					<input type="hidden" name="id" value="${sleepUser.id}">
 				</div>
 			</form>
 		</div>

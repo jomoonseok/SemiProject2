@@ -5,6 +5,8 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.springframework.ui.Model;
+
 import com.semi.animal.domain.user.SleepUserDTO;
 import com.semi.animal.domain.user.UserDTO;
 
@@ -20,10 +22,11 @@ public interface UserService {
 	public void logout(HttpServletRequest request, HttpServletResponse response);
 	public UserDTO getUserBySessionId(Map<String, Object> map);  // KeepLoginInterceptor에서 호출
 	public Map<String, Object> confirmPassword(HttpServletRequest request);
-	public void modifyPassword(HttpServletRequest request, HttpServletResponse response);
+	public void modifyUser(HttpServletRequest request, HttpServletResponse response);
 	public void sleepUserHandle();  // SleepUserScheduler에서 호출
 	public SleepUserDTO getSleepUserById(String id);
 	public void restoreUser(HttpServletRequest request, HttpServletResponse response);
+	public void getSessionForwardUser(HttpServletRequest request, Model model);
 	
 	
 	public String getNaverLoginApiURL(HttpServletRequest request);  // 네이버로그인-1
@@ -32,6 +35,9 @@ public interface UserService {
 	public UserDTO getNaverUserById(String id);
 	public void naverLogin(HttpServletRequest request, UserDTO naverUser);
 	public void naverJoin(HttpServletRequest request, HttpServletResponse response);
+	public UserDTO findId(UserDTO user);
+	public UserDTO findPw(UserDTO user);
+	public void modifyPw(UserDTO user);
 
 	
 }

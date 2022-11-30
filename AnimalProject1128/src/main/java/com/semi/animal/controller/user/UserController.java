@@ -147,7 +147,7 @@ public class UserController {
 	
 	@PostMapping("/user/modify/pw")
 	public void requiredLogin_modifyPw(HttpServletRequest request, HttpServletResponse response) {
-		userService.modifyPassword(request, response);
+		userService.modifyUser(request, response);
 	}
 	
 	
@@ -163,6 +163,44 @@ public class UserController {
 		userService.restoreUser(request, response);
 	}
 	
+	
+	@PostMapping("/user/findId")
+	public String findId(UserDTO user, Model model) {
+		UserDTO userDTO = userService.findId(user);
+		
+		if(userDTO == null) {
+			model.addAttribute("check", 1);
+		} else {
+			model.addAttribute("check", 0);
+			model.addAttribute("id", user.getId());
+		}
+		
+		return "user/findId";
+	}
+	
+	
+	
+	@PostMapping("/user/findPw")
+	public String findPw(UserDTO user, Model model) {
+		UserDTO userDTO = userService.findPw(user);
+		
+		if(userDTO == null) {
+			model.addAttribute("check", 1);
+		} else {
+			model.addAttribute("check", 0);
+			model.addAttribute("updateId", user.getId());
+		}
+		
+		return "user/findPw";
+	}
+	
+	@PostMapping("/user/updatePw")
+	public String updatePw(@RequestParam(required=false) String id  
+            , UserDTO user) {
+		user.setId(id);
+		userService.modifyPw(user);
+		return "user/findPw";
+	}
 	
 	
 	

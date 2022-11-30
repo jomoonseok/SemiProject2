@@ -91,11 +91,18 @@
 	</update>
 	
 	<!-- 마이페이지 : 비밀번호 수정 -->
-	<update id="updateUserPassword" parameterType="UserDTO">
+	<update id="updateUserData" parameterType="UserDTO">
 		UPDATE ANI_USER
 		   SET PW = #{pw}
 		     , PW_MODIFY_DATE = SYSDATE
-		 WHERE USER_NO = ${userNo}
+		     , MOBILE = #{mobile}
+		     , EMAIL = #{email}
+		     , POSTCODE = #{postcode}
+		     , ROAD_ADDRESS = #{roadAddress}
+		     , JIBUN_ADDRESS = #{jibunAddress}
+		     , DETAIL_ADDRESS = #{detailAddress}
+		     , EXTRA_ADDRESS = #{extraAddress}
+		 WHERE USER_NO = ${userNo}      
 	</update>
 	
 	<!-- 휴면처리1 : 1년 이상 로그인 기록이 없으면 휴면테이블에 저장 -->
@@ -142,10 +149,30 @@
  		  WHERE ID = #{id}
 	 </delete>
 	 
-	 <!-- 포인트 적립 -->
-	 <update id="updatePoint">
-	 	UPDATE ANI_USER SET POINT = POINT + #{point}
-	 	 WHERE ID = #{id}
-	 </update>
+	 <!-- 아이디 찾기 -->
+	 <select id="findId" parameterType="String" resultType="String">
+	 	SELET *
+	 	 FROM ANI_USER
+	 	WHERE NAME = #{name}
+	 	  AND MOBILE = #{mobile} 
+	 </select>
+	 
+	 <!-- 비밀번호 찾기 -->
+	 <select id="findPw" resultType="UserDTO">
+	 	SELET * 
+	 	 FROM ANI_USER
+	 	WHERE ID = #{id}
+	 	  AND NAME = #{name} 
+	 	  AND MOBILE = #{mobile} 
+	 </select>
+	
+	<!-- 비밀번호 찾기 후 수정 -->
+	<update id="updatePw" parameterType="UserDTO">
+		UPDATE ANI_USER
+		   SET PW = #{pw}
+		     , PW_MODIFY_DATE = SYSDATE
+		 WHERE ID = ${id}      
+	</update>
+	 
 	
 </mapper>
