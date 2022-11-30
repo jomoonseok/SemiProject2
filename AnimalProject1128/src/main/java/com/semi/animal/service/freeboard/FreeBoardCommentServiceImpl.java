@@ -10,7 +10,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.semi.animal.domain.freeboard.FreeBoardCommentDTO;
-import com.semi.animal.domain.freeboard.FreeBoardDTO;
 import com.semi.animal.domain.user.UserDTO;
 import com.semi.animal.mapper.freeboard.FreeBoardCommentMapper;
 import com.semi.animal.util.PageUtil;
@@ -37,14 +36,15 @@ public class FreeBoardCommentServiceImpl implements FreeBoardCommentService {
 	@Override
 	public Map<String, Object> addComment(FreeBoardCommentDTO freeComment, HttpServletRequest request) {
 		HttpSession session = request.getSession();
-		UserDTO userDTO = (UserDTO)session.getAttribute("loginUser");
+		UserDTO loginUser = (UserDTO)session.getAttribute("loginUser");
 		String freeCmtIp = request.getRemoteAddr();
 		
+		
 		System.out.println();
-		System.out.println("유저아이디 내놔!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!" + userDTO);
+		System.out.println("유저아이디 내놔!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! : " + loginUser);
 		System.out.println();
 		
-		freeComment.setId(userDTO.getId());
+		freeComment.setId(loginUser.getId());
 		freeComment.setFreeCmtIp(freeCmtIp);
 				
 		Map<String, Object> result = new HashMap<String, Object>();

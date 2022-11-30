@@ -28,12 +28,9 @@
 				});
 			</script>
 		</c:if>
-		
-		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-		전체 글 (${totalRecord})
+		<span style="margin-left: 50px; ">전체 글 (${totalRecord})</span>
 	</div>
 	
-	<!-- c:if test="${loginUser.id == 'admin'}"  관리자가 로그인이라면 -->
 
 	<div>
 		<table border="1">

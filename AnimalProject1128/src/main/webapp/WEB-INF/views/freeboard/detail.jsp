@@ -115,11 +115,8 @@
 					}
 				});
 			});
-			
-			
-			
-		}
 
+		}
 		
 		// 4. 댓글 리스트
 		function fn_commentList(){
@@ -147,7 +144,7 @@
 							div += '<input type="button" value="삭제" class="btn_comment_remove" data-comment_no="' + comment.commentNo + '">';
 							// 계층하려면 삭제!
 							if(comment.depth == 0){
-							div += '&nbsp;';
+								div += '&nbsp;';
 								div += '<input type="button" value="답글" class="btn_reply_area">';								
 							}
 							div += '</div>'
