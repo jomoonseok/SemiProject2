@@ -1,11 +1,12 @@
 package com.semi.animal.controller.admin;
 
-import java.sql.Date;
+import java.util.Date;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -38,8 +39,11 @@ public class AdminController {
 	
 	@ResponseBody
 	@PostMapping(value="/admin/removeUser", produces="application/json")
-	public Map<String, Object> removeUser(@RequestParam("userNo") int userNo, @RequestParam("id") String id, @RequestParam("joinDate") String joinDate) {
-		return adminService.removeUser(userNo, id, joinDate);
+	public Map<String, Object> removeUser(@RequestParam("id") String id, @RequestParam("joinDate")@DateTimeFormat(pattern="yy/MM/dd") Date joinDate) {
+		System.out.println(id);
+		System.out.println(joinDate);
+		return null;
+		//return adminService.removeUser(id, joinDate);
 	}
 	
 }

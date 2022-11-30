@@ -32,16 +32,10 @@
 	<!-- 유저 삭제2 : RETIRE_USERS 테이블에 추가 -->
 	<insert id="insertRetireUser" parameterType="RetireUserDTO">
 		INSERT INTO ANI_USER_RETIRE
-			(USER_NO, ID, JOIN_DATE, RETIRE_DATE)
+			(RETIRE_NO, ID, JOIN_DATE, RETIRE_DATE)
 		VALUES
-			(#{userNo}, #{id}, #{joinDate}, SYSDATE)
+			(ANI_USER_RETIRE_SEQ.NEXTVAL, #{id}, #{joinDate}, SYSDATE)
 	</insert>
-	
-	<select id="selectJoinDate" parameterType="String" resultType="Date">
-		SELECT JOIN_DATE
-		  FROM ANI_USER
-		 WHERE ID = #{id} 
-	</select>
 	
 	
 

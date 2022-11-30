@@ -1,5 +1,6 @@
 package com.semi.animal.service.admin;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
@@ -46,20 +47,19 @@ public class AdminServiceImpl implements AdminService {
 	
 	
 	@Override
-	public Map<String, Object> removeUser(int userNo, String id, String joinDate) {
-		/*
+	public Map<String, Object> removeUser(String id, Date joinDate) {
+		java.sql.Date sqlDate = new java.sql.Date(joinDate.getTime());
+		System.out.println(sqlDate);
 		RetireUserDTO retireUser = RetireUserDTO.builder()
-				.userNo(userNo)
 				.id(id)
-				.joinDate(joinDate) // String -> Util.Date -> SQL.Date
+				.joinDate(sqlDate) // Util.Date -> SQL.Date
 				.build();
-		*/
+		
 		int deleteResult = adminMapper.deleteUser(id);
-		//int insertresult = adminMapper.insertRetireUser(retireUser);
-		 
+		int insertresult = adminMapper.insertRetireUser(retireUser);
 		
 		Map<String, Object> result = new HashMap<String, Object>();
-		result.put("isRemove", deleteResult == 1 );
+		result.put("isRemove", deleteResult == 1 && insertresult == 1);
 		return result;
 		
 	}
