@@ -25,7 +25,7 @@ import com.semi.animal.util.PageUtil;
 import com.semi.animal.util.SecurityUtil;
 
 @Service
-public class GallBreServiceImpl implements GallBrdService {
+public class GallBrdServiceImpl implements GallBrdService {
 
 	@Autowired
 	private GallBrdMapper gallBrdMapper;
@@ -36,8 +36,9 @@ public class GallBreServiceImpl implements GallBrdService {
 	@Autowired
 	private MyFileUtil myFileUtil;
 	
-	@Autowired
-	private SecurityUtil securityUtil;
+	/*
+	 * @Autowired private SecurityUtil securityUtil;
+	 */
 	
 	@Override
 	public void getGallBoardList(HttpServletRequest request, Model model) {
@@ -198,22 +199,27 @@ public class GallBreServiceImpl implements GallBrdService {
 				
 	}
 	
-	
+	@Transactional
 	@Override
 	public void modifyGallBrd(HttpServletRequest request, HttpServletResponse response) {
 		
 		String gallTitle = request.getParameter("gallTitle");
 		String gallContent = request.getParameter("gallContent");
+		String id = "admin";
 		int gallNo = Integer.parseInt(request.getParameter("gallNo"));
+		
 		
 		GallBoardDTO gallBoard = GallBoardDTO.builder()
 				.gallTitle(gallTitle)
 				.gallContent(gallContent)
+				.id(id)
 				.gallNo(gallNo)
 				.build();
 		
-		int result = gallBrdMapper.updateGallBrd(gallBoard);
+		System.out.println(gallBoard);
 		
+		int result = gallBrdMapper.updateGallBrd(gallBoard);
+		System.out.println(result);
 		try {
 			
 			response.setContentType("text/html; charset=UTF-8");

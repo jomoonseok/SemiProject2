@@ -37,20 +37,23 @@
 			],
 			callbacks: {
 				onImageUpload: function(files){
-					var formData = new FormData();
-					formData.append('file', files[0]);
-					$.ajax({
-						type: 'post',
-						url: getContextPath() + '/gall/uploadImage',
-						data: formData,
-						contentType: false,
-						processData: false,
-						dataType: 'json',
-						success: function(resData){
-							$('#gallContent').summernote('insertImage', resData.src);
-						}
-					});
-				}
+					for(let i = 0; i < files.length; i++) {
+						var formData = new FormData();
+						formData.append('file', files[i]);
+						$.ajax({
+							type: 'post',
+							url: getContextPath() + '/gall/uploadImage',
+							data: formData,
+							contentType: false,
+							processData: false,
+							dataType: 'json',
+							success: function(resData){
+								$('#gallContent').summernote('insertImage', resData.src);
+								$('#summernote_image_list').append($('<input type="hidden" name="summernoteImageNames" value="' + resData.filesystem + '">'));
+							}
+						}); // ajax
+					}  // for
+				}  
 			}
 		});
 		

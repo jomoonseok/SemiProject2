@@ -10,6 +10,20 @@
 <jsp:include page="../layout/header.jsp">
 	<jsp:param value="${gall.gallNo}번 게시글" name="title"/>
 </jsp:include>
+<style>
+	.blind {
+		display: none;
+	}
+	
+	.btn_edit_gallBrd,.btn_remove_gallBrd{
+		border-radius: 5px;
+		border:1px solid lightgrey;
+		background-color: white;
+	}
+	
+	
+	
+</style>
 
 <div>
 	
@@ -31,11 +45,15 @@
 		${gall.gallContent}
 	</div>
 	
+	<div id="dislike" class="dislike">
+		<button><img src="../../../../resources/images/dislike"></button> 
+	</div>
+	
 	<div>
 		<form id="frm_btn" method="post">
 			<input type="hidden" name="gallNo" value="${gall.gallNo}">
-			<input type="button" value="수정" id="btn_edit_gallbrd">
-			<input type="button" value="삭제" id="btn_remove_gallbrd">
+			<input type="button" value="수정" id="btn_edit_gallbrd" class="btn_edit_gallBrd"> 
+			<input type="button" value="삭제" id="btn_remove_gallbrd" class="btn_remove_gallBrd">
 			<input type="button" value="목록" onclick="location.href='${contextPath}/gall/list'">
 		</form>
 		<script>
@@ -85,6 +103,57 @@
 	
 	<!-- 현재 페이지 번호를 저장하고 있는 hidden -->
 	<input type="hidden" id="page" value="1">
+	
+	<script>
+	
+	fn_commentCount();
+	fn_switchCommentList();
+	fn_addComment();
+	
+	function fn_commentCount() {
+		$.ajax({
+			type: 'get',
+			url: '${contextPath}/gall/comment/getCount',
+			data: 'gallNo=${gall.gallNo}',
+			dataType: 'json',
+			success: function(resData) {
+				$('#comment_count').text(resData.commentCount);
+			}
+		});
+	}
+	
+	function fn_switchCommentList() {
+		$('#btn_comment_list').click(function(){
+			$('#comment_area').toggleClass('blind');
+		});
+	}
+	
+	function fn_addComment() {
+		$('#btn_add_comment').click(function() {
+			if($('#comment').val() == '') {
+				alert('댓글 내용을 입력하세요.');
+				return;
+			}
+			$.ajax({
+				type: 'post',
+				url: '${contextPath}/gall/comment/add',
+				data: $('#frm_add_comment').serialize(),
+				dataType: 'json',
+				success: function(resData){  // resData = {"isAdd", true}
+					if(resData.isAdd) {
+						alert('댓글이 등록되었습니다.');
+						$('#content').val('');
+						fn_commentList();  // 댓글 목록 가져와서 뿌리는 함수
+						fn_commentCount(); // 댓글 목록 개수 갱신하는 함수
+					}
+				}
+			});  // ajax
+		});  // click
+	}
+	
+	
+	
+	</script>
 	
 	
 </div>

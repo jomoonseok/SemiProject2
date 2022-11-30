@@ -52,13 +52,13 @@
 		 WHERE GALL_NO = #{gallNo}
 	</select>
 	
-	<select id="updateGallBrd" parameterType="GallBoardDTO">
+	<update id="updateGallBrd" parameterType="GallBoardDTO">
 		UPDATE ANI_BRD_GALL
 		   SET GALL_TITLE = #{gallTitle}
 		     , GALL_CONTENT = #{gallContent}
 		     , GALL_MODIFY_DATE = SYSDATE
 		 WHERE GALL_NO = #{gallNo}
-	</select>
+	</update>
 	
 	<delete id="deleteGallBrd" parameterType="int">
 		DELETE
@@ -66,7 +66,7 @@
 		 WHERE GALL_NO = #{gallNo}
 	</delete>
 	
-	<select id="selectSummernoteImageListInGallBrd" parameterType="int" resultType="GallBoardDTO">
+	<select id="selectSummernoteImageListInGallBrd" parameterType="int" resultType="SummernoteImageDTO">
 		SELECT GALL_NO, FILESYSTEM
 		  FROM ANI_SUMMERNOTE_IMAGE
 		 WHERE GALL_NO = #{gallNo}
@@ -84,7 +84,9 @@
 	</delete>
 	
 	
-	
+<!-- 	UPDATE ANI_USER -->
+<!--    SET POINT = POINT + 10 -->
+<!--  WHERE ID = ID -->
 	
 	
 	

@@ -52,7 +52,7 @@
 							processData: false,  
 							dataType: 'json',    
 							success: function(resData) {
-								$('#gallContent').summernote('insertImage', resData.src);  // src라는 이름은 serviceimpl에서 결정
+								$('#gallContent').summernote('insertImage', resData.src);  
 								$('#summernote_image_list').append($('<input type="hidden" name="summernoteImageNames" value="' + resData.filesystem + '">'));
 							}
 						});  // ajax
