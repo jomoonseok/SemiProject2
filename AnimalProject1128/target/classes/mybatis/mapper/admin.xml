@@ -22,19 +22,45 @@
 		 WHERE A.ROW_NUM BETWEEN #{begin} AND #{end}
 	</select>
 	
-	<!-- 유저 삭제(강제 탈퇴) -->
-	<delete id="deleteUser" parameterType="String">
+	<!-- 유저 삭제(휴면, 탈퇴) -->
+	<delete id="deleteUser" parameterType="Map">
 		DELETE 
 		  FROM ANI_USER
-		 WHERE ID = #{id} 
+		  <where>
+		    <foreach item="item" collection="idList" open="ID in (" separator="," close=")">
+		    	#{item}
+		    </foreach>
+		  </where>
 	</delete>
 	
 	<!-- 유저 삭제2 : RETIRE_USERS 테이블에 추가 -->
-	<insert id="insertRetireUser" parameterType="RetireUserDTO">
-		INSERT INTO ANI_USER_RETIRE
-			(RETIRE_NO, ID, JOIN_DATE, RETIRE_DATE)
-		VALUES
-			(ANI_USER_RETIRE_SEQ.NEXTVAL, #{id}, #{joinDate}, SYSDATE)
+	<insert id="insertRetireUser" parameterType="Map">
+		INSERT INTO ANI_USER_RETIRE (RETIRE_NO, ID, JOIN_DATE, RETIRE_DATE)
+		SELECT ANI_USER_RETIRE_SEQ.NEXTVAL, A.* 
+		  FROM(
+			<foreach collection="retireUserList" item="item" separator="UNION ALL ">
+			SELECT #{item.id} AS ID, #{item.joinDate} AS JOIN_DATE, SYSDATE
+			  FROM DUAL
+			</foreach>) A 
+	</insert>
+	
+	<!-- 휴면 처리할 유저 찾기 -->
+	<select id="selectUserListById" parameterType="Map" resultType="UserDTO">
+		SELECT USER_NO, ID, PW, NAME, GENDER, EMAIL, MOBILE, BIRTH_YEAR, BIRTH_DAY, POSTCODE, ROAD_ADDRESS, JIBUN_ADDRESS, DETAIL_ADDRESS, EXTRA_ADDRESS, AGREE_CODE, SNS_TYPE, JOIN_DATE, PW_MODIFY_DATE, INFO_MODIFY_DATE, SESSION_ID, SESSION_LIMIT_DATE, POINT
+		  FROM ANI_USER
+		 	WHERE ID in
+		  <foreach item="item" collection="idList" open="(" separator="," close=")">
+		  		#{item}
+		  </foreach>
+	</select>
+	
+	<!-- 휴면 테이블에 휴면 처리 한 유저 저장 -->
+	<insert id="insertSleepUsers" parameterType="Map">
+		INSERT INTO ANI_USER_SLEEP (USER_NO, ID, PW, NAME, GENDER, EMAIL, MOBILE, BIRTH_YEAR, BIRTH_DAY, POSTCODE, ROAD_ADDRESS, JIBUN_ADDRESS, DETAIL_ADDRESS, EXTRA_ADDRESS, AGREE_CODE, SNS_TYPE, JOIN_DATE, LAST_LOGIN_DATE, SLEEP_DATE, POINT)
+			<foreach collection="sleepUsers" item="item" separator="UNION ALL ">
+			SELECT #{item.userNo} AS USER_NO, #{item.id} AS ID, #{item.pw} AS PW, #{item.name} AS NAME, #{item.gender} AS GENDER, #{item.email} AS EMAIL, #{item.mobile} AS MOBILE, #{item.birthYear} AS BIRTH_YEAR, #{item.birthDay} AS BIRTH_DAY, #{item.postcode} AS POSTCODE, #{item.roadAddress} AS ROAD_ADDRESS, #{item.jibunAddress} AS JIBUN_ADDRESS, #{item.detailAddress} AS DETAIL_ADDRESS, #{item.extraAddress} AS EXTRA_ADDRESS, #{item.agreeCode} AS AGREE_CODE, #{item.snsType} AS SNS_TYPE, #{item.joinDate} AS JOIN_DATE, #{item.lastLoginDate} AS LAST_LOGIN_DATE, SYSDATE, #{item.point} AS POINT
+			  FROM DUAL
+			</foreach>
 	</insert>
 	
 	

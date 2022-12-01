@@ -1,6 +1,7 @@
 package com.semi.animal.controller.admin;
 
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
@@ -39,11 +40,14 @@ public class AdminController {
 	
 	@ResponseBody
 	@PostMapping(value="/admin/removeUser", produces="application/json")
-	public Map<String, Object> removeUser(@RequestParam("id") String id, @RequestParam("joinDate")@DateTimeFormat(pattern="yy/MM/dd") Date joinDate) {
-		System.out.println(id);
-		System.out.println(joinDate);
-		return null;
-		//return adminService.removeUser(id, joinDate);
+	public Map<String, Object> removeUser(@RequestParam("idValueArr[]") List<String> id, @RequestParam("joinDateValueArr[]")@DateTimeFormat(pattern="yy/MM/dd") List<Date> joinDate) {
+		return adminService.removeUser(id, joinDate);
+	}
+	
+	@ResponseBody
+	@PostMapping(value="/admin/sleepUser", produces="application/json")
+	public Map<String, Object> sleepUser(@RequestParam("idValueArr[]") List<String> id) {
+		return adminService.sleepUser(id);
 	}
 	
 }

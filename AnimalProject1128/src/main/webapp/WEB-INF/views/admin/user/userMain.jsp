@@ -17,6 +17,7 @@
 		fn_getUserList();
 		fn_changePage();
 		fn_removeUser();
+		fn_SleepUser();
 		
 	});
 	
@@ -44,14 +45,11 @@
 					moment.locale('ko-KR');
 					tr += '<td>'+ moment(user.joinDate).format('YY/MM/DD') +'</td>';
 					tr += '<td>'+ user.point +'</td>';
-					tr += '<td>'; // form
-					//tr += '<form class="frm_remove">';
-					//tr += '<input type="hidden" name="userNo" value="' + user.userNo + '">';
-					tr += '<input type="hidden" name="id" value="' + user.id + '">';
-					tr += '<input type="hidden" name="joinDate" value="' + moment(user.joinDate).format('YY/MM/DD') + '">';
-					//tr += '<button class="btn_remove">탈퇴</button>';
-					tr += '<input type="checkbox" name="chkRemove" class="chk_remove" id="' + user.userNo + '">';
-					//tr += '</form>';
+					tr += '<td>'; 
+					tr += '<input type="checkbox" name="chkRemove" class="chk_remove" value="' + moment(user.joinDate).format('YY/MM/DD') + '" data-id="' + user.id + '">';
+					tr += '</td>';
+					tr += '<td>'; 
+					tr += '<input type="checkbox" name="chkSleep" class="chk_sleep" value="' + user.id + '">';
 					tr += '</td>';
 					tr += '</tr>';
 					$('#list').append(tr);
@@ -90,21 +88,23 @@
 	}
 	
 	function fn_removeUser(){
-		$(document).on('click', '#btn_remove', function(){
+		$('#btn_remove').click(function(){
 			if($('.chk_remove').is(':checked')){
-				console.log($('.chk_remove').val());
-				/*
-				for(){
-					if($('.chk_remove input[type=checkbox]').attr('checked')){
-						var idArr = [];
-					}
-				}
-				*/			
+				
+				var joinDateValueArr = [];
+				var idValueArr = [];
+				
+			    $("input[name='chkRemove']:checked").each(function(i) {
+			    	idValueArr.push($(this).data('id'));
+			    	joinDateValueArr.push($(this).val());
+			    });
+				var valueObj = {"idValueArr" : idValueArr, "joinDateValueArr" : joinDateValueArr}
+				
 				if(confirm('유저를 삭제할까요?')){
 					$.ajax({
 						type: 'post',
 						url: '${contextPath}/admin/removeUser',
-						data: $('#frm_list').serialize(),
+						data: valueObj,
 						dataType: 'json',
 						success: function(resData){
 							if(resData.isRemove){
@@ -114,6 +114,41 @@
 						}
 					});
 				}
+			}else{
+				alert('체크하세요');
+			}
+		});
+	}
+	
+	function fn_SleepUser(){
+		$('#btn_sleep').click(function(){
+			if($('.chk_sleep').is(':checked')){
+				
+				var idValueArr = [];
+				
+			    $("input[name='chkSleep']:checked").each(function(i) {
+			    	idValueArr.push($(this).val());
+			    });
+			    console.log(idValueArr);
+				var valueObj = {"idValueArr" : idValueArr}
+			    console.log(valueObj);
+				
+				if(confirm('유저를 휴면 처리할까요?')){
+					$.ajax({
+						type: 'post',
+						url: '${contextPath}/admin/sleepUser',
+						data: valueObj,
+						dataType: 'json',
+						success: function(resData){
+							if(resData.isSleep){
+								alert('휴면 처리 되었습니다.');
+								fn_getUserList();
+							}
+						}
+					});
+				}
+			}else{
+				alert('체크하세요');
 			}
 		});
 	}
@@ -140,6 +175,7 @@
 						<td>가입일</td>
 						<td>보유포인트</td>
 						<td id="remove"><input type="button" value="탈퇴" id="btn_remove"></td>
+						<td id="sleep"><input type="button" value="휴면" id="btn_sleep"></td>
 					</tr>
 				</thead>
 				<tbody id="list"></tbody>
