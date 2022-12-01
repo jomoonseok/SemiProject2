@@ -11,59 +11,44 @@
 <style>
 
 	@import url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css'); <%-- 뎝 --%>
-	@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR&display=swap'); <%-- 글꼴--%>
 	
-	body {
-		font-family: 'Noto Sans KR', sans-serif;
-	}
 	
 	.blind {
 		display: none;
 	}
-	
-	
+
 	<%-- 1. 버튼 --%>
 	
 	.button {
-		font-family: 'Noto Sans KR', sans-serif;
-		font-size: 13px;
-		line-height: 25px;
-		color: rgb(0, 159, 71);
-		background: rgb(255, 255, 255);
-		border: 1px solid rgb(0, 159, 71);
-		border-radius: 5px;
-		
-		width: 50px;
-		box-shadow: 2px 2px 2px rgb(141, 149, 163);
-		transition-duration: 0.3s;
+	  font-size: 13px;
+	  line-height: 25px;
+	  background: rgb(255, 255, 255);
+	  color: rgb(127, 127, 127);
+	  box-shadow: 0 2px 5px rgba(0,0,0,.25);
+	  width: 50px;
+	  border: 1px solid rgb(115, 104, 93);
+	  border-radius: 5px;
+	  overflow: hidden;
+	  transition-duration: 0.3s;
 	}
 	
 	.button:hover {
-		font-family: 'Noto Sans KR', sans-serif;
-		font-size: 13px;
-		line-height: 25px;
-		color: rgb(0, 159, 71);
-		background: rgb(224, 248, 235);
-		border: 1px solid rgb(0, 159, 71);
-		border-radius: 5px;
+		color: rgb(115, 104, 93);
+		font-weight: bold;
+		background: rgb(233, 231, 228);
 	}
 	
 	.button:active {
-		font-family: 'Noto Sans KR', sans-serif;
-		font-size: 13px;
-		line-height: 25px;
-		color: rgb(0, 159, 71);
+		color: rgb(115, 104, 93);
+		font-weight: bold;
 		background: rgb(255, 255, 255);
-		border: 1px solid rgb(0, 159, 71);
-		border-radius: 5px;
 		box-shadow: none;
 	}
 	
-	<%-- --%>
+	<%-- 2. 답글 버튼--%>
 	
 	
 	.button_reply {
-		font-family: 'Noto Sans KR', sans-serif;
 		font-size: 11px;
 		line-height: 20px;
 		color: rgb(0, 159, 71);
@@ -77,7 +62,6 @@
 	}
 	
 	.button_reply:hover {
-		font-family: 'Noto Sans KR', sans-serif;
 		font-size: 11px;
 		line-height: 20px;
 		color: rgb(0, 159, 71);
@@ -87,7 +71,6 @@
 	}
 	
 	.button_reply:active {
-		font-family: 'Noto Sans KR', sans-serif;
 		font-size: 11px;
 		line-height: 20px;
 		color: rgb(0, 159, 71);
@@ -129,6 +112,15 @@
 		padding: 0px 20px;
 
 	}
+	
+	.free_board_a_link:hover {
+		text-decoration: underline;
+		color: rgb(115, 104, 93);
+	}
+	
+	.free_board_content {
+		font-size: 10px;
+	}
 
 </style>
 
@@ -136,14 +128,16 @@
 
 	
 	<!-- 1. 게시글 상세보기 -->
-	<div><a href="${contextPath}/freeboard/list">자유게시판 > </a></div>
-	<div><i class="fa-solid fa-check"></i>&nbsp; ${free.freeNo}번 게시글</div>
-	<div><i class="fa-solid fa-check"></i>&nbsp; 조회수 : ${free.freeHit}</div>
-	<div><i class="fa-solid fa-check"></i>&nbsp; 작성자 : ${free.id}</div>
-	<div><i class="fa-solid fa-check"></i>&nbsp; 작성일 : ${free.freeCreateDate}</div>
-	<div><i class="fa-solid fa-check"></i>&nbsp; 수정일 : ${free.freeModifyDate}</div>
-	<div><i class="fa-solid fa-check"></i>&nbsp; 아이피 : ${free.freeIp}</div>
-	<div><i class="fa-solid fa-check"></i>&nbsp; 제목 : ${free.freeTitle}</div>
+	<div><a href="${contextPath}/freeboard/list" class="free_board_a_link">자유게시판 > </a></div>
+	<div class="free_board_content">
+		<div><i class="fa-solid fa-check"></i>&nbsp; ${free.freeNo}번 게시글</div>
+		<div><i class="fa-solid fa-check"></i>&nbsp; 조회수 : ${free.freeHit}</div>
+		<div><i class="fa-solid fa-check"></i>&nbsp; 작성자 : ${free.id}</div>
+		<span><i class="fa-solid fa-check"></i>&nbsp; 작성일 : ${free.freeCreateDate}</span>
+		<span><i class="fa-solid fa-check"></i>&nbsp; 수정일 : ${free.freeModifyDate}</span>
+		<div><i class="fa-solid fa-check"></i>&nbsp; 아이피 : ${free.freeIp}</div>
+		<div><i class="fa-solid fa-check"></i>&nbsp; 제목 : ${free.freeTitle}</div>
+	</div>
 	<hr>
 	<div>내용 ${free.freeContent}</div>
 	

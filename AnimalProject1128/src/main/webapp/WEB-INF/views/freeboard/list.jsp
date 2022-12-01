@@ -8,6 +8,48 @@
 	<jsp:param value="게시글 작성" name="title" />
 </jsp:include>
 
+<style>
+	body {
+	  padding: 21px;
+	}
+
+	table {
+	  font-size: 13px;
+	  box-shadow: 0 2px 5px rgba(0,0,0,.25);
+	  width: 100%;
+	  border-collapse: collapse;
+	  border-radius: 5px;
+	  overflow: hidden;
+	}
+
+	th {
+	  text-align: left;
+	}
+  
+	thead {
+	  font-weight: bold;
+	  color: #fff;
+	  background: #73685d;
+	}
+	  
+	 td, th {
+	  padding: 15px 8px;
+	}
+  
+	 td {
+	  border-bottom: 1px solid rgba(0,0,0,.1);
+	  background: #fff;
+	}
+
+  
+@media all and (max-width: 768px) {  
+	table, thead, tbody, th, td, tr {
+	  display: block;
+	}
+
+
+</style>
+
 	
 	<div>
 		<input type="button" value="글쓰기" id="write">
