@@ -24,13 +24,20 @@
 	<!-- 3. 댓글 리스트 -->
 	<select id="selectCommentList" parameterType="Map" resultType="FreeBoardCommentDTO">
 		SELECT A.ROW_NUM, A.FREE_CMT_NO, A.FREE_NO, A.ID, A.FREE_CMT_CONTENT, A.FREE_CMT_CREATE_DATE, A.FREE_CMT_MODIFY_DATE, A.FREE_CMT_IP, A.STATE, A.DEPTH, A.GROUP_NO, A.GROUP_ORDER
-		  FROM (SELECT ROW_NUMBER() OVER(ORDER BY GROUP_NO DESC, GROUP_ORDER ASC) AS ROW_NUM, FREE_CMT_NO, FREE_NO, ID, FREE_CMT_CONTENT, FREE_CMT_CREATE_DATE, FREE_CMT_MODIFY_DATE, FREE_CMT_IP, STATE, DEPTH, GROUP_NO, GROUP_ORDER
+		  FROM (SELECT ROW_NUMBER() OVER(ORDER BY GROUP_NO ASC, GROUP_ORDER ASC) AS ROW_NUM, FREE_CMT_NO, FREE_NO, ID, FREE_CMT_CONTENT, FREE_CMT_CREATE_DATE, FREE_CMT_MODIFY_DATE, FREE_CMT_IP, STATE, DEPTH, GROUP_NO, GROUP_ORDER
 		   	      FROM ANI_BRD_FREE_COMMENT
 		         WHERE FREE_NO = #{freeNo}) A
 		 WHERE A.ROW_NUM BETWEEN #{begin} AND #{end}
 	</select>
 	
-	<!-- 4. 다단계층 댓글(groupOrder 1 증가시키는 쿼리) -->
+	<!-- 4. 댓글 삭제 -->
+	<update id="deleteComment" parameterType="int">
+		UPDATE ANI_BRD_FREE_COMMENT
+		   SET STATE = -1
+		 WHERE FREE_CMT_NO = #{freeCmtNo}
+	</update>
+	
+	<!-- 5. 다단계층 댓글(groupOrder 1 증가시키는 쿼리) -->
 	<update id="updatePreviousReply" parameterType="FreeBoardCommentDTO">
 		UPDATE ANI_BRD_FREE_COMMENT
 		   SET GROUP_ORDER = GROUP_ORDER + 1
@@ -38,12 +45,13 @@
 		   AND GROUP_ORDER > #{groupOrder}
 	</update>
 	
-	<!-- 5. 대댓글 추가 -->
+	
+	<!-- 6. 대댓글 추가 -->
 	<insert id="insertCommentReply" parameterType="FreeBoardCommentDTO">
 		INSERT INTO ANI_BRD_FREE_COMMENT
 			(FREE_CMT_NO, FREE_NO, ID, FREE_CMT_CONTENT, FREE_CMT_CREATE_DATE, FREE_CMT_MODIFY_DATE, FREE_CMT_IP, STATE, DEPTH, GROUP_NO, GROUP_ORDER)
 		VALUES
-			(ANI_BRD_FREE_CMT_SEQ.NEXTVAL, #{freeNo}, #{id}, #{freeCmtContent}, SYSDATE, SYSDATE, '아이피', 1, 1, #{groupNo}, 0)
+			(ANI_BRD_FREE_CMT_SEQ.NEXTVAL, #{freeNo}, #{id}, #{freeCmtContent}, SYSDATE, SYSDATE, #{freeCmtIp}, 1, 1, #{groupNo}, 0)
 		</insert>
 
 

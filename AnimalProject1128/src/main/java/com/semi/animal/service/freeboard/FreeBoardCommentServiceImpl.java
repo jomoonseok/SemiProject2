@@ -8,7 +8,8 @@ import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 
 import com.semi.animal.domain.freeboard.FreeBoardCommentDTO;
 import com.semi.animal.domain.user.UserDTO;
@@ -29,8 +30,7 @@ public class FreeBoardCommentServiceImpl implements FreeBoardCommentService {
 		
 		Map<String, Object> result = new HashMap<String, Object>();
 		result.put("commentCount", freeBoardCmdMapper.selectCommentCount(freeNo));
-		System.out.println("serviceImpl(getCommentCount) : " + result);
-		System.out.println("serviceImpl(freeNo) : " + freeNo);
+
 		return result;
 	}
 	
@@ -40,15 +40,11 @@ public class FreeBoardCommentServiceImpl implements FreeBoardCommentService {
 		UserDTO loginUser = (UserDTO)session.getAttribute("loginUser");
 		String freeCmtIp = request.getRemoteAddr();
 		
-		System.out.println();
-		System.out.println("유저아이디 내놔!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! : " + loginUser);
-		System.out.println();
-		
 		freeComment.setId(loginUser.getId());
 		freeComment.setFreeCmtIp(freeCmtIp);
 				
 		Map<String, Object> result = new HashMap<String, Object>();
-		result.put("isAdd", freeBoardCmdMapper.insertComment(freeComment));
+		result.put("isAdd", freeBoardCmdMapper.insertComment(freeComment) == 1);
 
 		return result;
 	}
@@ -69,17 +65,49 @@ public class FreeBoardCommentServiceImpl implements FreeBoardCommentService {
 		Map<String, Object> result = new HashMap<String, Object>();
 		result.put("commentList", freeBoardCmdMapper.selectCommentList(map));
 		result.put("pageUtil", pageUtil);
-				
-		System.out.println("serviceImpl(getCommentList) : " + result);
+		return result;
+	}
+	
+	@Override
+	public Map<String, Object> removeComment(int freeCmtNo) {
+		Map<String, Object> result = new HashMap<String, Object>();
+		result.put("isRemove", freeBoardCmdMapper.deleteComment(freeCmtNo) == 1);
 		return result;
 	}
 	
 	
 	@Override
-	public Map<String, Object> addReply(FreeBoardCommentDTO freeComment) {
+	public Map<String, Object> addReply(FreeBoardCommentDTO freeCommentReply) {
+		HttpServletRequest request = ((ServletRequestAttributes)RequestContextHolder.getRequestAttributes()).getRequest();
+		HttpSession session = request.getSession();
+		UserDTO loginUser = (UserDTO)session.getAttribute("loginUser");
+		String freeCmtIp = request.getRemoteAddr();
+		
+		////////////////////////////////////////
+		// 원글의 DEPTH, GROUP_NO, GROUP_ORDER
+		int depth = Integer.parseInt(request.getParameter("depth"));
+		int groupNo = Integer.parseInt(request.getParameter("groupNo"));
+		int groupOrder = Integer.parseInt(request.getParameter("groupOrder"));
+		
+		// 원글DTO(updatePreviousReply를 위함)
+		FreeBoardCommentDTO freeBoardCmd = new FreeBoardCommentDTO();
+		freeBoardCmd.setDepth(depth);
+		freeBoardCmd.setGroupNo(groupNo);
+		freeBoardCmd.setGroupOrder(groupOrder);
+		
+		// updateRreviousReply 쿼리 실행
+		freeBoardCmdMapper.updatePreviousReply(freeCommentReply);
+		System.out.println("서비스임플의 freeCommentReply - 유저 추가 전 : " + freeCommentReply);
+		System.out.println();
+		
+		////////////////////////////////////////
+		
+		freeCommentReply.setId(loginUser.getId());
+		freeCommentReply.setFreeCmtIp(freeCmtIp);
+		System.out.println("서비스임플의 freeCommentReply - 유저 추가 후 : " + freeCommentReply);
+		
 		Map<String, Object> result = new HashMap<String, Object>();
-		result.put("isAddReply", freeBoardCmdMapper.insertCommentReply(freeComment) == 1);
-		System.out.println("serviceImpl(addReply) : " + result);
+		result.put("isAddReply", freeBoardCmdMapper.insertCommentReply(freeCommentReply) == 1);
 		
 		return result;
 	}

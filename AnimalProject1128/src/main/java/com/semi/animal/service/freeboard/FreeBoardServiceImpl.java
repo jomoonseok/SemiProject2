@@ -63,9 +63,9 @@ public class FreeBoardServiceImpl implements FreeBoardService {
 	public void addFreeBoard(HttpServletRequest request, HttpServletResponse response) {
 		
 		HttpSession session = request.getSession();
-		UserDTO userDTO = (UserDTO)session.getAttribute("loginUser"); 
+		UserDTO loginUser = (UserDTO)session.getAttribute("loginUser"); 
 		
-		String id = userDTO.getId();
+		String id = loginUser.getId();
 		String freeTitle = request.getParameter("title");
 		String freeContent = request.getParameter("content");
 		String freeIp = request.getRemoteAddr();

@@ -13,8 +13,9 @@ public interface FreeBoardCommentMapper {
 	public int selectCommentCount(int freeNo);
 	public int insertComment(FreeBoardCommentDTO freeComment);
 	public List<FreeBoardCommentDTO> selectCommentList(Map<String, Object> map);
+	public int deleteComment(int freeCmtNo);
 	public int updatePreviousReply(FreeBoardCommentDTO freeComment);
-	public int insertCommentReply(FreeBoardCommentDTO freeComment);
+	public int insertCommentReply(FreeBoardCommentDTO freeCommentReply);
 			
 
 	

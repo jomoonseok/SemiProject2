@@ -68,7 +68,6 @@
 			</div>
 			<div>
 				<button>수정완료</button>
-				<input type="reset" value="입력초기화">
 				<input type="button" value="목록" id="btn_list">
 			</div>
 		</form>

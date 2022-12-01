@@ -17,8 +17,7 @@ public class FreeBoardController {
 
 	@Autowired
 	private FreeBoardService freeBoardService;
-	
-	
+
 	@GetMapping("/freeboard/list")
 	public String list(HttpServletRequest request, Model model) {
 		model.addAttribute("request", request);
@@ -48,7 +47,6 @@ public class FreeBoardController {
 	
 	@GetMapping("/freeboard/detail")
 	public String detail(@RequestParam(value="freeNo", required=false, defaultValue="0") int freeNo, Model model) {
-		
 		model.addAttribute("free", freeBoardService.getFreeBoardByNo(freeNo));
 		return "freeboard/detail";
 	}

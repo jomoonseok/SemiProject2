@@ -23,14 +23,12 @@ public class FreeBoardCommentController {
 	@ResponseBody
 	@GetMapping(value="/freecomment/getCount", produces="application/json")
 	public Map<String, Object> getCount(@RequestParam("freeNo") int freeNo){
-		System.out.println("controller(getCount) : " + freeNo);
 		return freeBoardCmdService.getCommentCount(freeNo);
 	}
 	
 	@ResponseBody
 	@PostMapping(value="/freecomment/add", produces="application/json")
 	public Map<String, Object> add(FreeBoardCommentDTO freeComment, HttpServletRequest request){
-		System.out.println("controller(add) : " + freeComment);
 		return freeBoardCmdService.addComment(freeComment, request);
 	}
 	
@@ -39,15 +37,19 @@ public class FreeBoardCommentController {
 	public Map<String, Object> list(HttpServletRequest request){
 		return freeBoardCmdService.getCommentList(request);
 	}
+	
+	@ResponseBody
+	@PostMapping(value="/freecomment/remove", produces="application/json")
+	public Map<String, Object> remove(@RequestParam("freeCmtNo") int freeCmtNo){
+		return freeBoardCmdService.removeComment(freeCmtNo);
+	}
 
 	
 	@ResponseBody
-	@PostMapping(value="/freecomment/addReply", produces="apllication/json")
-	public Map<String, Object> addReply(FreeBoardCommentDTO freeComment){
-		System.out.println("controller(addReply) : " + freeComment);
-		return freeBoardCmdService.addReply(freeComment);
+	@PostMapping(value="/freecomment/reply/add", produces="application/json")
+	public Map<String, Object> addReply(FreeBoardCommentDTO freeCommentReply){
+		return freeBoardCmdService.addReply(freeCommentReply);
 	}
-	
 	
 		
 	
