@@ -10,4 +10,5 @@ public interface AdminService {
 	public Map<String, Object> getUserList(HttpServletRequest request);
 	public Map<String, Object> removeUser(List<String> id,  List<Date> joinDate);
 	public Map<String, Object> sleepUser(List<String> id);
+	public Map<String, Object> getSearchUsers(HttpServletRequest request);
 }

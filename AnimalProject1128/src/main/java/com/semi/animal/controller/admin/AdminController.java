@@ -50,4 +50,10 @@ public class AdminController {
 		return adminService.sleepUser(id);
 	}
 	
+	@ResponseBody
+	@GetMapping(value="/admin/searchUsers", produces="application/json")
+	public Map<String, Object> searchUsers(HttpServletRequest request){
+		return adminService.getSearchUsers(request);
+	}
+	
 }

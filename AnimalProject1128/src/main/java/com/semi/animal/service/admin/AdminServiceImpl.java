@@ -18,6 +18,7 @@ import com.semi.animal.domain.user.SleepUserDTO;
 import com.semi.animal.domain.user.UserDTO;
 import com.semi.animal.mapper.admin.AdminMapper;
 import com.semi.animal.util.PageUtil;
+import com.semi.animal.util.SecurityUtil;
 
 @Service
 public class AdminServiceImpl implements AdminService {
@@ -26,6 +27,8 @@ public class AdminServiceImpl implements AdminService {
 	private AdminMapper adminMapper;
 	@Autowired
 	private PageUtil pageUtil;
+	@Autowired
+	private SecurityUtil securityUtil;
 	
 	@Override
 	public Map<String, Object> getUserList(HttpServletRequest request) {
@@ -129,6 +132,34 @@ public class AdminServiceImpl implements AdminService {
 		result.put("isSleep", adminMapper.insertSleepUsers(map) == count && adminMapper.deleteUser(map) == count);
 		
 			
+		return result;
+	}
+	
+	
+	
+	@Override
+	public Map<String, Object> getSearchUsers(HttpServletRequest request) {
+		String column = securityUtil.preventXSS(request.getParameter("column"));
+		String searchText = securityUtil.preventXSS(request.getParameter("searchText"));
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("column", column);
+		map.put("searchText", searchText);
+		
+		Optional<String> opt1 = Optional.ofNullable(request.getParameter("page"));
+		int page = Integer.parseInt(opt1.orElse("1"));
+		int totalRecord = adminMapper.selectUsersByQueryCount(map);
+		
+		pageUtil.setPageUtil(page, totalRecord);
+		
+		map.put("begin", pageUtil.getBegin());
+		map.put("end", pageUtil.getEnd());
+		
+		Map<String, Object> result = new HashMap<String, Object>();
+		result.put("users", adminMapper.selectUsersByQuery(map));
+		result.put("pageUtil", pageUtil);
+		result.put("beginNo", totalRecord - (page - 1) * pageUtil.getRecordPerPage());
+		
 		return result;
 	}
 	

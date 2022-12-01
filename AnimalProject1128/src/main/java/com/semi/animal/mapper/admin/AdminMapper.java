@@ -19,6 +19,8 @@ public interface AdminMapper {
 	public int insertRetireUser(Map<String, Object> retireUser);
 	public List<UserDTO> selectUserListById(Map<String, Object> id);
 	public int insertSleepUsers(Map<String, Object> sleepUser);
+	public int selectUsersByQueryCount(Map<String, Object> map);
+	public List<UserDTO> selectUsersByQuery(Map<String, Object> map);
 	
 	// free 
 	public int selectFreeListCount();

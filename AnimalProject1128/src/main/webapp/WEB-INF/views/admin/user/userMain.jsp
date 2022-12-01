@@ -7,7 +7,7 @@
 	<jsp:param value="메인게시판" name="title" />
 </jsp:include>
 <style>
-	.enable_link:hover {
+	.enable_link, .enable_link2:hover {
 		cursor:pointer;
 	}
 </style>
@@ -18,7 +18,9 @@
 		fn_changePage();
 		fn_removeUser();
 		fn_SleepUser();
-		
+		fn_getSearchUsers();
+		fn_changeSearchPage();
+		fn_init();
 	});
 	
 	
@@ -30,8 +32,6 @@
 			data: 'page=' + $('#page').val(),
 			dataType: 'json',
 			success: function(resData){
-				console.log(resData);
-				
 				$('#list').empty();
 				$.each(resData.list, function(i, user){
 					var tr = '';
@@ -129,9 +129,7 @@
 			    $("input[name='chkSleep']:checked").each(function(i) {
 			    	idValueArr.push($(this).val());
 			    });
-			    console.log(idValueArr);
 				var valueObj = {"idValueArr" : idValueArr}
-			    console.log(valueObj);
 				
 				if(confirm('유저를 휴면 처리할까요?')){
 					$.ajax({
@@ -153,35 +151,166 @@
 		});
 	}
 	
+	function fn_getSearchUsers(){
+		$('#btn_search').click(function(){
+			$.ajax({
+				data: 'GET',
+				url: '${contextPath}/admin/searchUsers',
+				data: 'page=' + $('#page').val() + '&column=' + $('#column').val() + '&searchText=' + $('#searchText').val(),
+				datatype: 'json',
+				success: function(resData){
+					$('#list').empty();
+					$.each(resData.users, function(i, user){
+						var tr = '';
+						tr += '<tr>';
+						tr += '<td>'+ user.userNo +'</td>';
+						tr += '<td>'+ user.id +'</td>';
+						tr += '<td>'+ user.name +'</td>';
+						tr += '<td>'+ user.gender +'</td>';
+						tr += '<td>'+ user.email +'</td>';
+						tr += '<td>'+ user.mobile +'</td>';
+						moment.locale('ko-KR');
+						tr += '<td>'+ moment(user.joinDate).format('YY/MM/DD') +'</td>';
+						tr += '<td>'+ user.point +'</td>';
+						tr += '<td>'; 
+						tr += '<input type="checkbox" name="chkRemove" class="chk_remove" value="' + moment(user.joinDate).format('YY/MM/DD') + '" data-id="' + user.id + '">';
+						tr += '</td>';
+						tr += '<td>'; 
+						tr += '<input type="checkbox" name="chkSleep" class="chk_sleep" value="' + user.id + '">';
+						tr += '</td>';
+						tr += '</tr>';
+						$('#list').append(tr);
+					});
+					// 페이징
+					$('#paging').empty();
+					var pageUtil = resData.pageUtil;
+					var paging = '';
+					// 이전 블록
+					if(pageUtil.beginPage != 1) {
+						paging += '<span class="enable_link2" data-page="'+ (pageUtil.beginPage - 1) +'">◀</span>';
+					}
+					// 페이지번호
+					for(let p = pageUtil.beginPage; p <= pageUtil.endPage; p++) {
+						if(p == $('#page').val()){
+							paging += '<strong>' + p + '</strong>';
+						} else {
+							paging += '<span class="enable_link2" data-page="'+ p +'">' + p + '</span>';
+						}
+					}
+					// 다음 블록
+					if(pageUtil.endPage != pageUtil.totalPage){
+						paging += '<span class="enable_link2" data-page="'+ (pageUtil.endPage + 1) +'">▶</span>';
+					}
+					$('#paging').append(paging);
+				},
+				error: function(jqXHR){
+					$('#list').empty();
+					$('<tr>')
+					.append( $('<td>').attr('colspan', '10').text('검색결과가 없습니다.') )
+					.appendTo('#list');
+				}
+				
+			}); 
+			
+		}); 
+	}
+	
+	function fn_changeSearchPage(){
+		$(document).on('click', '.enable_link2', function(){
+			$('#page').val( $(this).data('page') );
+			$.ajax({
+				data: 'GET',
+				url: '${contextPath}/admin/searchUsers',
+				data: 'page=' + $('#page').val() + '&column=' + $('#column').val() + '&searchText=' + $('#searchText').val(),
+				datatype: 'json',
+				success: function(resData){
+					$('#list').empty();
+					$.each(resData.users, function(i, user){
+						var tr = '';
+						tr += '<tr>';
+						tr += '<td>'+ user.userNo +'</td>';
+						tr += '<td>'+ user.id +'</td>';
+						tr += '<td>'+ user.name +'</td>';
+						tr += '<td>'+ user.gender +'</td>';
+						tr += '<td>'+ user.email +'</td>';
+						tr += '<td>'+ user.mobile +'</td>';
+						moment.locale('ko-KR');
+						tr += '<td>'+ moment(user.joinDate).format('YY/MM/DD') +'</td>';
+						tr += '<td>'+ user.point +'</td>';
+						tr += '<td>'; 
+						tr += '<input type="checkbox" name="chkRemove" class="chk_remove" value="' + moment(user.joinDate).format('YY/MM/DD') + '" data-id="' + user.id + '">';
+						tr += '</td>';
+						tr += '<td>'; 
+						tr += '<input type="checkbox" name="chkSleep" class="chk_sleep" value="' + user.id + '">';
+						tr += '</td>';
+						tr += '</tr>';
+						$('#list').append(tr);
+					});
+					// 페이징
+					$('#paging').empty();
+					var pageUtil = resData.pageUtil;
+					var paging = '';
+					// 이전 블록
+					if(pageUtil.beginPage != 1) {
+						paging += '<span class="enable_link2" data-page="'+ (pageUtil.beginPage - 1) +'">◀</span>';
+					}
+					// 페이지번호
+					for(let p = pageUtil.beginPage; p <= pageUtil.endPage; p++) {
+						if(p == $('#page').val()){
+							paging += '<strong>' + p + '</strong>';
+						} else {
+							paging += '<span class="enable_link2" data-page="'+ p +'">' + p + '</span>';
+						}
+					}
+					// 다음 블록
+					if(pageUtil.endPage != pageUtil.totalPage){
+						paging += '<span class="enable_link2" data-page="'+ (pageUtil.endPage + 1) +'">▶</span>';
+					}
+					$('#paging').append(paging);
+				}
+			});
+		});
+	}
+	
+	function fn_init(){
+		$('#btn_init').click(function(){
+			fn_getUserList();
+		});
+	}
+	
 </script>
 	
 	
-	<div>
-		<input type="text" name="searchUser">
-		<input type="button" value="검색">
-	</div>
 	
 	<div>
-		<form id="frm_list">
-			<table border="1">
-				<thead>
-					<tr>
-						<td>번호</td>
-						<td>아이디</td>
-						<td>이름</td>
-						<td>성별</td>
-						<td>이메일</td>
-						<td>핸드폰</td>
-						<td>가입일</td>
-						<td>보유포인트</td>
-						<td id="remove"><input type="button" value="탈퇴" id="btn_remove"></td>
-						<td id="sleep"><input type="button" value="휴면" id="btn_sleep"></td>
-					</tr>
-				</thead>
-				<tbody id="list"></tbody>
-				<tfoot id="paging"></tfoot>
-			</table>
+		<form id=frm_search>
+			<select id="column" name="column">
+				<option value="USER_NO">번호</option>
+				<option value="ID">아이디</option>
+				<option value="NAME">이름</option>
+			</select>
+			<input type="text" id="searchText" name="searchText">
+			<input type="button" id="btn_search" value="검색">
+			<input type="button" id="btn_init" value="초기화">
 		</form>
+		<table border="1">
+			<thead>
+				<tr>
+					<td>번호</td>
+					<td>아이디</td>
+					<td>이름</td>
+					<td>성별</td>
+					<td>이메일</td>
+					<td>핸드폰</td>
+					<td>가입일</td>
+					<td>보유포인트</td>
+					<td id="remove"><input type="button" value="탈퇴" id="btn_remove"></td>
+					<td id="sleep"><input type="button" value="휴면" id="btn_sleep"></td>
+				</tr>
+			</thead>
+			<tbody id="list"></tbody>
+			<tfoot id="paging"></tfoot>
+		</table>
 	</div>
 	<input type="hidden" id="page" value="1">
 
