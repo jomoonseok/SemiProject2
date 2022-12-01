@@ -38,10 +38,15 @@ public interface UploadMapper {
 	public int updateAttachPoint(String id);        // 게시글 등록 포인트 증가
 	public int updateSubtractPoint(String id);		// 게시글 삭제 포인트 차감
 	
+	public int updateAttachAddPoint(Map<String, Object> map);       // 파일첨부 포인트 증가 (1. (id) / 2. (변수) * 2)
+	public int updateAttachSubtractPoint(Map<String, Object> map);  // 파일다운 포인트 차감 (1. (id) / 2. -2.5 * -2)
+	
 	public List<UploadDTO> selectFindBoardsByQuery(Map<String, Object> map);  // 조건별 검색 쿼리
 	public int selectFindBoardsCount(Map<String, Object> map);	 // 조건별 검색 쿼리에 이용할 카운트 수
 	
 	public List<AttachDTO> selectAttachListInYesterday();
+	public String selectTrueAttachId(long uploadNo);      // 테이블 3개 조인, 게시글 번호를 받아서 작성자 ID 받아오기 
+	public long selectUploadNoInAttach(long attachNo);  // attachNo가 가진 uploadNo를 가져오기
 	
 	
 	

@@ -36,9 +36,7 @@ public interface UploadService {
 	
 	public void removeUploadByUploadNo(HttpServletRequest request, HttpServletResponse response);
 	
-	public List<UploadDTO> findUploadListByQuery(HttpServletRequest request, Model model);
+	public void findUploadListByQuery(HttpServletRequest request, Model model);
 	
-	
-//	public List<UploadDTO> getUploadListByOption();
 	
 }

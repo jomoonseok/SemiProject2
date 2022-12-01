@@ -5,7 +5,6 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.PrintWriter;
 import java.net.URLEncoder;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -37,6 +36,7 @@ import com.semi.animal.domain.user.UserDTO;
 import com.semi.animal.mapper.upload.UploadMapper;
 import com.semi.animal.util.MyFileUtil;
 import com.semi.animal.util.PageUtil;
+import com.semi.animal.util.PageUtil2;
 import com.semi.animal.util.SecurityUtil;
 
 @Service
@@ -50,6 +50,9 @@ public class UploadServiceImpl implements UploadService {
 	
 	@Autowired
 	private PageUtil pageUtil;
+	
+	@Autowired
+	private PageUtil2 pageUtil2;
 	
 	@Autowired
 	private SecurityUtil securityUtil;
@@ -103,6 +106,10 @@ public class UploadServiceImpl implements UploadService {
 			attachResult = 2;  // 파일첨부가 없으면 2 
 		}
 		
+//		int modifyAttachResult;
+//		modifyAttachResult = attachResult - 1;  // 실제로 등록된 파일의 수 (files.size() - 1) - 썸머노트..
+//		System.out.println("modifyattachresult" +modifyAttachResult);
+		
 		for(MultipartFile multipartFile : files) {
 			try {
 				if(multipartFile != null && multipartFile.isEmpty() == false) {  // 둘 다 필요함
@@ -137,7 +144,24 @@ public class UploadServiceImpl implements UploadService {
 			response.setContentType("text/html; charset=UTF-8");
 			PrintWriter out = response.getWriter();
 			if(uploadResult > 0 && attachResult == files.size()) {
+				// 게시물 작성 시 10포인트 증가
 				uploadMapper.updateAddPoint(id);
+				
+				// attach 첨부 시 파일 당 포인트 5씩 증가
+				if(files.get(1).getSize() == 0) {
+					attachResult = 0;
+				} else if(attachResult == 2) {
+					attachResult = 1;
+				} else {
+					attachResult -= 1;
+				}
+				
+				Map<String, Object> map = new HashMap<String, Object>();
+				map.put("id", id);
+				map.put("attachResult", attachResult);
+				
+				uploadMapper.updateAttachAddPoint(map);
+				
 				out.println("<script>");
 				out.println("alert('업로드 되었습니다.');");
 				out.println("location.href='" + request.getContextPath() + "/upload'");
@@ -162,8 +186,6 @@ public class UploadServiceImpl implements UploadService {
 		HttpSession session = req.getSession();
 		UserDTO loginUser = (UserDTO)session.getAttribute("loginUser");  // 로그인 후 세션에 담긴 loginUser 가져오기
 		
-		System.out.println(loginUser);
-		
 		model.addAttribute("upload", uploadMapper.selectUploadByNo(uploadNo));
 		model.addAttribute("attachList", uploadMapper.selectAttachList(uploadNo));
 		model.addAttribute("attachCnt", uploadMapper.selectAttachCnt(uploadNo));
@@ -178,6 +200,13 @@ public class UploadServiceImpl implements UploadService {
 	@Override
 	public ResponseEntity<Resource> download(String userAgent, long attachNo) {
 		
+		HttpServletRequest req = ((ServletRequestAttributes)RequestContextHolder.getRequestAttributes()).getRequest();  // request 없이 session 받아오는 코드
+		HttpSession session = req.getSession();
+		UserDTO loginUser = (UserDTO)session.getAttribute("loginUser");  // 로그인 후 세션에 담긴 loginUser 가져오기
+		
+		long uploadNo = uploadMapper.selectUploadNoInAttach(attachNo);
+		String myId = uploadMapper.selectTrueAttachId(uploadNo);
+		
 		AttachDTO attach = uploadMapper.selectAttachByNo(attachNo);
 		File file = new File(attach.getPath(), attach.getFilesystem());
 		
@@ -188,6 +217,17 @@ public class UploadServiceImpl implements UploadService {
 		}
 		
 		uploadMapper.updateDownloadCnt(attachNo);
+		
+		// attach 다운로드 시 5포인트 차감
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("id", loginUser.getId());
+		map.put("attachResult", 1);
+		
+		// 내가 올린 게시글에서 다운받을 때 포인트 차감 막기
+		if(!loginUser.getId().equals(myId)) {
+			uploadMapper.updateAttachSubtractPoint(map);
+		}
+		
 		String origin = attach.getOrigin();
 		try {
 			if(userAgent.contains("Trident")) {
@@ -214,7 +254,13 @@ public class UploadServiceImpl implements UploadService {
 	@Override
 	public ResponseEntity<Resource> downloadAll(String userAgent, int uploadNo) {
 		
+		HttpServletRequest req = ((ServletRequestAttributes)RequestContextHolder.getRequestAttributes()).getRequest();  // request 없이 session 받아오는 코드
+		HttpSession session = req.getSession();
+		UserDTO loginUser = (UserDTO)session.getAttribute("loginUser");  // 로그인 후 세션에 담긴 loginUser 가져오기
+		
+		int attachResult = 0; 
 		List<AttachDTO> attachList = uploadMapper.selectAttachList(uploadNo);
+		String myId = uploadMapper.selectTrueAttachId(uploadNo);
 		
 		FileOutputStream fout = null;
 		ZipOutputStream zout = null;  
@@ -249,10 +295,20 @@ public class UploadServiceImpl implements UploadService {
 					}
 					zout.closeEntry();
 					fin.close();
-
-					uploadMapper.updateDownloadCnt(attach.getAttachNo());
 					
-				}
+					
+					uploadMapper.updateDownloadCnt(attach.getAttachNo());
+					attachResult++;
+					
+				} // for문
+				
+				// 내 파일 다운로드는 포인트 차감 막기 - 게시글의 ID를 DB에서 가져와서 세션 ID와 비교
+				if(!loginUser.getId().equals(myId)) {
+					Map<String, Object> map = new HashMap<String, Object>();
+					map.put("id", loginUser.getId());
+					map.put("attachResult", attachResult);
+					uploadMapper.updateAttachSubtractPoint(map);
+				} 
 				
 				zout.close();
 
@@ -444,7 +500,7 @@ public class UploadServiceImpl implements UploadService {
 	}
 	
 	@Override
-	public List<UploadDTO> findUploadListByQuery(HttpServletRequest request, Model model) {
+	public void findUploadListByQuery(HttpServletRequest request, Model model) {
 		
 		Optional<String> opt = Optional.ofNullable(request.getParameter("page"));
 		int page = Integer.parseInt(opt.orElse("1"));
@@ -456,29 +512,34 @@ public class UploadServiceImpl implements UploadService {
 		pageUtilMap.put("column", column);
 		pageUtilMap.put("query", query);
 		
-		pageUtil.setPageUtil(page, uploadMapper.selectFindBoardsCount(pageUtilMap));
-		
-//		System.out.println("count : " + uploadMapper.selectFindBoardsCount(pageUtilMap));
+		pageUtil2.setPageUtil(page, uploadMapper.selectFindBoardsCount(pageUtilMap));
 		
 		Map<String, Object> findBoardsMap = new HashMap<String, Object>();
-		findBoardsMap.put("begin", pageUtil.getBegin());
-		findBoardsMap.put("end", pageUtil.getEnd());
+		findBoardsMap.put("begin", pageUtil2.getBegin());
+		findBoardsMap.put("end", pageUtil2.getEnd());
 		findBoardsMap.put("column", column);
 		findBoardsMap.put("query", query);
 //		System.out.println("findBoardsMap" + findBoardsMap);
 		
 		List<UploadDTO> uploadList = uploadMapper.selectFindBoardsByQuery(findBoardsMap);
 		
-		Map<String, Object> result = new HashMap<String, Object>();
-		result.put("uploadList", uploadList);
-		result.put("paging", pageUtil.getPaging(request.getContextPath() + "/upload/find"));
+//		Map<String, Object> result = new HashMap<String, Object>();
+//		result.put("uploadList", uploadList);
+//		result.put("paging", pageUtil.getPaging(request.getContextPath() + "/upload/upload_listQuery"));
 		
-		model.addAttribute("result", result);
+//		model.addAttribute("result", result);
+		model.addAttribute("uploadList", uploadList);
+		model.addAttribute("paging", pageUtil2.getPaging(request.getContextPath() + "/upload/find?column=" + column + "&query=" + query));
 		
-		return uploadList;
+		
+		
 	}
 	
-	
+//	@Override
+//	public List<UploadDTO> getUploadListByOption(HttpServletRequest request) {
+//		
+//		return null;
+//	}
 	
 	
 //	@Override

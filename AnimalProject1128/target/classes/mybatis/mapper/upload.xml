@@ -6,6 +6,8 @@
   
  <mapper namespace="com.semi.animal.mapper.upload.UploadMapper">
 
+	
+
 	<select id="selectUploadList" resultType="UploadDTO">
 		SELECT UPLOAD_NO, ID, UPLOAD_TITLE, UPLOAD_CONTENT, UPLOAD_HIT, UPLOAD_CREATE_DATE, UPLOAD_MODIFY_DATE, UPLOAD_IP
 		  FROM ANI_BRD_UD
@@ -17,6 +19,14 @@
 		  		  FROM ANI_BRD_UD) A
 		 WHERE A.RN BETWEEN #{begin} AND #{end}
 	</select>
+	
+	<!-- <select id="selectUploadListPage" parameterType="Map" resultType="UploadDTO">
+		SELECT C.RN, C.UPLOAD_NO, C.ID, C.UPLOAD_TITLE, C.UPLOAD_CONTENT, C.UPLOAD_HIT, C.UPLOAD_CREATE_DATE, C.UPLOAD_MODIFY_DATE, C.UPLOAD_IP, C.POINT
+	  	  FROM (SELECT ROW_NUMBER() OVER(ORDER BY UPLOAD_NO DESC) AS RN, A.UPLOAD_NO, A.ID, A.UPLOAD_TITLE, A.UPLOAD_CONTENT, A.UPLOAD_HIT, A.UPLOAD_CREATE_DATE, A.UPLOAD_MODIFY_DATE, A.UPLOAD_IP, B.POINT
+	              FROM ANI_BRD_UD A LEFT OUTER JOIN ANI_USER B
+	                ON A.ID = B.ID) C
+		 WHERE C.RN BETWEEN #{begin} AND #{end}
+	</select> -->
 	
 	<select id="selectFindBoardsCount" parameterType="Map" resultType="int">
 		SELECT COUNT(*)
@@ -37,9 +47,14 @@
 		 	<if test="column == 'ALL'">UPLOAD_NO || ID || UPLOAD_TITLE || UPLOAD_CREATE_DATE LIKE '%' || #{query} || '%') A</if>
 		 	<if test="column == 'ID'">${column} LIKE '%' || #{query} || '%') A</if>
 		 	<if test="column == 'UPLOAD_TITLE'">${column} LIKE '%' || #{query} || '%') A</if>
-		 	<if test="opt_column == 'UPLOAD_CREATE_DATE'">${column} LIKE '%' || #{query} || '%') A</if>
+		 	<!-- <if test="opt_column == 'UPLOAD_CREATE_DATE'">${column} LIKE '%' || #{query} || '%') A</if> -->
 		 </where>
 		 WHERE A.RN BETWEEN #{begin} AND #{end}
+	</select>
+	
+	<select id="selectUploadUser">
+		SELECT 
+		  FROM ANI_BRD_UD LEFT OUTER JOIN ANI_USER
 	</select>
 	
 	
@@ -53,9 +68,10 @@
 	</select>
 	
 	<select id="selectUploadByNo" parameterType="long" resultType="UploadDTO">
-		SELECT UPLOAD_NO, ID, UPLOAD_TITLE, UPLOAD_CONTENT, UPLOAD_HIT, UPLOAD_CREATE_DATE, UPLOAD_MODIFY_DATE, UPLOAD_IP
-		  FROM ANI_BRD_UD
-		 WHERE UPLOAD_NO = #{uploadNo}
+		SELECT B.UPLOAD_NO, B.ID, B.UPLOAD_TITLE, B.UPLOAD_CONTENT, B.UPLOAD_HIT, B.UPLOAD_CREATE_DATE, B.UPLOAD_MODIFY_DATE, B.UPLOAD_IP, A.POINT
+            FROM ANI_USER A RIGHT OUTER JOIN ANI_BRD_UD B
+              ON A.ID = B.ID
+           WHERE B.UPLOAD_NO = #{uploadNo}
 	</select>
 	<select id="selectAttachByNo" parameterType="long" resultType="AttachDTO">
 		SELECT ATTACH_NO, UPLOAD_NO, PATH, ORIGIN, FILESYSTEM, DOWNLOAD_CNT
@@ -155,9 +171,14 @@
 	
 	
 
-	<update id="updateAttachPoint" parameterType="String">
+	<update id="updateAttachAddPoint" parameterType="Map">
 		UPDATE ANI_USER
-		   SET POINT = POINT + 2
+		   SET POINT = POINT + (5 * #{attachResult})
+		 WHERE ID = #{id}
+	</update>
+	<update id="updateAttachSubtractPoint" parameterType="Map">
+		UPDATE ANI_USER
+		   SET POINT = POINT - (5 * #{attachResult})
 		 WHERE ID = #{id}
 	</update>
 	
@@ -167,6 +188,19 @@
 		 WHERE PATH = CONCAT('storage\\', TO_CHAR(SYSDATE - 1, 'yyyy\\mm\\dd'))
 	</select>
 		
+	<select id="selectTrueAttachId" parameterType="long" resultType="String">
+		SELECT DISTINCT(A.ID)
+		  FROM ANI_USER A INNER JOIN ANI_BRD_UD B
+			ON A.ID = B.ID LEFT OUTER JOIN ANI_BRD_UD_ATTACH C
+			ON C.UPLOAD_NO = B.UPLOAD_NO
+		 WHERE C.ATTACH_NO IS NOT NULL AND B.UPLOAD_NO IS NOT NULL AND B.UPLOAD_NO = #{uploadNo}
+	</select>
+	
+	<select id="selectUploadNoInAttach" resultType="long" parameterType="long">
+		SELECT UPLOAD_NO
+          FROM ANI_BRD_UD_ATTACH
+         WHERE ATTACH_NO = #{attachNo}
+	</select>
 	
 	
 	<!-- <select id="selectByOption" resultType="uploadDTO">

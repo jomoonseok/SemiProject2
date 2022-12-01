@@ -64,13 +64,13 @@ public class UploadController {
 	
 	@ResponseBody
 	@GetMapping("/upload/download")
-	public ResponseEntity<Resource> requiredLogin_download(@RequestHeader("User-Agent") String userAgent, @RequestParam("attachNo") long attachNo) {
+	public ResponseEntity<Resource> download(@RequestHeader("User-Agent") String userAgent, @RequestParam("attachNo") long attachNo) {
 		return uploadService.download(userAgent, attachNo);
 	}
 	
 	@ResponseBody
 	@GetMapping("/upload/downloadAll")
-	public ResponseEntity<Resource> requiredLogin_downloadAll(@RequestHeader("User-Agent") String userAgent, @RequestParam("uploadNo") int uploadNo) {
+	public ResponseEntity<Resource> downloadAll(@RequestHeader("User-Agent") String userAgent, @RequestParam("uploadNo") int uploadNo) {
 		return uploadService.downloadAll(userAgent, uploadNo);
 	}
 	
@@ -90,11 +90,21 @@ public class UploadController {
 		uploadService.removeUploadByUploadNo(request, response);
 	}
 	
-	@ResponseBody
-	@GetMapping(value="/upload/find", produces = MediaType.APPLICATION_JSON_VALUE)
-	public List<UploadDTO> findUploadList(HttpServletRequest request, Model model) {
-		return uploadService.findUploadListByQuery(request, model);
+	/*
+	 * @ResponseBody
+	 * 
+	 * @GetMapping(value="/upload/find", produces =
+	 * MediaType.APPLICATION_JSON_VALUE) public List<UploadDTO>
+	 * findUploadList(HttpServletRequest request, Model model) { return
+	 * uploadService.findUploadListByQuery(request, model); }
+	 */
+	
+	@GetMapping("/upload/find")
+	public String find(HttpServletRequest request, Model model) {
+		uploadService.findUploadListByQuery(request, model);
+		return "upload/upload_listQuery";
 	}
+	
 	
 	
 //	@PostMapping("/upload/find")
