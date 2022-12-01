@@ -149,30 +149,14 @@
  		  WHERE ID = #{id}
 	 </delete>
 	 
-	 <!-- 아이디 찾기 -->
-	 <select id="findId" parameterType="String" resultType="String">
-	 	SELET *
-	 	 FROM ANI_USER
-	 	WHERE NAME = #{name}
-	 	  AND MOBILE = #{mobile} 
-	 </select>
+	 <!-- 아이디찾기 : 휴면계정 -->
+	 <select id="findSleep" parameterType="Map" resultType="SleepUserDTO">
+		SELECT *
+		  FROM ANI_USER_SLEEP
+		 WHERE EMAIL = #{email}
+	</select>
 	 
-	 <!-- 비밀번호 찾기 -->
-	 <select id="findPw" resultType="UserDTO">
-	 	SELET * 
-	 	 FROM ANI_USER
-	 	WHERE ID = #{id}
-	 	  AND NAME = #{name} 
-	 	  AND MOBILE = #{mobile} 
-	 </select>
 	
-	<!-- 비밀번호 찾기 후 수정 -->
-	<update id="updatePw" parameterType="UserDTO">
-		UPDATE ANI_USER
-		   SET PW = #{pw}
-		     , PW_MODIFY_DATE = SYSDATE
-		 WHERE ID = ${id}      
-	</update>
 	 
 	
 </mapper>

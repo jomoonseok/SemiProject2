@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.semi.animal.domain.user.SleepUserDTO;
 import com.semi.animal.domain.user.UserDTO;
 import com.semi.animal.service.user.UserService;
 
@@ -22,6 +23,7 @@ public class UserController {
 
 	@Autowired
 	private UserService userService;
+
 	
 	@GetMapping("/")         
 	public String index() {  
@@ -61,8 +63,20 @@ public class UserController {
 	
 	@ResponseBody
 	@GetMapping(value="/user/checkReduceEmail", produces=MediaType.APPLICATION_JSON_VALUE)
-	public Map<String, Object> checkReduceEmail(String email){
-		return userService.isReduceEmail(email);
+	public Map<String, Object> checkReduceEmail(HttpServletRequest request){
+		return userService.isReduceEmail(request);
+	}
+	
+	@ResponseBody
+	@GetMapping(value="/user/checkSleep", produces=MediaType.APPLICATION_JSON_VALUE)
+	public SleepUserDTO checkSleep(String email){
+		return userService.findSleep(email);
+	}
+	
+	@ResponseBody
+	@GetMapping(value="/user/checkReduceIdEmail", produces=MediaType.APPLICATION_JSON_VALUE)
+	public Map<String, Object> checkReduceIdEmail(String id, String email){
+		return userService.isReduceIdEmail(id, email);
 	}
 	
 	@ResponseBody
@@ -164,43 +178,36 @@ public class UserController {
 	}
 	
 	
-	@PostMapping("/user/findId")
-	public String findId(UserDTO user, Model model) {
-		UserDTO userDTO = userService.findId(user);
-		
-		if(userDTO == null) {
-			model.addAttribute("check", 1);
-		} else {
-			model.addAttribute("check", 0);
-			model.addAttribute("id", user.getId());
-		}
-		
+	@GetMapping("/user/findId")
+	public String findId(UserDTO userDTO, Model model){
 		return "user/findId";
 	}
 	
+	@GetMapping("/user/findPw")
+	public String findPw() {
+		return "user/findPw";
+	}
 	
 	
-	@PostMapping("/user/findPw")
-	public String findPw(UserDTO user, Model model) {
-		UserDTO userDTO = userService.findPw(user);
-		
-		if(userDTO == null) {
-			model.addAttribute("check", 1);
-		} else {
-			model.addAttribute("check", 0);
-			model.addAttribute("updateId", user.getId());
+	// get오류가 떠서 비밀번호찾기 페이지의 로그인버튼의 경로를 설정해주었다.
+	@PostMapping("/user/login/form/pw")
+	public String loginFormByPw(HttpServletRequest request, Model model) {  // model로 응답받은 데이터를 jsp파일에 이동시킨다.
+			
+			// 요청 헤더 referer : 이전 페이지의 주소가 저장
+			model.addAttribute("url", request.getHeader("referer"));  // 로그인 후 되돌아 갈 주소 url
+			
+			// 네이버 로그인
+			model.addAttribute("apiURL", userService.getNaverLoginApiURL(request));
+			return "user/login";
+			
 		}
 		
-		return "user/findPw";
-	}
+
 	
-	@PostMapping("/user/updatePw")
-	public String updatePw(@RequestParam(required=false) String id  
-            , UserDTO user) {
-		user.setId(id);
-		userService.modifyPw(user);
-		return "user/findPw";
-	}
+	
+
+	
+
 	
 	
 	

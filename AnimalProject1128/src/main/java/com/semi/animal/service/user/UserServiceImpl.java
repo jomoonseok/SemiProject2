@@ -73,17 +73,54 @@ public class UserServiceImpl implements UserService {
 	}
 	
 	@Override
-	public Map<String, Object> isReduceEmail(String email) {
+	public Map<String, Object> isReduceEmail(HttpServletRequest request) {
 		
+		// 조회 조건으로 사용할 Map
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("email", request.getParameter("email"));
+		
+		Map<String, Object> result = new HashMap<String, Object>();
+		result.put("isUser", userMapper.selectUserByMap(map) != null);  // 여기
+		result.put("user", userMapper.selectUserByMap(map));
+		result.put("sleepUser", userMapper.findSleep(map));
+		// 매개변수에 String id, String email인 메소드 복붙하고 isSleepUser 가져오기
+		return result;
+		
+	}
+	
+	@Override
+	public SleepUserDTO findSleep(String email) {
 		// 조회 조건으로 사용할 Map
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("email", email);
 		
+		SleepUserDTO sleepUserDTO = new SleepUserDTO();
+		sleepUserDTO.setEmail(email);
+		return sleepUserDTO;
+	}
+	
+	
+	
+	@Override
+	public Map<String, Object> isReduceIdEmail(String id, String email) {
+
+		// 조회 조건으로 사용할 Map
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("id", id);
+		map.put("email", email);
+		
 		Map<String, Object> result = new HashMap<String, Object>();
 		result.put("isUser", userMapper.selectUserByMap(map) != null);
-		return result;
+		result.put("user", userMapper.selectUserByMap(map));
+		result.put("sleepUser", userMapper.selectSleepUserById(id));
 		
+		return result;
 	}
+	
+	
+	
+	
+	
 	
 	@Override
 	public Map<String, Object> sendAuthCode(String email) {
@@ -938,21 +975,9 @@ public class UserServiceImpl implements UserService {
 		
 	}
 	
-	@Override
-	public UserDTO findId(UserDTO user) {
-		return userMapper.findId(user);
-	}
-	
-	@Override
-	public UserDTO findPw(UserDTO user) {
-		return userMapper.findPw(user);
-	}
-	
-	@Override
-	public void modifyPw(UserDTO user) {
-		userMapper.updatePw(user);
-	}
 	
 	
+	
+
 	
 }

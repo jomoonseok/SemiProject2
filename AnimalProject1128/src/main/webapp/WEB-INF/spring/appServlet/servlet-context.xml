@@ -43,5 +43,7 @@
          <beans:bean class="com.semi.animal.interceptor.SleepUserCheckingInterceptor" />
       </interceptor>
    </interceptors>
+   
+ 
 	
 </beans:beans>

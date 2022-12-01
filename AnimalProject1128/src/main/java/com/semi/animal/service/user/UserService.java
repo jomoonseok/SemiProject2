@@ -13,7 +13,8 @@ import com.semi.animal.domain.user.UserDTO;
 public interface UserService {
 	
 	public Map<String, Object> isReduceId(String id);
-	public Map<String, Object> isReduceEmail(String email);
+	public Map<String, Object> isReduceEmail(HttpServletRequest request);
+	public Map<String, Object> isReduceIdEmail(String id, String email);
 	public Map<String, Object> sendAuthCode(String email);
 	public void join(HttpServletRequest request, HttpServletResponse response);
 	public void retire(HttpServletRequest request, HttpServletResponse response);
@@ -27,6 +28,7 @@ public interface UserService {
 	public SleepUserDTO getSleepUserById(String id);
 	public void restoreUser(HttpServletRequest request, HttpServletResponse response);
 	public void getSessionForwardUser(HttpServletRequest request, Model model);
+	public SleepUserDTO findSleep(String email);
 	
 	
 	public String getNaverLoginApiURL(HttpServletRequest request);  // 네이버로그인-1
@@ -35,9 +37,7 @@ public interface UserService {
 	public UserDTO getNaverUserById(String id);
 	public void naverLogin(HttpServletRequest request, UserDTO naverUser);
 	public void naverJoin(HttpServletRequest request, HttpServletResponse response);
-	public UserDTO findId(UserDTO user);
-	public UserDTO findPw(UserDTO user);
-	public void modifyPw(UserDTO user);
+	
 
 	
 }

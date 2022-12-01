@@ -6,7 +6,7 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Insert title here</title>
+<title>회원가입</title>
 <script src="${contextPath}/resources/js/jquery-3.6.1.min.js"></script>
 <script>
 	

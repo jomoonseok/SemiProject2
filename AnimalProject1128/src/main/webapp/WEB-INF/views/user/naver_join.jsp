@@ -6,7 +6,7 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Insert title here</title>
+<title>네이버 간편 가입</title>
 <script src="${contextPath}/resources/js/jquery-3.6.1.min.js"></script>
 <script src="${contextPath}/resources/js/agree.js"></script>
 <link rel="stylesheet" href="${contextPath}/resources/css/agree.css" />

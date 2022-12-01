@@ -6,7 +6,7 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Insert title here</title>
+<title>마이페이지</title>
 <script src="${contextPath}/resources/js/jquery-3.6.1.min.js"></script>
 <script>
 
@@ -192,15 +192,34 @@
 		<h1>마이페이지</h1>
 		
 		<span>${loginUser.name}님 반갑습니다.</span><br>
-		<span>${loginUser.name}님의 포인트는 ${loginUser.point}p 입니다.</span>
+		<span>내 포인트는 ${loginUser.point}p 입니다.</span><br>
+		<span>내 가입일은 ${loginUser.joinDate} 입니다.</span>
 		
 		<hr>
+		
+
+
 		
 		<div>
 			<input type="button" value="개인정보변경" id="btn_edit_pw">
 		</div>
 		<div id="modify_data">
 			<form id="frm_edit_pw" action="${contextPath}/user/modify/pw" method="post">
+				<div>
+					이름 : ${loginUser.name}
+				</div>
+				<div>
+					성별 : ${loginUser.gender}
+				</div>
+				<div>
+					출생년도 : ${loginUser.birthYear}  
+				</div>
+				<div>
+					생년월일 : ${loginUser.birthDay}
+				</div>
+				<div>
+					아이디 : ${loginUser.id}
+				</div>
 				<!-- 비밀번호 -->
 				<div>
 					<label for="pw">비밀번호</label>

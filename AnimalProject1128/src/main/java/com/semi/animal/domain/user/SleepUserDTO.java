@@ -31,4 +31,5 @@ public class SleepUserDTO {  // 휴먼계정
 	private Date joinDate;
 	private Date lastLoginDate;
 	private Date sleepDate;
+	private int point;
 }

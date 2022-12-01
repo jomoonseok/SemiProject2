@@ -6,7 +6,7 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Insert title here</title>
+<title>휴면계정</title>
 <script src="${contextPath}/resources/js/jquery-3.6.1.min.js"></script>
 </head>
 <body>

@@ -26,9 +26,8 @@ public interface UserMapper {
 	public int insertRestoreUser(String id);
 	public int deleteSleepUser(String id);
 	public int insertNaverUser(UserDTO user);
-	public UserDTO findId(UserDTO user);
-	public UserDTO findPw(UserDTO user);
-	public void updatePw(UserDTO user);
+	public SleepUserDTO findSleep(Map<String, Object> map);
+	
 }
 	
 
