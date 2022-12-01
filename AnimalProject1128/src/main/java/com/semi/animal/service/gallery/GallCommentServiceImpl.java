@@ -22,28 +22,28 @@ public class GallCommentServiceImpl implements GallCommentService {
 	private PageUtil pageUtil;
 	
 	@Override
-	public Map<String, Object> getCommentCount(int gallNo) {
+	public Map<String, Object> getGallCommentCount(int gallNo) {
 		Map<String, Object> result = new HashMap<String, Object>();
-		result.put("commentCount", gallCommentMapper.selectGallCommentCount(gallNo));
-		return null;
+		result.put("gallCommentCount", gallCommentMapper.selectGallCommentCount(gallNo));
+		return result;
 	}
 	
 	
 	@Override
-	public Map<String, Object> addComment(GallCommentDTO gallComment) {
+	public Map<String, Object> addGallComment(GallCommentDTO gallComment) {
 		Map<String, Object> result = new HashMap<String, Object>();
-		result.put("isAdd", gallCommentMapper.insertGallComment(gallComment) == 1);
-		return null;
+		result.put("isGallCommentAdd", gallCommentMapper.insertGallComment(gallComment) == 1);
+		return result;
 	}
 	
 	@Override
-	public Map<String, Object> gatCommentList(HttpServletRequest request) {
+	public Map<String, Object> getGallCommentList(HttpServletRequest request) {
 		int gallNo = Integer.parseInt(request.getParameter("gallNo"));
 		int page = Integer.parseInt(request.getParameter("page"));
 		
-		int commentCount = gallCommentMapper.selectGallCommentCount(gallNo);
+		int gallCommentCount = gallCommentMapper.selectGallCommentCount(gallNo);
 		
-		pageUtil.setPageUtil(page, commentCount);
+		pageUtil.setPageUtil(page, gallCommentCount);
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("gallNo", gallNo);
@@ -51,9 +51,26 @@ public class GallCommentServiceImpl implements GallCommentService {
 		map.put("end", pageUtil.getEnd());
 		
 		Map<String, Object> result = new HashMap<String, Object>();
-		result.put("commentList", gallCommentMapper.selectGallCommentList(map));
+		result.put("gallCommentList", gallCommentMapper.selectGallCommentList(map));
 		result.put("pageUtil", pageUtil);
 		
 		return result;
+		
+		
 	}
+	
+	@Override
+	public Map<String, Object> removeGallComment(int gallCmtNo) {
+		Map<String, Object> result = new HashMap<String, Object>();
+		result.put("isGallCommentRemove", gallCommentMapper.deleteGallComment(gallCmtNo) == 1); // true
+		return result;
+	}
+	
+	@Override
+	public Map<String, Object> addGallCommentReply(GallCommentDTO gallCmtreply) {
+		Map<String, Object> result = new HashMap<String, Object>();
+		result.put("isGallCommentAdd", gallCommentMapper.insertGallCommentReply(gallCmtreply) == 1); // 1과 같으면 true
+		return result;
+	}
+	
 }

@@ -142,7 +142,10 @@ CREATE TABLE "ANI_BRD_GALL_COMMENT" (
 	"GALL_NO"	            NUMBER		            NOT NULL,
 	"ID"	                VARCHAR2(45 BYTE)		NOT NULL,
 	"GALL_CMT_CONTENT"	    VARCHAR2(1000 BYTE)		NOT NULL,
-	"GALL_CMT_CREATE_DATE"	DATE		            NOT NULL
+	"GALL_CMT_CREATE_DATE"	DATE		            NOT NULL,
+	"STATE"	                NUMBER(1,0)		        NOT NULL,
+	"DEPTH"	                NUMBER(2,0)		        NOT NULL,
+	"GROUP_NO"	            NUMBER		            NOT NULL
 	--"GALL_CMT_MODIFY_DATE"	DATE		            NOT NULL,
 	--"GALL_CMT_IP"	        VARCHAR2(30 BYTE)		NOT NULL
 );

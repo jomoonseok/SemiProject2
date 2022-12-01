@@ -17,6 +17,9 @@ public class GallCommentDTO {
 	private String id;
 	private String gallCmtContent;
 	private Date gallCmtCreateDate;
+	private int state;
+	private int depth;
+	private int groupNo;
 	//private Date gallCmtModifyDate;
 	//private String gallCmtIp;
 }
