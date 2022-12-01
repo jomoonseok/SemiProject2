@@ -8,6 +8,7 @@ import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.servlet.ModelAndView;
 
 import com.semi.animal.domain.freeboard.FreeBoardCommentDTO;
 import com.semi.animal.domain.user.UserDTO;
@@ -38,7 +39,6 @@ public class FreeBoardCommentServiceImpl implements FreeBoardCommentService {
 		HttpSession session = request.getSession();
 		UserDTO loginUser = (UserDTO)session.getAttribute("loginUser");
 		String freeCmtIp = request.getRemoteAddr();
-		
 		
 		System.out.println();
 		System.out.println("유저아이디 내놔!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! : " + loginUser);

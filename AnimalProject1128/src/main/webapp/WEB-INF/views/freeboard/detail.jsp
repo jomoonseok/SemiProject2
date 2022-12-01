@@ -38,6 +38,23 @@
 					<input type="text" name="freeCmtContent" id="content" size="50" placeholder="댓글을 작성하려면 로그인을 해야합니다.">
 					<span class="add_comment_btn">
 						<input type="button" value="등록" id="btn_add_comment">
+						<c:if test="${loginUser != null}">
+							<script>
+								$('#btn_add_comment').click(function(){
+									alert('로그인')
+								});
+							</script>
+						</c:if>
+						
+						<c:if test="${loginUser == null}">
+							<script>
+								$('#btn_add_comment').click(function(){
+									if(confirm('글을 작성하려면 로그인이 필요합니다. 로그인 페이지로 이동 하시겠습니까?')) {
+										location.href = "${contextPath}/user/login/form";
+									}
+								});
+							</script>
+						</c:if>
 					</span>
 				</div>
 			</div>
@@ -92,6 +109,7 @@
 				$('#comment_area').toggleClass('blind');
 			});
 		}
+				
 
 		// 3. 댓글 추가
 		function fn_addComment(){
