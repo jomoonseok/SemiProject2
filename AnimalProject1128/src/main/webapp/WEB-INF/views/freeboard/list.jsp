@@ -22,14 +22,12 @@
 	  overflow: hidden;
 	}
 
-	th {
-	  text-align: left;
-	}
   
 	thead {
 	  font-weight: bold;
-	  color: #fff;
-	  background: #73685d;
+	  color: rgb(78, 78, 78);
+	  background: rgb(233, 231, 228);
+	  text-align: center;
 	}
 	  
 	 td, th {
@@ -77,12 +75,12 @@
 	<div>
 		<table border="1">
 			<thead>
-				<tr style="text-align: center; color: rgb(78, 78, 78);">
-					<td><strong>순번</strong></td>
-					<td><strong>작성자</strong></td>
-					<td><strong>제목</strong></td>
-					<td><strong>작성날짜</strong></td>
-					<td><strong>조회수</strong></td>
+				<tr>
+					<th>순번</th>
+					<th>작성자</th>
+					<th>제목</th>
+					<th>작성날짜</th>
+					<th>조회수</th>
 				</tr>
 			</thead>
 			<tbody>
