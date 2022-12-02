@@ -41,7 +41,7 @@
 				<c:forEach items="${gallList}" var="gall" varStatus="vs">
 					<tr>
 						<td>${beginNo - vs.index}</td>
-						<td><a id="btn_galldetail"> ${gall.gallTitle}</a></td>
+						<td><a href="${contextPath}/gall/increase/hit?gallNo=${gall.gallNo}"> ${gall.gallTitle}</a></td>
 						<td>${gall.id}</td>						
 						<td>${gall.gallHit}</td>
 						<td>${gall.gallCreateDate}</td>
@@ -57,17 +57,7 @@
 			</tfoot>
 		</table>
 	</div>
-	<script>
-	//href="${contextPath}/gall/increase/hit?gallNo=${gall.gallNo}"
-		$('#btn_galldetail').click(function(){
-			if(${loginUser != null}) {
-				location.href="${contextPath}/gall/increase/hit?gallNo=${gall.gallNo}"
-			} else {
-				alert('로그인한 회원만 조회가능합니다.');
-				location.href="${contextPath}/user/login/form"
-			}
-		});
-	</script>
+	
 	
 </div>
 

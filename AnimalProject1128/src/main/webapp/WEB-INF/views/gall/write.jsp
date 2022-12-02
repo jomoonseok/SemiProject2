@@ -10,8 +10,6 @@
 
 <script>
 	
-	// contextPath를 반환하는 자바스크립트 함수
-	// taglib방식 대신 사용 
 	function getContextPath() {
 		var begin = location.href.indexOf(location.origin) + location.origin.length;
 		var end = location.href.indexOf("/", begin + 1);
@@ -70,8 +68,8 @@
 		$('#frm_write').submit(function(event){
 			if($('#gallTitle').val() == ''){
 				alert('제목은 필수입니다.');
-				event.preventDefault();  // 서브밋 취소
-				return;  // 더 이상 코드 실행할 필요 없음
+				event.preventDefault();
+				return;
 			}
 		});
 		

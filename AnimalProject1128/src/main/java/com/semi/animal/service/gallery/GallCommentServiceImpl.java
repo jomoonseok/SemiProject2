@@ -4,11 +4,13 @@ import java.util.HashMap;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.semi.animal.domain.gallery.GallCommentDTO;
+import com.semi.animal.domain.user.UserDTO;
 import com.semi.animal.mapper.gallery.GallCommentMapper;
 import com.semi.animal.util.PageUtil;
 
@@ -30,7 +32,13 @@ public class GallCommentServiceImpl implements GallCommentService {
 	
 	
 	@Override
-	public Map<String, Object> addGallComment(GallCommentDTO gallComment) {
+	public Map<String, Object> addGallComment(GallCommentDTO gallComment, HttpServletRequest request) {
+		
+		HttpSession session = request.getSession();
+		UserDTO loginUser = (UserDTO)session.getAttribute("loginUser");
+		
+		gallComment.setId(loginUser.getId());
+		
 		Map<String, Object> result = new HashMap<String, Object>();
 		result.put("isGallCommentAdd", gallCommentMapper.insertGallComment(gallComment) == 1);
 		return result;
@@ -67,7 +75,13 @@ public class GallCommentServiceImpl implements GallCommentService {
 	}
 	
 	@Override
-	public Map<String, Object> addGallCommentReply(GallCommentDTO gallCmtreply) {
+	public Map<String, Object> addGallCommentReply(GallCommentDTO gallCmtreply, HttpServletRequest request) {
+		
+		HttpSession session = request.getSession();
+		UserDTO loginUser = (UserDTO)session.getAttribute("loginUser");
+		
+		gallCmtreply.setId(loginUser.getId());
+		
 		Map<String, Object> result = new HashMap<String, Object>();
 		result.put("isGallCommentAdd", gallCommentMapper.insertGallCommentReply(gallCmtreply) == 1); // 1과 같으면 true
 		return result;

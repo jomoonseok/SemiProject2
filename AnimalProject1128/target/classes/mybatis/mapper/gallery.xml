@@ -81,19 +81,6 @@
 		DELETE
 		  FROM ANI_SUMMERNOTE_IMAGE
 		 WHERE FILESYSTEM = #{filesystem}
-	</delete>
-	
-	
-<!-- 	UPDATE ANI_USER -->
-<!--    SET POINT = POINT + 10 -->
-<!--  WHERE ID = ID -->
-	
-	
-	
-	
-	
-	
-	
-	
+	</delete>	
 	
 </mapper>
