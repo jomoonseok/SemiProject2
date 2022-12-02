@@ -9,9 +9,47 @@
 </jsp:include>
 
 <style>
+
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR&display=swap');
+
 	body {
 	  padding: 21px;
 	}
+	
+	h3 {
+		font-family: 'Noto Sans KR', sans-serif;
+		color: rgb(127, 127, 127);
+		text-align: center;
+	}
+	
+	<%-- 1. 버튼 --%>
+	.button {
+	  font-size: 13px;
+	  line-height: 25px;
+	  background: rgb(255, 255, 255);
+	  color: rgb(127, 127, 127);
+	  box-shadow: 0 2px 5px rgba(0,0,0,.25);
+	  width: 50px;
+	  border: 1px solid rgb(115, 104, 93);
+	  border-radius: 5px;
+	  overflow: hidden;
+	  transition-duration: 0.3s;
+	}
+	
+	.button:hover {
+		color: rgb(115, 104, 93);
+		font-weight: bold;
+		background: rgb(233, 231, 228);
+	}
+	
+	.button:active {
+		color: rgb(115, 104, 93);
+		font-weight: bold;
+		background: rgb(255, 255, 255);
+		box-shadow: none;
+	}
+	
+	<%-- 2. 테이블 --%>
 
 	table {
 	  font-size: 13px;
@@ -29,6 +67,22 @@
 	  background: rgb(233, 231, 228);
 	  text-align: center;
 	}
+	
+	thead > tr > th:first-of-type {
+		width: 5%;
+	}
+	
+	thead > tr > th:nth-of-type(2) {
+		width: 10%;
+	}
+	
+	thead > tr > th:nth-of-type(4) {
+		width: 10%;
+	}
+	
+	thead > tr > th:nth-of-type(5) {
+		width: 5%;
+	}
 	  
 	 td, th {
 	  padding: 15px 8px;
@@ -44,13 +98,24 @@
 	table, thead, tbody, th, td, tr {
 	  display: block;
 	}
+	
+	<%-- 3. 페이징 --%>
+	.paging {
+		width: 30%;
+		display: flex;
+		flex-wrap: nowrap;
+		justify-content: space-evenly;
+		margin: 0 auto;
+		cursor: default;
+		
+	}
 
 
 </style>
 
-	
+	<h3>자유게시판</h3>
 	<div>
-		<input type="button" value="글쓰기" id="write">
+		<input type="button" value="글쓰기" id="write" class="button">
 		<c:if test="${loginUser != null}">
 			<script>
 				$('#write').click(function(){
@@ -97,7 +162,7 @@
 			<tfoot>
 				<tr>
 					<td colspan="6">
-						${paging}
+						<span class="paging">${paging}</span>
 					</td>
 				</tr>
 			</tfoot>

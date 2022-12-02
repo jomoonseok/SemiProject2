@@ -49,10 +49,47 @@
 	});
 	
 </script>
+<style>
+
+	<%-- 1. 버튼 --%>
+	.button {
+	  font-size: 13px;
+	  line-height: 25px;
+	  background: rgb(255, 255, 255);
+	  color: rgb(127, 127, 127);
+	  box-shadow: 0 2px 5px rgba(0,0,0,.25);
+	  width: 50px;
+	  border: 1px solid rgb(115, 104, 93);
+	  border-radius: 5px;
+	  overflow: hidden;
+	  transition-duration: 0.3s;
+	}
+	
+	.button:hover {
+		color: rgb(115, 104, 93);
+		font-weight: bold;
+		background: rgb(233, 231, 228);
+	}
+	
+	.button:active {
+		color: rgb(115, 104, 93);
+		font-weight: bold;
+		background: rgb(255, 255, 255);
+		box-shadow: none;
+	}
+
+
+	h3 {
+	font-family: 'Noto Sans KR', sans-serif;
+	color: rgb(127, 127, 127);
+	text-align: center;
+	}
+	
+</style>
 
 
 	<div>
-		<h1>작성 화면</h1>
+		<h3>작성 화면</h3>
 		
 		<form id="frm_write" action="${contextPath}/freeboard/add" method="post">
 		
@@ -65,8 +102,8 @@
     			<textarea name="content" id="content" ></textarea>
 			</div>
 			<div>
-				<button>작성완료</button>
-				<input type="button" value="목록" id="btn_list">
+				<button class="button">완료</button>
+				<input type="button" value="목록" id="btn_list" class="button">
 			</div>
 		</form>
 	</div>

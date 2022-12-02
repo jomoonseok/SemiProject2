@@ -41,7 +41,7 @@
         
         .left_article{
         	border: 1px solid gray;
-        	width: 50%;
+        	width: 100%;
         }
 
         .right_section {
@@ -64,18 +64,15 @@
         <section class="left_section">
         	<section class="left_section_top">
 	            <article class="left_article">
-	                <h2>자유게시판</h2>
-	            </article>
-	            <article class="left_article">
-	                <h2>Title2</h2>
+	                <h2><a href="${contextPath}/freeboard/list">자유게시판</a></h2>
 	            </article>
             </section>
             <section class="left_section_bottom">
 	            <article class="left_article">
-	                <h2>갤러리게시판</h2>
+	                <h2><a href="${contextPath}/gall/list">갤러리게시판</a></h2>
 	            </article>
 	            <article class="left_article">
-	                <h2>파일게시판</h2>
+	                <h2><a href="${contextPath}/upload">파일게시판</a></h2>
 	            </article>
             </section>
         </section>
