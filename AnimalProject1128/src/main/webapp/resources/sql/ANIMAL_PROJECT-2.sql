@@ -35,145 +35,147 @@ DROP SEQUENCE ANI_BRD_GALL_CMT_SEQ;
 CREATE SEQUENCE ANI_BRD_GALL_CMT_SEQ NOCACHE;
 DROP SEQUENCE ANI_BRD_UD_SEQ;
 CREATE SEQUENCE ANI_BRD_UD_SEQ NOCACHE;
+DROP SEQUENCE ANI_BRD_UD_ATTACH_SEQ;
+CREATE SEQUENCE ANI_BRD_UD_ATTACH_SEQ NOCACHE;
 
 CREATE TABLE "ANI_USER" (
-	"USER_NO"	            NUMBER		            NOT NULL,
-	"ID"	                VARCHAR2(45 BYTE)		NOT NULL        UNIQUE,
-	"PW"	                VARCHAR2(64 BYTE)		NOT NULL,
-	"NAME"	                VARCHAR2(50 BYTE)		NOT NULL,
-	"GENDER"	            VARCHAR2(2 BYTE)		NOT NULL,
-	"EMAIL"	                VARCHAR2(100 BYTE)		NOT NULL        UNIQUE,
-	"MOBILE"	            VARCHAR2(11 BYTE)		NOT NULL,
-	"BIRTH_YEAR"	        VARCHAR2(4 BYTE)		NULL,
-	"BIRTH_DAY" 	        VARCHAR2(4 BYTE)		NULL,
-	"POSTCODE"  	        VARCHAR2(5 BYTE)		NULL,
-	"ROAD_ADDRESS"	        VARCHAR2(100 BYTE)		NULL,
-	"JIBUN_ADDRESS"	        VARCHAR2(100 BYTE)		NULL,
-	"DETAIL_ADDRESS"	    VARCHAR2(100 BYTE)		NULL,
-	"EXTRA_ADDRESS"	        VARCHAR2(100 BYTE)		NULL,
-	"AGREE_CODE"	        NUMBER		            NOT NULL,
-	"SNS_TYPE"	            VARCHAR2(10 BYTE)		NULL,
-	"JOIN_DATE"	            DATE		            NOT NULL,
-	"PW_MODIFY_DATE"	    DATE		            NOT NULL,
-	"INFO_MODIFY_DATE"	    DATE		            NULL,
-	"SESSION_ID"	        VARCHAR2(32 BYTE)		NULL,
-	"SESSION_LIMIT_DATE"	DATE		            NULL,
-	"POINT"	                NUMBER		            NOT NULL
+   "USER_NO"               NUMBER                  NOT NULL,
+   "ID"                   VARCHAR2(45 BYTE)      NOT NULL        UNIQUE,
+   "PW"                   VARCHAR2(64 BYTE)      NOT NULL,
+   "NAME"                   VARCHAR2(50 BYTE)      NOT NULL,
+   "GENDER"               VARCHAR2(2 BYTE)      NOT NULL,
+   "EMAIL"                   VARCHAR2(100 BYTE)      NOT NULL        UNIQUE,
+   "MOBILE"               VARCHAR2(11 BYTE)      NOT NULL,
+   "BIRTH_YEAR"           VARCHAR2(4 BYTE)      NULL,
+   "BIRTH_DAY"            VARCHAR2(4 BYTE)      NULL,
+   "POSTCODE"             VARCHAR2(5 BYTE)      NULL,
+   "ROAD_ADDRESS"           VARCHAR2(100 BYTE)      NULL,
+   "JIBUN_ADDRESS"           VARCHAR2(100 BYTE)      NULL,
+   "DETAIL_ADDRESS"       VARCHAR2(100 BYTE)      NULL,
+   "EXTRA_ADDRESS"           VARCHAR2(100 BYTE)      NULL,
+   "AGREE_CODE"           NUMBER                  NOT NULL,
+   "SNS_TYPE"               VARCHAR2(10 BYTE)      NULL,
+   "JOIN_DATE"               DATE                  NOT NULL,
+   "PW_MODIFY_DATE"       DATE                  NULL,
+   "INFO_MODIFY_DATE"       DATE                  NULL,
+   "SESSION_ID"           VARCHAR2(32 BYTE)      NULL,
+   "SESSION_LIMIT_DATE"   DATE                  NULL,
+   "POINT"                   NUMBER                  NOT NULL
 );
 
 
 
 CREATE TABLE "ANI_USER_SLEEP" (
-	"USER_NO"	            NUMBER		            NOT NULL,
-	"ID"	                VARCHAR2(45 BYTE)		NOT NULL,
-	"PW"	                VARCHAR2(64 BYTE)		NOT NULL,
-	"NAME"	                VARCHAR2(50 BYTE)		NOT NULL,
-	"GENDER"	            VARCHAR2(2 BYTE)		NOT NULL,
-	"EMAIL"	                VARCHAR2(50 BYTE)		NULL,
-	"MOBILE"	            VARCHAR2(11 BYTE)		NOT NULL,
-	"BIRTH_YEAR"	        VARCHAR2(4 BYTE)		NULL,
-	"BIRTH_DAY"	            VARCHAR2(4 BYTE)		NULL,
-	"POSTCODE"	            VARCHAR2(5 BYTE)		NULL,
-	"ROAD_ADDRESS"	        VARCHAR2(100 BYTE)		NULL,
-	"JIBUN_ADDRESS"	        VARCHAR2(100 BYTE)		NULL,
-	"DETAIL_ADDRESS"	    VARCHAR2(100 BYTE)		NULL,
-	"EXTRA_ADDRESS"	        VARCHAR2(100 BYTE)		NULL,
-	"AGREE_CODE"	        NUMBER		            NULL,
-	"SNS_TYPE"	            VARCHAR2(10 BYTE)		NULL,
-	"JOIN_DATE"	            DATE		            NOT NULL,
-	"LAST_LOGIN_DATE"	    DATE		            NULL,
-	"SLEEP_DATE"	        DATE		            NULL,
-	"POINT"	                NUMBER		            NOT NULL
+   "USER_NO"               NUMBER                  NOT NULL,
+   "ID"                   VARCHAR2(45 BYTE)      NOT NULL,
+   "PW"                   VARCHAR2(64 BYTE)      NOT NULL,
+   "NAME"                   VARCHAR2(50 BYTE)      NOT NULL,
+   "GENDER"               VARCHAR2(2 BYTE)      NOT NULL,
+   "EMAIL"                   VARCHAR2(50 BYTE)      NULL,
+   "MOBILE"               VARCHAR2(11 BYTE)      NOT NULL,
+   "BIRTH_YEAR"           VARCHAR2(4 BYTE)      NULL,
+   "BIRTH_DAY"               VARCHAR2(4 BYTE)      NULL,
+   "POSTCODE"               VARCHAR2(5 BYTE)      NULL,
+   "ROAD_ADDRESS"           VARCHAR2(100 BYTE)      NULL,
+   "JIBUN_ADDRESS"           VARCHAR2(100 BYTE)      NULL,
+   "DETAIL_ADDRESS"       VARCHAR2(100 BYTE)      NULL,
+   "EXTRA_ADDRESS"           VARCHAR2(100 BYTE)      NULL,
+   "AGREE_CODE"           NUMBER                  NULL,
+   "SNS_TYPE"               VARCHAR2(10 BYTE)      NULL,
+   "JOIN_DATE"               DATE                  NOT NULL,
+   "LAST_LOGIN_DATE"       DATE                  NULL,
+   "SLEEP_DATE"           DATE                  NULL,
+   "POINT"                   NUMBER                  NOT NULL
 );
 
 CREATE TABLE "ANI_USER_ACCESS" (
-	"ID"	                VARCHAR2(45 BYTE)		NOT NULL,
-	"LAST_LOGIN_DATE"	    DATE		            NOT NULL
+   "ID"                   VARCHAR2(45 BYTE)      NOT NULL,
+   "LAST_LOGIN_DATE"       DATE                  NOT NULL
 );
 
 CREATE TABLE "ANI_USER_RETIRE" (
-	"RETIRE_NO"	            NUMBER		            NOT NULL,
-	"ID"	                VARCHAR2(45 BYTE)		NOT NULL,
-	"JOIN_DATE"	            DATE		            NULL,
-	"RETIRE_DATE"	        DATE		            NULL
+   "RETIRE_NO"               NUMBER                  NOT NULL,
+   "ID"                   VARCHAR2(45 BYTE)      NOT NULL,
+   "JOIN_DATE"               DATE                  NULL,
+   "RETIRE_DATE"           DATE                  NULL
 );
 
 CREATE TABLE "ANI_BRD_FREE" (
-	"FREE_NO"	            NUMBER		            NOT NULL,
-	"ID"	                VARCHAR2(45 BYTE)		NOT NULL,
-	"FREE_TITLE"	        VARCHAR2(100 BYTE)		NOT NULL,
-	"FREE_CONTENT"	        VARCHAR2(4000 BYTE)		NULL,
-	"FREE_CREATE_DATE"	    DATE		            NOT NULL,
-	"FREE_MODIFY_DATE"	    DATE		            NOT NULL,
-	"FREE_IP"	            VARCHAR2(30 BYTE)		NOT NULL,
-	"FREE_HIT"	            NUMBER		            NOT NULL
+   "FREE_NO"               NUMBER                  NOT NULL,
+   "ID"                   VARCHAR2(45 BYTE)      NOT NULL,
+   "FREE_TITLE"           VARCHAR2(100 BYTE)      NOT NULL,
+   "FREE_CONTENT"           VARCHAR2(4000 BYTE)      NULL,
+   "FREE_CREATE_DATE"       DATE                  NOT NULL,
+   "FREE_MODIFY_DATE"       DATE                  NOT NULL,
+   "FREE_IP"               VARCHAR2(30 BYTE)      NOT NULL,
+   "FREE_HIT"               NUMBER                  NOT NULL
 );
 
 
 
 CREATE TABLE "ANI_BRD_FREE_COMMENT" (
-	"FREE_CMT_NO"	        NUMBER		            NOT NULL,
-	"FREE_NO"	            NUMBER		            NOT NULL,
-	"ID"	                VARCHAR2(45 BYTE)		NOT NULL,
-	"FREE_CMT_CONTENT"	    VARCHAR2(1000 BYTE)		NOT NULL,
-	"FREE_CMT_CREATE_DATE"	DATE		            NOT NULL,
-	"FREE_CMT_MODIFY_DATE"	DATE		            NOT NULL,
-	"FREE_CMT_IP"	        VARCHAR2(30 BYTE)		NOT NULL,
-    "STATE"	                NUMBER(1,0)		        NOT NULL,
-	"DEPTH"	                NUMBER(2,0)		        NOT NULL,
-	"GROUP_NO"	            NUMBER		            NOT NULL,
-	"GROUP_ORDER"	        NUMBER		            NOT NULL
+   "FREE_CMT_NO"           NUMBER                  NOT NULL,
+   "FREE_NO"               NUMBER                  NOT NULL,
+   "ID"                   VARCHAR2(45 BYTE)      NOT NULL,
+   "FREE_CMT_CONTENT"       VARCHAR2(1000 BYTE)      NOT NULL,
+   "FREE_CMT_CREATE_DATE"   DATE                  NOT NULL,
+   "FREE_CMT_MODIFY_DATE"   DATE                  NOT NULL,
+   "FREE_CMT_IP"           VARCHAR2(30 BYTE)      NOT NULL,
+    "STATE"                   NUMBER(1,0)              NOT NULL,
+   "DEPTH"                   NUMBER(2,0)              NOT NULL,
+   "GROUP_NO"               NUMBER                  NOT NULL,
+   "GROUP_ORDER"           NUMBER                  NOT NULL
 );
 
 
 CREATE TABLE "ANI_BRD_GALL" (
-	"GALL_NO"	            NUMBER		            NOT NULL,
-	"ID"	                VARCHAR2(45 BYTE)		NOT NULL,
-	"GALL_TITLE"	        VARCHAR2(100 BYTE)		NOT NULL,
-	"GALL_CONTENT"	        VARCHAR2(4000 BYTE)     NULL,
-	"GALL_HIT"	            NUMBER	DEFAULT 0	    NULL,
-	"GALL_CREATE_DATE"	    DATE		            NOT NULL,
-	"GALL_MODIFY_DATE"	    DATE		            NOT NULL,
-	"GALL_IP"	            VARCHAR2(30 BYTE)		NOT NULL
+   "GALL_NO"               NUMBER                  NOT NULL,
+   "ID"                   VARCHAR2(45 BYTE)      NOT NULL,
+   "GALL_TITLE"           VARCHAR2(100 BYTE)      NOT NULL,
+   "GALL_CONTENT"           VARCHAR2(4000 BYTE)     NULL,
+   "GALL_HIT"               NUMBER   DEFAULT 0       NULL,
+   "GALL_CREATE_DATE"       DATE                  NOT NULL,
+   "GALL_MODIFY_DATE"       DATE                  NOT NULL,
+   "GALL_IP"               VARCHAR2(30 BYTE)      NOT NULL
 );
 
 CREATE TABLE "ANI_BRD_GALL_COMMENT" (
-	"GALL_CMT_NO"	        NUMBER		            NOT NULL,
-	"GALL_NO"	            NUMBER		            NOT NULL,
-	"ID"	                VARCHAR2(45 BYTE)		NOT NULL,
-	"GALL_CMT_CONTENT"	    VARCHAR2(1000 BYTE)		NOT NULL,
-	"GALL_CMT_CREATE_DATE"	DATE		            NOT NULL,
-	"STATE"	                NUMBER(1,0)		        NOT NULL,
-	"DEPTH"	                NUMBER(2,0)		        NOT NULL,
-	"GROUP_NO"	            NUMBER		            NOT NULL
-	--"GALL_CMT_MODIFY_DATE"	DATE		            NOT NULL,
-	--"GALL_CMT_IP"	        VARCHAR2(30 BYTE)		NOT NULL
+   "GALL_CMT_NO"           NUMBER                  NOT NULL,
+   "GALL_NO"               NUMBER                  NOT NULL,
+   "ID"                   VARCHAR2(45 BYTE)      NOT NULL,
+   "GALL_CMT_CONTENT"       VARCHAR2(1000 BYTE)      NOT NULL,
+   "GALL_CMT_CREATE_DATE"   DATE                  NOT NULL,
+   "STATE"                   NUMBER(1,0)              NOT NULL,
+   "DEPTH"                   NUMBER(2,0)              NOT NULL,
+   "GROUP_NO"               NUMBER                  NOT NULL
+   --"GALL_CMT_MODIFY_DATE"   DATE                  NOT NULL,
+   --"GALL_CMT_IP"           VARCHAR2(30 BYTE)      NOT NULL
 );
 
 CREATE TABLE "ANI_BRD_GALL_LIKE" (
-	"GALL_NO"	            NUMBER		            NOT NULL,
-	"ID"	                VARCHAR2(45 BYTE)		NOT NULL
+   "GALL_NO"               NUMBER                  NOT NULL,
+   "ID"                   VARCHAR2(45 BYTE)      NOT NULL
 );
 
 
 CREATE TABLE "ANI_BRD_UD" (
-	"UPLOAD_NO"	            NUMBER		            NOT NULL,
-	"ID"	                VARCHAR2(45 BYTE)		NOT NULL,
-	"UPLOAD_TITLE"	        VARCHAR2(100 BYTE)		NOT NULL,
-	"UPLOAD_CONTENT"	    VARCHAR2(1000 BYTE)		NOT NULL,
-	"UPLOAD_HIT"	        NUMBER		            NULL,
-	"UPLOAD_CREATE_DATE"	DATE		            NULL,
-	"UPLOAD_MODIFY_DATE"	DATE		            NULL,
-	"UPLOAD_IP"	            VARCHAR2(30 BYTE)		NOT NULL
+   "UPLOAD_NO"               NUMBER                  NOT NULL,
+   "ID"                   VARCHAR2(45 BYTE)      NOT NULL,
+   "UPLOAD_TITLE"           VARCHAR2(100 BYTE)      NOT NULL,
+   "UPLOAD_CONTENT"       VARCHAR2(1000 BYTE)      NOT NULL,
+   "UPLOAD_HIT"           NUMBER                  NULL,
+   "UPLOAD_CREATE_DATE"   DATE                  NULL,
+   "UPLOAD_MODIFY_DATE"   DATE                  NULL,
+   "UPLOAD_IP"               VARCHAR2(30 BYTE)      NOT NULL
 );
 
 CREATE TABLE "ANI_BRD_UD_ATTACH" (
-	"ATTACH_NO"	            NUMBER		            NULL,
-	"UPLOAD_NO"	            NUMBER		            NOT NULL,
-	"PATH"	                VARCHAR2(300 BYTE)		NULL,
-	"ORIGIN"	            VARCHAR2(300 BYTE)		NULL,
-	"FILESYSTEM"	        VARCHAR2(40 BYTE)		NULL,
-	"DOWNLOAD_CNT"	        NUMBER		            NULL
+   "ATTACH_NO"               NUMBER                  NULL,
+   "UPLOAD_NO"               NUMBER                  NOT NULL,
+   "PATH"                   VARCHAR2(300 BYTE)      NULL,
+   "ORIGIN"               VARCHAR2(300 BYTE)      NULL,
+   "FILESYSTEM"           VARCHAR2(40 BYTE)      NULL,
+   "DOWNLOAD_CNT"           NUMBER                  NULL
 );
 
 CREATE TABLE "ANI_SUMMERNOTE_IMAGE"(
@@ -190,7 +192,7 @@ ALTER TABLE "ANI_BRD_UD" ADD CONSTRAINT "PK_BRD_UD" PRIMARY KEY ("UPLOAD_NO");
 ALTER TABLE "ANI_BRD_UD_ATTACH" ADD CONSTRAINT "PK_BRD_UD_ATTACH" PRIMARY KEY ("ATTACH_NO");
 ALTER TABLE "ANI_BRD_GALL_COMMENT" ADD CONSTRAINT "PK_BRD_GALL_COMMENT" PRIMARY KEY ("GALL_CMT_NO");
 ALTER TABLE "ANI_BRD_FREE_COMMENT" ADD CONSTRAINT "PK_FREE_COMMENT" PRIMARY KEY ("FREE_CMT_NO");
-ALTER TABLE "ANI_SUMMERNOTE_IMAGE" ADD CONSTRAINT "PK_SUMNOTE_IMG" PRIMARY KEY ("GALL_NO");
+--ALTER TABLE "ANI_SUMMERNOTE_IMAGE" ADD CONSTRAINT "PK_SUMNOTE_IMG" PRIMARY KEY ("GALL_NO");
 
 ALTER TABLE "ANI_USER_ACCESS" 
 ADD CONSTRAINT "FK_USER_USER_ACCESS" 
@@ -258,8 +260,8 @@ ON DELETE CASCADE;
 -----------------------------------------------------------------------------------------------------------------------------
 -----------------------------------------------------------------------------------------------------------------------------
 
-INSERT INTO ANI_USER
-VALUES (999, 'admin', '1234', 'Moon', 'M', 'moom97102002@gmail.com', '01012341234', '1997', '1001', '12345', 'GUMCHEN-RO', 'JIBUN', 'DETAIL', 'EXTRA', 0, 'SNS', SYSDATE, SYSDATE, SYSDATE, 'SESSION-ID', SYSDATE, 10);
+--INSERT INTO ANI_USER
+--VALUES (999, 'admin', '1234', 'Moon', 'M', 'moom97102002@gmail.com', '01012341234', '1997', '1001', '12345', 'GUMCHEN-RO', 'JIBUN', 'DETAIL', 'EXTRA', 0, 'SNS', SYSDATE, SYSDATE, SYSDATE, 'SESSION-ID', SYSDATE, 10);
 --
 --INSERT INTO ANI_USER
 --VALUES (2, 'UNIQUE-hyo', '1234', 'HYO', 'FE', 'UNIQUE-HOH12011@NAVER.COM', '01023452345', '1994', '1001', 'GUMCHEN-RO', 'JIBUN', 'DETAIL', 'EXTRA', 0, 'NI2CK', 'UNIQUE-NA7ME', '30'
@@ -272,5 +274,9 @@ VALUES (999, 'admin', '1234', 'Moon', 'M', 'moom97102002@gmail.com', '0101234123
 --INSERT INTO ANI_BRD_UD
 --    VALUES(1, 'HYO', '안녕하세요', '반갑습니다', 0, SYSDATE, SYSDATE, '111');
 
+INSERT INTO ANI_USER VALUES(USERS_SEQ.NEXTVAL, 'admin', '9BDB4EA68F6F65EC4D5F 3781636525CB2943BFD1E599D34B186BA77F1D8CE9F', '관리자', 'M', 'admin@naver.com', '01033333333', '2001', '0101', '33333', 'ROAD3', 'JIBUN3', 'DETAIL3', 'EXTRA3', 0, NULL, TO_DATE('20221201', 'YYYYMMDD'), SYSDATE, SYSDATE, NULL, NULL, 10);
+INSERT INTO ANI_USER VALUES(USERS_SEQ.NEXTVAL, 'user01', '9BDB4EA68F6F65EC4D5F 3781636525CB2943BFD1E599D34B186BA77F1D8CE9F', 'user01', 'M', 'user01@naver.com', '01033333333', '2001', '0101', '33333', 'ROAD3', 'JIBUN3', 'DETAIL3', 'EXTRA3', 0, NULL, TO_DATE('20221201', 'YYYYMMDD'), SYSDATE, SYSDATE, NULL, NULL, 20);
+INSERT INTO ANI_USER VALUES(USERS_SEQ.NEXTVAL, 'bbbb', '9BDB4EA68F6F65EC4D5F 3781636525CB2943BFD1E599D34B186BA77F1D8CE9F', 'NAME3', 'M', 'bbbb@naver.com', '01033333333', '2001', '0101', '33333', 'ROAD3', 'JIBUN3', 'DETAIL3', 'EXTRA3', 0, NULL, TO_DATE('20201212', 'YYYYMMDD'), SYSDATE, SYSDATE, NULL, NULL, 30);
+INSERT INTO ANI_USER_ACCESS VALUES('bbbb', TO_DATE('20200101', 'YYYYMMDD'));  -- 휴면
 
 commit;

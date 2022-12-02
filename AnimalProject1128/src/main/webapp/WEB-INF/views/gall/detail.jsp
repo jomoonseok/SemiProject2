@@ -57,13 +57,21 @@
 		</form>
 		<script>
 			$('#btn_edit_gallbrd').click(function(){
-				$('#frm_btn').attr('action', '${contextPath}/gall/edit');
-				$('#frm_btn').submit();
+				if(${loginUser.id == gall.id}){
+					$('#frm_btn').attr('action', '${contextPath}/gall/edit');
+					$('#frm_btn').submit();
+				} else {
+					alert('작성자만 수정가능합니다.');
+				}
 			});
 			$('#btn_remove_gallbrd').click(function(){
-				if(confirm('게시글을 삭제하시겠습니까?')) {
-					$('#frm_btn').attr('action', '${contextPath}/gall/remove');
-					$('#frm_btn').submit();
+				if(${loginUser.id == gall.id}) {
+					if(confirm('게시글을 삭제하시겠습니까?')) {
+						$('#frm_btn').attr('action', '${contextPath}/gall/remove');
+						$('#frm_btn').submit();
+					}
+				} else {
+					alert('작성자만 삭제가능합니다.');
 				}
 			});
 		</script>
@@ -147,8 +155,8 @@
 					if(resData.isGallCommentAdd) {
 						alert('댓글이 등록되었습니다.');
 						$('#gallCmtContent').val('');
-						fn_gallCommentList();  // 댓글 목록 가져와서 뿌리는 함수
-						fn_gallCommentCount(); // 댓글 목록 개수 갱신하는 함수
+						fn_gallCommentList();
+						fn_gallCommentCount();
 					}
 				}  // success
 			});  // ajax
@@ -159,10 +167,9 @@
 		$.ajax({
 			type: 'get',
 			url:'${contextPath}/gall/comment/list',
-			data: 'gallNo=${gall.gallNo}&page=' + $('#page').val(),  // page도 넘겨줘야함
+			data: 'gallNo=${gall.gallNo}&page=' + $('#page').val(),
 			dataType: 'json',
 			success: function(resData) {
-				// 화면에 댓글 목록 뿌리기
 				$('#gallComment_list').empty();
 				$.each(resData.gallCommentList, function(i, gallComment){
 					var div = '';
@@ -193,9 +200,9 @@
 					div += '<div style="margin-left:40px;" class="gallReply_area blind">';
 					div += '<form class="frm_gallReply">';
 					div += '<input type="hidden" name="gallNo" value="' + gallComment.gallNo + '">';
-					div += '<input type="hidden" name="groupNo" value="' + gallComment.gallCmtNo + '">';   // comment.groupNo 사용가능
+					div += '<input type="hidden" name="groupNo" value="' + gallComment.gallCmtNo + '">';
 					div += '<input typt="text" name="gallCmtContent" placeholder="답글을 작성하려면 로그인을 해주세요.">';
-					// 로그인한 사용자만 볼 수 있도록 if 처리
+					
 					div += '<input type="button" value="답글작성완료" class="btn_gallReply_add">';
 					div += '</form>';
 					div += '</div>';
@@ -203,15 +210,12 @@
 					$('#gallComment_list').append(div);
 					$('#gallComment_list').append('<div style="border-bottom: 1px dotted gray;"></div>');
 				});  // $.each
-				// 페이징
 				$('#paging').empty();
 				var pageUtil = resData.pageUtil;
 				var paging = '';
-				// 이전 블록
 				if(pageUtil.beginPage != 1) {
 					paging += '<span class="enable_link" data-page="'+ (pageUtil.beginPage - 1) +'">◀</span>';
 				}
-				// 페이지 번호
 				for(let p = pageUtil.beginPage; p <= pageUtil.endPage; p++) {
 					if(p == $('#page').val()){
 						paging += '<strong>' + p + '</strong>';
@@ -219,7 +223,6 @@
 						paging += '<span class="enable_link" data-page="'+ p +'">' + p + '</span>';
 					}
 				}
-				// 다음 블록
 				if(pageUtil.endPage != pageUtil.totalPage){
 					paging += '<span class="enable_link" data-page="'+ (pageUtil.endPage + 1) +'">▶</span>';
 				}
@@ -256,13 +259,12 @@
 	
 	function fn_switchGallReplyArea() {
 		$(document).on('click', '.btn_gallReply_area', function() {
-			$(this).parent().next().next().toggleClass('blind');  //f12로 찾긔
+			$(this).parent().next().next().toggleClass('blind');
 		});
 	}  // fn_switchGallReplyArea
 	
 	function fn_addGallCommentReply() {
 		$(document).on('click', '.btn_gallReply_add', function (){
-			// 공백검사
 			if($(this).prev().val() == ''){
 				alert('답글 내용을 입력하세요.');
 				return;
@@ -272,9 +274,8 @@
 				url: '${contextPath}/gall/comment/reply/add',
 				data: $(this).closest('.frm_gallReply').serialize(),
 				dataType: 'json',
-				success: function(resData) {  // resData = {"isAdd", true}
+				success: function(resData) {
 					if(resData.isGallCommentAdd) {
-						// 추가되었다면
 						alert('답글이 등록되었습니다.');
 						fn_gallCommentList();
 						fn_gallCommentCount();

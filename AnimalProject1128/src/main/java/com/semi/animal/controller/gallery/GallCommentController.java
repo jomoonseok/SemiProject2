@@ -28,8 +28,8 @@ public class GallCommentController {
 	
 	@ResponseBody
 	@PostMapping(value="/gall/comment/add", produces="application/json")
-	public Map<String, Object> add(GallCommentDTO gallComment){
-		return gallCommentService.addGallComment(gallComment);
+	public Map<String, Object> add(GallCommentDTO gallComment, HttpServletRequest request){
+		return gallCommentService.addGallComment(gallComment, request);
 	}
 	
 
@@ -47,7 +47,7 @@ public class GallCommentController {
 	
 	@ResponseBody
 	@PostMapping(value="/gall/comment/reply/add", produces="application/json")
-	public Map<String, Object> replyAdd(GallCommentDTO gallCmtreply) {
-		return gallCommentService.addGallCommentReply(gallCmtreply);
+	public Map<String, Object> replyAdd(GallCommentDTO gallCmtreply, HttpServletRequest request) {
+		return gallCommentService.addGallCommentReply(gallCmtreply, request);
 	}
 }
