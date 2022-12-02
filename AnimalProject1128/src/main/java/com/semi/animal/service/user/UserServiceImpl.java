@@ -852,16 +852,18 @@ public class UserServiceImpl implements UserService {
 	
 	}
 	
+
 	@Override
 	public UserDTO getNaverUserById(String id) {
-		
 		// 조회 조건으로 사용할 Map
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("id", id);
 		
 		return userMapper.selectUserByMap(map);
-		
 	}
+	
+
+	
 	
 	@Transactional
 	@Override
@@ -975,5 +977,10 @@ public class UserServiceImpl implements UserService {
 		model.addAttribute("loginUser", loginUser);
 
 	}
+<<<<<<< HEAD
+	
+
+=======
+>>>>>>> main
 
 }

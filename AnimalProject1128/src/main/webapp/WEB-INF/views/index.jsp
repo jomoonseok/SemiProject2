@@ -59,7 +59,16 @@
             background-color: #888;
         }
 </style>
+<<<<<<< HEAD
+
+	<c:if test="${loginUser.id == 'admin'}">
+		<c:redirect url="/admin/main" />
+	</c:if>
 	
+
+=======
+	
+>>>>>>> main
 	<section class="main_section">
         <section class="left_section">
         	<section class="left_section_top">

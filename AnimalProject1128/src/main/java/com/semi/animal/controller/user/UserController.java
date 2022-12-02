@@ -14,7 +14,10 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+<<<<<<< HEAD
+=======
 
+>>>>>>> main
 import com.semi.animal.domain.user.SleepUserDTO;
 import com.semi.animal.domain.user.UserDTO;
 import com.semi.animal.service.user.UserService;
@@ -30,11 +33,7 @@ public class UserController {
 	public String index() {  
 		return "index";     
 	}
-	
-	@GetMapping("/user/come")
-	public String come() {
-		return "user/come";
-	}
+
 	
 	@GetMapping("/user/login") 
 	public String login() {     
@@ -194,10 +193,10 @@ public class UserController {
 	
 	// get오류가 떠서 비밀번호찾기 페이지의 로그인버튼의 경로를 설정해주었다.
 	@PostMapping("/user/login/form/pw")
-	public String loginFormByPw(HttpServletRequest request, Model model) {  // model로 응답받은 데이터를 jsp파일에 이동시킨다.
+	public String loginFormByPw(HttpServletRequest request, Model model) { 
 			
 			// 요청 헤더 referer : 이전 페이지의 주소가 저장
-			model.addAttribute("url", request.getHeader("referer"));  // 로그인 후 되돌아 갈 주소 url
+			model.addAttribute("url", request.getHeader("referer"));  
 			
 			// 네이버 로그인
 			model.addAttribute("apiURL", userService.getNaverLoginApiURL(request));

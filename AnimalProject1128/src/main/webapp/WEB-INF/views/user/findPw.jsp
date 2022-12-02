@@ -45,7 +45,9 @@
 				dataType: 'json',
 				success: function(resData){  
 					if(resData.user){
-						alert('임시 비밀번호가 발급되었습니다. 메일함을 확인해 주세요.');
+						alert('임시비밀번호를 보냈습니다. 메일함을 확인하세요.');
+					}else if(resData.sleepUser){
+						alert('임시비밀번호를 보냈습니다. 메일함을 확인하세요.');
 					}else{
 						alert('아이디 또는 이메일이 회원정보에 없습니다.');
 						return;
@@ -86,7 +88,7 @@
 			</div>
 			
 			<div>			
-				<input type="button" value="비밀번호찾기" id="btn_findPw">
+				<input type="button" value="비밀번호변경" id="btn_findPw">
 				<button>로그인</button>
 				<input type="button" value="취소하기" onclick="history.back(-1)">
 			</div>

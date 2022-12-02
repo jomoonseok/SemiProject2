@@ -266,7 +266,7 @@
 				});  // ajax
 				
 			}).then(function(){
-				
+				$('#msg_email').empty();
 				// 인증번호 보내는 ajax
 				$.ajax({
 					/* 요청 */
@@ -282,9 +282,11 @@
 							if(resData.authCode == $('#authCode').val()){
 								alert('인증되었습니다.');
 								authCodePass = true;
+								return;
 							} else {
 								alert('인증에 실패했습니다.');
 								authCodePass = false;
+								return;
 							}
 						});
 					},
@@ -295,12 +297,13 @@
 				});  // ajax
 				
 			}).catch(function(code){  // 인수 1 또는 2를 전달받기 위한 파라미터 code 선언
-
 				switch(code){
 				case 1:
+					$('#msg_email').empty();
 					$('#msg_email').text('이메일 형식이 올바르지 않습니다.');
 					break;
 				case 2:
+					$('#msg_email').empty();
 					$('#msg_email').text('이미 사용중인 이메일입니다.');
 					break;
 				}

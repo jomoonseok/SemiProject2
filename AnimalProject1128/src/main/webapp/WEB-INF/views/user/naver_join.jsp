@@ -159,11 +159,9 @@
 			<!-- 버튼 -->
 			<div>
 				<button>가입하기</button>
-<<<<<<< HEAD
-				<input type="button" value="취소하기" onclick="history.back(-4)">
-=======
-				<input type="button" value="취소하기" onclick="location.href='${contextPath}'">
->>>>>>> main
+
+				<input type="button" value="취소하기" onclick="history.go(-1)">
+
 			</div>
 		
 		</form>
