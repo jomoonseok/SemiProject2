@@ -82,7 +82,4 @@ public class GallBrdController {
 		gallBrdService.removeGallBrd(request, response);
 	}
 	
-	
-	
-	
 }

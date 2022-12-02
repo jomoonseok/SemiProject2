@@ -14,9 +14,18 @@
 	<h3>게시판 목록(전체 ${totalRecord}개)</h3>
 	
 	<div>
-		<input type="button" value="게시글 작성하기" onclick="location.href='${contextPath}/gall/write'">
+		<input type="button" value="게시글 작성하기" id="btn_gallWrite">
 	</div>
-	
+	<script>
+		$('#btn_gallWrite').click(function(){
+			if(${loginUser != null}) {
+				location.href="${contextPath}/gall/write"
+			} else {
+				alert('로그인한 회원만 작성가능합니다.');
+				location.href="${contextPath}/user/login/form"
+			}
+		});
+	</script>
 	<div>
 		<table border="1">
 			<thead>
@@ -48,6 +57,7 @@
 			</tfoot>
 		</table>
 	</div>
+	
 	
 </div>
 

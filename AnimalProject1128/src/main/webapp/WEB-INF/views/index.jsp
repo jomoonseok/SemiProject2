@@ -59,15 +59,15 @@
             background-color: #888;
         }
 </style>
-
+	
 	<section class="main_section">
         <section class="left_section">
         	<section class="left_section_top">
 	            <article class="left_article">
-	                <h2>자유게시판</h2>
+	                <h2>공지사항</h2>
 	            </article>
 	            <article class="left_article">
-	                <h2>Title2</h2>
+	                <h2>자유게시판</h2>
 	            </article>
             </section>
             <section class="left_section_bottom">
@@ -111,7 +111,6 @@
     </section>
     
     
-
 
 </body>
 </html>

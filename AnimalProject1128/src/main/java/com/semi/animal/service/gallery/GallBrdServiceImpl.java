@@ -37,29 +37,21 @@ public class GallBrdServiceImpl implements GallBrdService {
 	
 	@Autowired
 	private MyFileUtil myFileUtil;
-	
-	/*
-	 * @Autowired private SecurityUtil securityUtil;
-	 */
-	
+
 	@Override
 	public void getGallBoardList(HttpServletRequest request, Model model) {
 		
 		Optional<String> opt = Optional.ofNullable(request.getParameter("page"));
 		int page = Integer.parseInt(opt.orElse("1"));
-		
-		// 전체 레코드(직원) 개수 구하기
+
 		int totalRecord = gallBrdMapper.selectGallBrdListCount();
-		
-		// PageUtil 계산하기
+
 		pageUtil.setPageUtil(page, totalRecord);
-	
-		// Map 만들기(begin, end)
+
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("begin", pageUtil.getBegin());
 		map.put("end", pageUtil.getEnd());
-		
-		// 뷰로 보낼 데이터
+
 		model.addAttribute("totalRecord", totalRecord);
 		model.addAttribute("gallList", gallBrdMapper.selectGallBrdListByMap(map));
 		model.addAttribute("beginNo", totalRecord - (page - 1) * pageUtil.getRecordPerPage());
@@ -68,41 +60,31 @@ public class GallBrdServiceImpl implements GallBrdService {
 
 	@Override
 	public Map<String, Object> saveSummernoteImage(MultipartHttpServletRequest multipartRequest) {
-		
-		// 파라미터 file
+
 		MultipartFile multipartFile = multipartRequest.getFile("file");
-		
-		// 저장 경로 (수정하기)
+
 		String path = "C:" + File.separator + "galleryImage";
-		
-		// 저장할 파일명
+
 		String filesystem = myFileUtil.getFileName(multipartFile.getOriginalFilename());
-		
-		
-		// 저장 경로가 없으면 만들기
+
 		File dir = new File(path);
 		if(dir.exists() == false) {
 			dir.mkdirs();
 		}
-		
-		// 저장할 File 객체
+
 		File file = new File(path, filesystem);  // new File(dir, filesystem)도 가능
-		
-		// HDD에 File 객체 저장하기
+
 		try {
 			multipartFile.transferTo(file);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		
-		// 저장된 파일을 확인할 수 있는 매핑을 반환
+
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("src", multipartRequest.getContextPath() + "/load/image/" + filesystem);
 		map.put("filesystem", filesystem);  // HDD에 저장된 파일명 반환
 		return map;
-		
-		// 저장된 파일이 aaa.jpg라고 가정하면
-		// src=${contextPath}/load/image/aaa.jpg 이다. 
+
 		
 	}
 	
@@ -114,7 +96,6 @@ public class GallBrdServiceImpl implements GallBrdService {
 		UserDTO loginUser = (UserDTO)session.getAttribute("loginUser");
 		
 		String gallTitle = request.getParameter("gallTitle");
-		String id = request.getParameter("id");
 		String gallContent = request.getParameter("gallContent");
 		
 		Optional<String> opt = Optional.ofNullable(request.getHeader("X-Forwarded-For"));
@@ -123,12 +104,10 @@ public class GallBrdServiceImpl implements GallBrdService {
 		
 		GallBoardDTO gallBoard = GallBoardDTO.builder()
 				.gallTitle(gallTitle)
-				.id(id)
+				.id(loginUser.getId())
 				.gallContent(gallContent)
 				.gallIp(gallIp)
 				.build();
-		
-		System.out.println(gallBoard);
 		
 		int result = gallBrdMapper.insertGallBrd(gallBoard);
 		
@@ -136,13 +115,11 @@ public class GallBrdServiceImpl implements GallBrdService {
 			response.setContentType("text/html; charset=UTF-8");
 			PrintWriter out = response.getWriter();
 			
-			out.println("<script>");
+//			out.println("<script>");
 			if(result > 0) {
 
-				// 파라미터 summernoteImageNames
 				String[] summernoteImageNames = request.getParameterValues("summernoteImageNames");
-				
-				// DB에 SummernoteImage 저장
+
 				if(summernoteImageNames !=  null) {
 					for(String filesystem : summernoteImageNames) {
 						SummernoteImageDTO summernoteImage = SummernoteImageDTO.builder()
@@ -151,19 +128,19 @@ public class GallBrdServiceImpl implements GallBrdService {
 								.build();
 						gallBrdMapper.insertSummernoteImage(summernoteImage);
 					}
-					System.out.println(gallBoard.getGallNo());
 				}
-				
-				out.println("alert('게시글이 등록되었습니다.)");
+				out.println("<script>");
+				out.println("alert('게시글이 등록되었습니다.')");
 				out.println("location.href='" + request.getContextPath() + "/gall/list';");
+				out.println("</script>");
 
 			} else {
-				
+				out.println("<script>");
 				out.println("alert('게시글 등록 실패')");
 				out.println("history.back();");
-				
+				out.println("</script>");
 			}
-			out.println("</script>");
+//			out.println("</script>");
 			out.close();
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -188,14 +165,13 @@ public class GallBrdServiceImpl implements GallBrdService {
 				if(gallBoard.getGallContent().contains(summernoteImage.getFilesystem()) == false) {
 					File file = new File("C:" + File.separator + "galleryImage", summernoteImage.getFilesystem());
 					if(file.exists()) {
-						file.delete();  // HDD에 저장된 파일 지우기
+						file.delete();
 					}
-					gallBrdMapper.deleteSummernoteImage(summernoteImage.getFilesystem());  // DB에 목록에서 지우기
+					gallBrdMapper.deleteSummernoteImage(summernoteImage.getFilesystem());
 				}
 			}
 		}
 		
-		// 블로그 반환
 		return gallBoard;
 				
 	}
@@ -204,9 +180,12 @@ public class GallBrdServiceImpl implements GallBrdService {
 	@Override
 	public void modifyGallBrd(HttpServletRequest request, HttpServletResponse response) {
 		
+		HttpSession session = request.getSession();
+		UserDTO loginUser = (UserDTO)session.getAttribute("loginUser");
+		
 		String gallTitle = request.getParameter("gallTitle");
 		String gallContent = request.getParameter("gallContent");
-		String id = "admin";
+		String id = request.getParameter(loginUser.getId());
 		int gallNo = Integer.parseInt(request.getParameter("gallNo"));
 		
 		
@@ -226,13 +205,11 @@ public class GallBrdServiceImpl implements GallBrdService {
 			response.setContentType("text/html; charset=UTF-8");
 			PrintWriter out = response.getWriter();
 			
-			out.println("<script>");
+			/* out.println("<script>"); */
 			if(result > 0) {
 				
-				// 파라미터 summernoteImageNames
 				String[] summernoteImageNames = request.getParameterValues("summernoteImageNames");
 				
-				// DB에 SummernoteImage 저장
 				if(summernoteImageNames !=  null) {
 					for(String filesystem : summernoteImageNames) {
 						SummernoteImageDTO summernoteImage = SummernoteImageDTO.builder()
@@ -243,13 +220,17 @@ public class GallBrdServiceImpl implements GallBrdService {
 					}
 				}
 				
+				out.println("<script>");
 				out.println("alert('게시글이 수정되었습니다.')");
 				out.println("location.href='" + request.getContextPath() + "/gall/detail?gallNo=" + gallNo + "';");
+				out.println("</script>");
 			} else {
+				out.println("<script>");
 				out.println("alert('수정실패')");
 				out.println("history.back();");
+				out.println("</script>");
 			}
-			out.println("</script>");
+			/* out.println("</script>"); */
 			out.close();
 			
 		} catch (Exception e) {
@@ -277,7 +258,6 @@ public class GallBrdServiceImpl implements GallBrdService {
 			out.println("<script>");
 			if(result > 0) {	
 				
-				// DB에 SummernoteImage 저장
 				if(summernoteImageList != null && summernoteImageList.isEmpty() == false) {
 					for(SummernoteImageDTO summernoteImage : summernoteImageList) {
 						File file = new File("C:" + File.separator + "galleryImage", summernoteImage.getFilesystem());
