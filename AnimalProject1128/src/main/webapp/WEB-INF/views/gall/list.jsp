@@ -14,9 +14,18 @@
 	<h3>게시판 목록(전체 ${totalRecord}개)</h3>
 	
 	<div>
-		<input type="button" value="게시글 작성하기" onclick="location.href='${contextPath}/gall/write'">
+		<input type="button" value="게시글 작성하기" id="btn_gallWrite">
 	</div>
-	
+	<script>
+		$('#btn_gallWrite').click(function(){
+			if(${loginUser != null}) {
+				location.href="${contextPath}/gall/write"
+			} else {
+				alert('로그인한 회원만 작성가능합니다.');
+				location.href="${contextPath}/user/login/form"
+			}
+		});
+	</script>
 	<div>
 		<table border="1">
 			<thead>
@@ -32,7 +41,7 @@
 				<c:forEach items="${gallList}" var="gall" varStatus="vs">
 					<tr>
 						<td>${beginNo - vs.index}</td>
-						<td><a href="${contextPath}/gall/increase/hit?gallNo=${gall.gallNo}"> ${gall.gallTitle}</a></td>
+						<td><a id="btn_galldetail"> ${gall.gallTitle}</a></td>
 						<td>${gall.id}</td>						
 						<td>${gall.gallHit}</td>
 						<td>${gall.gallCreateDate}</td>
@@ -48,6 +57,17 @@
 			</tfoot>
 		</table>
 	</div>
+	<script>
+	//href="${contextPath}/gall/increase/hit?gallNo=${gall.gallNo}"
+		$('#btn_galldetail').click(function(){
+			if(${loginUser != null}) {
+				location.href="${contextPath}/gall/increase/hit?gallNo=${gall.gallNo}"
+			} else {
+				alert('로그인한 회원만 조회가능합니다.');
+				location.href="${contextPath}/user/login/form"
+			}
+		});
+	</script>
 	
 </div>
 
