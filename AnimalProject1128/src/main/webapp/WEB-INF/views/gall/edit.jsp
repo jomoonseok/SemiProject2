@@ -4,14 +4,14 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <c:set var="contextPath" value="${pageContext.request.contextPath}" />
 
+<!-- header.jsp로 parameter 넘기기 -->
 <jsp:include page="../layout/header.jsp">
-	<jsp:param value="갤러리게시판목록" name="title"/>
+	<jsp:param value="게시글 수정" name="title"/>
 </jsp:include>
 
 <script>
 	
 	// contextPath를 반환하는 자바스크립트 함수
-	// taglib방식 대신 사용 
 	function getContextPath() {
 		var begin = location.href.indexOf(location.origin) + location.origin.length;
 		var end = location.href.indexOf("/", begin + 1);
@@ -20,6 +20,7 @@
 	
 	$(document).ready(function(){
 		
+		// summernote
 		$('#gallContent').summernote({
 			width: 800,
 			height: 400,
@@ -35,30 +36,25 @@
 			    ['insert', ['link', 'picture', 'video']]
 			],
 			callbacks: {
-				
-				onImageUpload: function(files) {
-
+				onImageUpload: function(files){
 					for(let i = 0; i < files.length; i++) {
-						
 						var formData = new FormData();
-						
-						formData.append('file', files[i]); 
-						
+						formData.append('file', files[i]);
 						$.ajax({
 							type: 'post',
 							url: getContextPath() + '/gall/uploadImage',
 							data: formData,
-							contentType: false,  
-							processData: false,  
-							dataType: 'json',    
-							success: function(resData) {
-								$('#gallContent').summernote('insertImage', resData.src);  
+							contentType: false,
+							processData: false,
+							dataType: 'json',
+							success: function(resData){
+								$('#gallContent').summernote('insertImage', resData.src);
 								$('#summernote_image_list').append($('<input type="hidden" name="summernoteImageNames" value="' + resData.filesystem + '">'));
 							}
-						});  // ajax
+						}); // ajax
 					}  // for
-				}  // onImageUpload
-			}  // callbacks
+				}  
+			}
 		});
 		
 		// 목록
@@ -67,11 +63,11 @@
 		});
 		
 		// 서브밋
-		$('#frm_write').submit(function(event){
+		$('#frm_edit').submit(function(event){
 			if($('#gallTitle').val() == ''){
 				alert('제목은 필수입니다.');
-				event.preventDefault();  // 서브밋 취소
-				return;  // 더 이상 코드 실행할 필요 없음
+				event.preventDefault();
+				return;
 			}
 		});
 		
@@ -80,32 +76,34 @@
 </script>
 
 <div>
-	
+
 	<h1>작성 화면</h1>
+
+	<form id="frm_edit" action="${contextPath}/gall/modify" method="post">
 	
-	<form id="frm_write" action="${contextPath}/gall/add" method="post">
+		<input type="hidden" name="gallNo" value="${gall.gallNo}">
 	
 		<div>
 			<label for="gallTitle">제목</label>
-			<input type="text" name="gallTitle" id="gallTitle">
+			<input type="text" name="gallTitle" id="gallTitle" value="${gall.gallTitle}">
 		</div>
-		
-		<!-- 여기에 작성자의 이름을 받아와야함 -->
 		
 		<div>
 			<label for="gallContent">내용</label>
-			<textarea name="gallContent" name="filesystemList" id="gallContent"></textarea>				
+			<textarea name="gallContent" id="gallContent">${gall.gallContent}</textarea>				
 		</div>
 		
 		<div id="summernote_image_list"></div>
 		
 		<div>
-			<button>작성완료</button>
-			<input type="reset" value="입력초기화">
+			<button>수정완료</button>
+			<input type="reset" value="작성초기화">
 			<input type="button" value="목록" id="btn_list">
 		</div>
+		
 	</form>
-</div>
 
+
+</div>
 </body>
 </html>

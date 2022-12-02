@@ -6,6 +6,10 @@
 
 <mapper namespace="com.semi.animal.mapper.gallery.GallBrdMapper">
 
+	<!-- 작성자 ID로 이름받아오기
+		작성자 : 이름
+	 -->
+
 	<select id="selectGallBrdListCount" resultType="int">
 		SELECT COUNT(*)
 		  FROM ANI_BRD_GALL
@@ -18,14 +22,25 @@
 		 WHERE A.ROW_NUM BETWEEN #{begin} AND #{end}
 	</select>
 	
+	<insert id="insertSummernoteImage" parameterType="SummernoteImageDTO">
+		INSERT INTO ANI_SUMMERNOTE_IMAGE
+			(GALL_NO, FILESYSTEM)
+		VALUES
+			(#{gallNo}, #{filesystem})
+	</insert>
+	
 	<insert id="insertGallBrd" parameterType="GallBoardDTO">
+		<selectKey keyProperty="gallNo" resultType="int" order="BEFORE">
+			SELECT ANI_BRD_GALL_SEQ.NEXTVAL
+			  FROM DUAL
+		</selectKey>
 		INSERT INTO ANI_BRD_GALL
 			(GALL_NO, ID, GALL_TITLE, GALL_CONTENT, GALL_HIT, GALL_CREATE_DATE, GALL_MODIFY_DATE, GALL_IP)
 		VALUES
-			(ANI_BRD_GALL_SEQ.NEXTVAL, #{id}, #{gallTitle}, #{gallContent}, 0, SYSDATE, SYSDATE, #{gallIp})
+			(#{gallNo}, 'admin', #{gallTitle}, #{gallContent}, 0, SYSDATE, SYSDATE, #{gallIp})
 	</insert>
 	
-	<update id="updateGallHit">
+	<update id="updateGallHit" parameterType="int">
 		UPDATE ANI_BRD_GALL
 		   SET GALL_HIT = GALL_HIT + 1
 		 WHERE GALL_NO = #{gallNo}
@@ -37,14 +52,41 @@
 		 WHERE GALL_NO = #{gallNo}
 	</select>
 	
+	<update id="updateGallBrd" parameterType="GallBoardDTO">
+		UPDATE ANI_BRD_GALL
+		   SET GALL_TITLE = #{gallTitle}
+		     , GALL_CONTENT = #{gallContent}
+		     , GALL_MODIFY_DATE = SYSDATE
+		 WHERE GALL_NO = #{gallNo}
+	</update>
+	
+	<delete id="deleteGallBrd" parameterType="int">
+		DELETE
+		  FROM ANI_BRD_GALL
+		 WHERE GALL_NO = #{gallNo}
+	</delete>
+	
+	<select id="selectSummernoteImageListInGallBrd" parameterType="int" resultType="SummernoteImageDTO">
+		SELECT GALL_NO, FILESYSTEM
+		  FROM ANI_SUMMERNOTE_IMAGE
+		 WHERE GALL_NO = #{gallNo}
+	</select>
+	
+	<select id="selectAllSummernoteImageList" resultType="GallBoardDTO">
+		SELECT GALL_NO, FILESYSTEM
+		  FROM ANI_SUMMERNOTE_IMAGE
+	</select>
+	
+	<delete id="deleteSummernoteImage" parameterType="String">
+		DELETE
+		  FROM ANI_SUMMERNOTE_IMAGE
+		 WHERE FILESYSTEM = #{filesystem}
+	</delete>
 	
 	
-	
-	
-	
-	
-	
-	
+<!-- 	UPDATE ANI_USER -->
+<!--    SET POINT = POINT + 10 -->
+<!--  WHERE ID = ID -->
 	
 	
 	

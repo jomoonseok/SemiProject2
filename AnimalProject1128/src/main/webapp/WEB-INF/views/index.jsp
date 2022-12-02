@@ -88,16 +88,9 @@
 					<div>
 						<h2><a href="${contextPath}/user/check/form">${loginUser.name}</a> 님</h2>
 					</div>
+					<div style="text-align:center">
 					<a href="${contextPath}/user/logout">로그아웃</a>
-					<a href="javascript:fn_abc()">회원탈퇴</a>
-					<form id="lnk_retire" action="${contextPath}/user/retire" method="post"></form>
-					<script>
-						function fn_abc(){
-							if(confirm('탈퇴하시겠습니까?')){
-								$('#lnk_retire').submit();
-							}
-						}
-					</script>
+					</div>
 				</c:if>
             </article>
             <article class="right_article">

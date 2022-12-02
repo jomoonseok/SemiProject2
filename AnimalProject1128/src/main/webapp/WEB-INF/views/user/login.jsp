@@ -6,7 +6,7 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Insert title here</title>
+<title>로그인</title>
 <script src="${contextPath}/resources/js/jquery-3.6.1.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.min.js" integrity="sha512-3j3VU6WC5rPQB4Ld1jnLV7Kd5xr+cq9avvhwqzbH/taCRNURoeEpoPBK9pDyeukwSxwRPJ8fDgvYXd6SkaZ2TA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 <script>
@@ -92,7 +92,8 @@
 			
 		<div>
 			<a href="${contextPath}/user/agree">회원가입페이지</a> |
-			<a href="${contextPath}/member/findIdPw">아이디/비밀번호 찾기</a>  
+			<a href="${contextPath}/user/findId">아이디 찾기</a> | 
+			<a href="${contextPath}/user/findPw">비밀번호 찾기</a> 
 		</div>
 		
 		<hr>
