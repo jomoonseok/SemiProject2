@@ -12,6 +12,7 @@ import javax.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.ui.Model;
 
 import com.semi.animal.domain.user.RetireUserDTO;
 import com.semi.animal.domain.user.SleepUserDTO;
@@ -161,6 +162,36 @@ public class AdminServiceImpl implements AdminService {
 		result.put("beginNo", totalRecord - (page - 1) * pageUtil.getRecordPerPage());
 		
 		return result;
+	}
+	
+	
+	
+	@Override
+	public void getFreeList(Model model) {
+		Map<String, Object> modelMap = model.asMap();
+		HttpServletRequest request = (HttpServletRequest) modelMap.get("request");
+		
+		Optional<String> opt = Optional.ofNullable(request.getParameter("page"));
+		int page = Integer.parseInt(opt.orElse("1"));
+		
+		String id = request.getParameter("id");
+		
+		
+		int totalRecord = adminMapper.selectFreeListCount(id);
+		
+		pageUtil.setPageUtil(page, totalRecord);
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("id", id);
+		map.put("begin", pageUtil.getBegin());
+		map.put("end", pageUtil.getEnd());
+		
+		model.addAttribute("totalRecord", totalRecord);
+		model.addAttribute("freeBoardList", adminMapper.selectFreeListByMap(map));
+		model.addAttribute("beginNo", totalRecord - (page - 1) * pageUtil.getRecordPerPage());
+		model.addAttribute("paging", pageUtil.getPaging(request.getContextPath() + "/freeboard/list"));
+		model.addAttribute("id", id);
+		
 	}
 	
 }

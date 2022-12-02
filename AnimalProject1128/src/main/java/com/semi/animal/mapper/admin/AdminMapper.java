@@ -23,10 +23,8 @@ public interface AdminMapper {
 	public List<UserDTO> selectUsersByQuery(Map<String, Object> map);
 	
 	// free 
-	public int selectFreeListCount();
+	public int selectFreeListCount(String id);
 	public List<FreeBoardDTO> selectFreeListByMap(Map<String, Object> map);
-	public int insertFreeBoard(FreeBoardDTO freeBoard);
-	public FreeBoardDTO selectFreeBoardByNo(int freeNo);
-	public int deleteFreeBoard(int freeNo);
+	
 	
 }

@@ -37,7 +37,7 @@
 					var tr = '';
 					tr += '<tr>';
 					tr += '<td>'+ user.userNo +'</td>';
-					tr += '<td>'+ user.id +'</td>';
+					tr += '<td><a href="${contextPath}/admin/boardList?id=' + user.id + '">'+ user.id +'</a></td>';
 					tr += '<td>'+ user.name +'</td>';
 					tr += '<td>'+ user.gender +'</td>';
 					tr += '<td>'+ user.email +'</td>';
@@ -164,7 +164,7 @@
 						var tr = '';
 						tr += '<tr>';
 						tr += '<td>'+ user.userNo +'</td>';
-						tr += '<td>'+ user.id +'</td>';
+						tr += '<td><a href="">'+ user.id +'</a></td>';
 						tr += '<td>'+ user.name +'</td>';
 						tr += '<td>'+ user.gender +'</td>';
 						tr += '<td>'+ user.email +'</td>';
