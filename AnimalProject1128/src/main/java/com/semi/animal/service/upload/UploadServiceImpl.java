@@ -1,12 +1,20 @@
 package com.semi.animal.service.upload;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.PrintWriter;
 import java.net.URLEncoder;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipOutputStream;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.FileSystemResource;
@@ -17,13 +25,19 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import com.semi.animal.domain.upload.AttachDTO;
 import com.semi.animal.domain.upload.UploadDTO;
+import com.semi.animal.domain.user.UserDTO;
 import com.semi.animal.mapper.upload.UploadMapper;
 import com.semi.animal.util.MyFileUtil;
+import com.semi.animal.util.PageUtil;
+import com.semi.animal.util.PageUtil2;
+import com.semi.animal.util.SecurityUtil;
 
 @Service
 public class UploadServiceImpl implements UploadService {
@@ -34,19 +48,49 @@ public class UploadServiceImpl implements UploadService {
 	@Autowired
 	private MyFileUtil myFileUtil;
 	
+	@Autowired
+	private PageUtil pageUtil;
+	
+	@Autowired
+	private PageUtil2 pageUtil2;
+	
+	@Autowired
+	private SecurityUtil securityUtil;
+	
 	@Override
-	public List<UploadDTO> getUploadList() {
+	public void getUploadList(HttpServletRequest request, Model model) {
 		
-		return uploadMapper.selectUploadList();
+		HttpSession session = request.getSession();
+		UserDTO loginUser = (UserDTO)session.getAttribute("loginUser");  // 로그인 후 세션에 담긴 loginUser 가져오기
+		
+		Optional<String> opt = Optional.ofNullable(request.getParameter("page"));
+		int page = Integer.parseInt(opt.orElse("1"));
+		int totalRecord = uploadMapper.selectUploadCount();
+		
+		pageUtil.setPageUtil(page, totalRecord);
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("begin", pageUtil.getBegin());
+		map.put("end", pageUtil.getEnd());
+		
+		List<UploadDTO> uploadList = uploadMapper.selectUploadListPage(map);
+		
+		model.addAttribute("uploadList", uploadList);
+		model.addAttribute("paging", pageUtil.getPaging(request.getContextPath() + "/upload"));
+		model.addAttribute("loginUser", loginUser);  // 세션에 담긴 loginUser를 모델에 담아 uplaod_list.jsp로 넘김
 	}
 	
 	@Transactional
 	@Override
 	public void addUpload(MultipartHttpServletRequest request, HttpServletResponse response) {
 		
-		String id = "admin";   																	// 수정하기
+		HttpSession session = request.getSession();
+		UserDTO loginUser = (UserDTO)session.getAttribute("loginUser");  // 로그인 후 세션에 담긴 loginUser 가져오기
+		
+		String id = loginUser.getId();   																	
 		
 		String title = request.getParameter("title"); 
+		title = securityUtil.preventXSS(title);
 		String content = request.getParameter("content");
 		String ip = request.getRemoteAddr(); 
 		
@@ -56,11 +100,15 @@ public class UploadServiceImpl implements UploadService {
 		
 		List<MultipartFile> files = request.getFiles("files");
 		int attachResult;
-		if(files.get(0).getSize() == 0) {  
-			attachResult = 1;
+		if(files.get(1).getSize() != 0) {  
+			attachResult = 1;  // 파일첨부가 있으면 1
 		} else { 
-			attachResult = 0;
+			attachResult = 2;  // 파일첨부가 없으면 2 
 		}
+		
+//		int modifyAttachResult;
+//		modifyAttachResult = attachResult - 1;  // 실제로 등록된 파일의 수 (files.size() - 1) - 썸머노트..
+//		System.out.println("modifyattachresult" +modifyAttachResult);
 		
 		for(MultipartFile multipartFile : files) {
 			try {
@@ -95,8 +143,25 @@ public class UploadServiceImpl implements UploadService {
 		try {
 			response.setContentType("text/html; charset=UTF-8");
 			PrintWriter out = response.getWriter();
-			
 			if(uploadResult > 0 && attachResult == files.size()) {
+				// 게시물 작성 시 10포인트 증가
+				uploadMapper.updateAddPoint(id);
+				
+				// attach 첨부 시 파일 당 포인트 5씩 증가
+				if(files.get(1).getSize() == 0) {
+					attachResult = 0;
+				} else if(attachResult == 2) {
+					attachResult = 1;
+				} else {
+					attachResult -= 1;
+				}
+				
+				Map<String, Object> map = new HashMap<String, Object>();
+				map.put("id", id);
+				map.put("attachResult", attachResult);
+				
+				uploadMapper.updateAttachAddPoint(map);
+				
 				out.println("<script>");
 				out.println("alert('업로드 되었습니다.');");
 				out.println("location.href='" + request.getContextPath() + "/upload'");
@@ -112,14 +177,19 @@ public class UploadServiceImpl implements UploadService {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		
 	}
 	
 	@Override
 	public void getUploadAttachByNo(long uploadNo, Model model) {
+		
+		HttpServletRequest req = ((ServletRequestAttributes)RequestContextHolder.getRequestAttributes()).getRequest();  // request 없이 session 받아오는 코드
+		HttpSession session = req.getSession();
+		UserDTO loginUser = (UserDTO)session.getAttribute("loginUser");  // 로그인 후 세션에 담긴 loginUser 가져오기
+		
 		model.addAttribute("upload", uploadMapper.selectUploadByNo(uploadNo));
 		model.addAttribute("attachList", uploadMapper.selectAttachList(uploadNo));
 		model.addAttribute("attachCnt", uploadMapper.selectAttachCnt(uploadNo));
+		model.addAttribute("loginUser", loginUser);
 	}
 	
 	@Override
@@ -129,6 +199,13 @@ public class UploadServiceImpl implements UploadService {
 	
 	@Override
 	public ResponseEntity<Resource> download(String userAgent, long attachNo) {
+		
+		HttpServletRequest req = ((ServletRequestAttributes)RequestContextHolder.getRequestAttributes()).getRequest();  // request 없이 session 받아오는 코드
+		HttpSession session = req.getSession();
+		UserDTO loginUser = (UserDTO)session.getAttribute("loginUser");  // 로그인 후 세션에 담긴 loginUser 가져오기
+		
+		long uploadNo = uploadMapper.selectUploadNoInAttach(attachNo);
+		String myId = uploadMapper.selectTrueAttachId(uploadNo);
 		
 		AttachDTO attach = uploadMapper.selectAttachByNo(attachNo);
 		File file = new File(attach.getPath(), attach.getFilesystem());
@@ -140,6 +217,17 @@ public class UploadServiceImpl implements UploadService {
 		}
 		
 		uploadMapper.updateDownloadCnt(attachNo);
+		
+		// attach 다운로드 시 5포인트 차감
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("id", loginUser.getId());
+		map.put("attachResult", 1);
+		
+		// 내가 올린 게시글에서 다운받을 때 포인트 차감 막기
+		if(!loginUser.getId().equals(myId)) {
+			uploadMapper.updateAttachSubtractPoint(map);
+		}
+		
 		String origin = attach.getOrigin();
 		try {
 			if(userAgent.contains("Trident")) {
@@ -163,6 +251,94 @@ public class UploadServiceImpl implements UploadService {
 		
 	}
 	
+	@Override
+	public ResponseEntity<Resource> downloadAll(String userAgent, int uploadNo) {
+		
+		HttpServletRequest req = ((ServletRequestAttributes)RequestContextHolder.getRequestAttributes()).getRequest();  // request 없이 session 받아오는 코드
+		HttpSession session = req.getSession();
+		UserDTO loginUser = (UserDTO)session.getAttribute("loginUser");  // 로그인 후 세션에 담긴 loginUser 가져오기
+		
+		int attachResult = 0; 
+		List<AttachDTO> attachList = uploadMapper.selectAttachList(uploadNo);
+		String myId = uploadMapper.selectTrueAttachId(uploadNo);
+		
+		FileOutputStream fout = null;
+		ZipOutputStream zout = null;  
+		FileInputStream fin = null;
+		
+		String tmpPath = "storage" + File.separator + "temp";
+		
+		File tmpDir = new File(tmpPath);
+		if(tmpDir.exists() == false) {
+			tmpDir.mkdirs();
+		}
+		
+		String tmpName =  System.currentTimeMillis() + ".zip";
+		
+		try {
+			
+			fout = new FileOutputStream(new File(tmpPath, tmpName));
+			zout = new ZipOutputStream(fout);
+			
+			if(attachList != null && attachList.isEmpty() == false) {
+
+				for(AttachDTO attach : attachList) {
+					
+					ZipEntry zipEntry = new ZipEntry(attach.getOrigin());
+					zout.putNextEntry(zipEntry);
+					
+					fin = new FileInputStream(new File(attach.getPath(), attach.getFilesystem()));
+					byte[] buffer = new byte[1024];
+					int length;
+					while((length = fin.read(buffer)) != -1){
+						zout.write(buffer, 0, length);
+					}
+					zout.closeEntry();
+					fin.close();
+					
+					
+					uploadMapper.updateDownloadCnt(attach.getAttachNo());
+					attachResult++;
+					
+				} // for문
+				
+				// 내 파일 다운로드는 포인트 차감 막기 - 게시글의 ID를 DB에서 가져와서 세션 ID와 비교
+				if(!loginUser.getId().equals(myId)) {
+					Map<String, Object> map = new HashMap<String, Object>();
+					map.put("id", loginUser.getId());
+					map.put("attachResult", attachResult);
+					uploadMapper.updateAttachSubtractPoint(map);
+				} 
+				
+				zout.close();
+
+			}
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		
+		// 반환할 Resource
+		File file = new File(tmpPath, tmpName);
+		Resource resource = new FileSystemResource(file);
+		
+		// Resource가 없으면 종료 (다운로드할 파일이 없음)
+		if(resource.exists() == false) {
+			return new ResponseEntity<Resource>(HttpStatus.NOT_FOUND);
+		}
+		
+		// 다운로드 헤더 만들기
+		HttpHeaders header = new HttpHeaders();
+		header.add("Content-Disposition", "attachment; filename=" + tmpName);  // 다운로드할 zip파일명은 타임스탬프로 만든 이름을 그대로 사용
+		header.add("Content-Length", file.length() + "");
+		
+		return new ResponseEntity<Resource>(resource, header, HttpStatus.OK);
+		
+	}
+	
+	
+	
 	@Transactional
 	@Override
 	public void modifyUpload(MultipartHttpServletRequest request, HttpServletResponse response) {
@@ -170,21 +346,20 @@ public class UploadServiceImpl implements UploadService {
 		long no = Long.parseLong(request.getParameter("uploadNo"));
 		String ip = request.getRemoteAddr();
 		String title = request.getParameter("title");
+		title = securityUtil.preventXSS(title);
 		String content = request.getParameter("content");
 		
 		UploadDTO upload = UploadDTO.builder()
 				.uploadNo(no).uploadIp(ip).uploadTitle(title).uploadContent(content).build();
 		
-		int uploadResult = uploadMapper.updateUpload(upload);   // 게시판 업데이트
+		int uploadResult = uploadMapper.updateUpload(upload); 
 		
-		// attach 테이블 
 		List<MultipartFile> files = request.getFiles("files");
-		
 		int attachResult;
-		if(files.get(0).getSize() == 0) {  
-			attachResult = 1;
+		if(files.get(1).getSize() != 0) {  
+			attachResult = 1;  // 비어있지 않으면
 		} else {
-			attachResult = 0;
+			attachResult = 2;  // 비어있으면
 		}
 		
 		for(MultipartFile multipartFile : files) {
@@ -229,7 +404,6 @@ public class UploadServiceImpl implements UploadService {
 			
 			response.setContentType("text/html; charset=UTF-8");
 			PrintWriter out = response.getWriter();
-			
 			if(uploadResult > 0 && attachResult == files.size()) {
 				out.println("<script>");
 				out.println("alert('수정 되었습니다.');");
@@ -277,6 +451,11 @@ public class UploadServiceImpl implements UploadService {
 	
 	@Override
 	public void removeUploadByUploadNo(HttpServletRequest request, HttpServletResponse response) {
+		
+		HttpSession session = request.getSession();
+		UserDTO loginUser = (UserDTO)session.getAttribute("loginUser");  // 로그인 후 세션에 담긴 loginUser 가져오기
+		String id = loginUser.getId(); 
+		System.out.println(id);
 		long uploadNo = Long.parseLong(request.getParameter("uploadNo"));
 		
 		List<AttachDTO> attachList = uploadMapper.selectAttachList(uploadNo);
@@ -300,6 +479,7 @@ public class UploadServiceImpl implements UploadService {
 			PrintWriter out = response.getWriter();
 			
 			if(result > 0) {
+				uploadMapper.updateSubtractPoint(id);
 				out.println("<script>");
 				out.println("alert('삭제 되었습니다.');");
 				out.println("location.href='" + request.getContextPath() + "/upload'");
@@ -319,8 +499,47 @@ public class UploadServiceImpl implements UploadService {
 		
 	}
 	
+	@Override
+	public void findUploadListByQuery(HttpServletRequest request, Model model) {
+		
+		Optional<String> opt = Optional.ofNullable(request.getParameter("page"));
+		int page = Integer.parseInt(opt.orElse("1"));
+		
+		String column = request.getParameter("column");
+		String query = request.getParameter("query");
+		
+		Map<String, Object> pageUtilMap = new HashMap<String, Object>();
+		pageUtilMap.put("column", column);
+		pageUtilMap.put("query", query);
+		
+		pageUtil2.setPageUtil(page, uploadMapper.selectFindBoardsCount(pageUtilMap));
+		
+		Map<String, Object> findBoardsMap = new HashMap<String, Object>();
+		findBoardsMap.put("begin", pageUtil2.getBegin());
+		findBoardsMap.put("end", pageUtil2.getEnd());
+		findBoardsMap.put("column", column);
+		findBoardsMap.put("query", query);
+//		System.out.println("findBoardsMap" + findBoardsMap);
+		
+		List<UploadDTO> uploadList = uploadMapper.selectFindBoardsByQuery(findBoardsMap);
+		
+//		Map<String, Object> result = new HashMap<String, Object>();
+//		result.put("uploadList", uploadList);
+//		result.put("paging", pageUtil.getPaging(request.getContextPath() + "/upload/upload_listQuery"));
+		
+//		model.addAttribute("result", result);
+		model.addAttribute("uploadList", uploadList);
+		model.addAttribute("paging", pageUtil2.getPaging(request.getContextPath() + "/upload/find?column=" + column + "&query=" + query));
+		
+		
+		
+	}
 	
-	
+//	@Override
+//	public List<UploadDTO> getUploadListByOption(HttpServletRequest request) {
+//		
+//		return null;
+//	}
 	
 	
 //	@Override

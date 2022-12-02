@@ -6,7 +6,7 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Insert title here</title>
+<title>로그인</title>
 <script src="${contextPath}/resources/js/jquery-3.6.1.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.min.js" integrity="sha512-3j3VU6WC5rPQB4Ld1jnLV7Kd5xr+cq9avvhwqzbH/taCRNURoeEpoPBK9pDyeukwSxwRPJ8fDgvYXd6SkaZ2TA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 <script>
@@ -57,9 +57,6 @@
 
 	<div>
 
-		<!-- post는 URL파라미터로 데이터 전송x, 보안 유지할 때 사용, 속도가 느림 -->
-		<!-- get은 URL파라미터로 데이터 전송, 서버상의 데이터 값이나 상태를 바꾸지 않음. -->
-		<!-- 활용: 글의 목록이나 내용을 보는 경우에는 get방식, 글의 내용을 저장하고 수정할 때는 post방식 사용 -->
 		
 		<form id="frm_login" action="${contextPath}/user/login" method="post">  
 			
@@ -95,7 +92,8 @@
 			
 		<div>
 			<a href="${contextPath}/user/agree">회원가입페이지</a> |
-			<a href="${contextPath}/member/findIdPw">아이디/비밀번호 찾기</a>  
+			<a href="${contextPath}/user/findId">아이디 찾기</a> | 
+			<a href="${contextPath}/user/findPw">비밀번호 찾기</a> 
 		</div>
 		
 		<hr>

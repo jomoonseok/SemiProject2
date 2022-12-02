@@ -19,6 +19,7 @@
 		<typeAlias type="com.semi.animal.domain.gallery.GallBoardDTO" alias="GallBoardDTO" />
 		<typeAlias type="com.semi.animal.domain.gallery.GallCommentDTO" alias="GallCommentDTO" />
 		<typeAlias type="com.semi.animal.domain.gallery.GallLikeDTO" alias="GallLikeDTO" />
+		<typeAlias type="com.semi.animal.domain.gallery.SummernoteImageDTO" alias="SummernoteImageDTO" />
 		<typeAlias type="com.semi.animal.domain.upload.UploadDTO" alias="UploadDTO" />
 		<typeAlias type="com.semi.animal.domain.upload.AttachDTO" alias="AttachDTO" />
 	</typeAliases>

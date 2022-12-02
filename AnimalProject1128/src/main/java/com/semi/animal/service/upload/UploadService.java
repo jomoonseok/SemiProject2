@@ -1,6 +1,7 @@
 package com.semi.animal.service.upload;
 
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -15,7 +16,7 @@ import com.semi.animal.domain.upload.UploadDTO;
 
 public interface UploadService {
 
-	public List<UploadDTO> getUploadList();  // upload 게시글 리스트 전체조회
+	public void getUploadList(HttpServletRequest request, Model model);  // upload 게시글 리스트 전체조회
 	
 	public void addUpload(MultipartHttpServletRequest request, HttpServletResponse response);  // upload 게시글 삽입
 	
@@ -25,6 +26,8 @@ public interface UploadService {
 	
 	public ResponseEntity<Resource> download(String userAgent, long attachNo);  // attach 다운로드
 	
+	public ResponseEntity<Resource> downloadAll(String userAgent, int uploadNo);
+	
 	public void modifyUpload(MultipartHttpServletRequest request, HttpServletResponse response);   // 게시글 수정
 	
 	public UploadDTO getUploadByNo(long uploadNo);
@@ -33,9 +36,7 @@ public interface UploadService {
 	
 	public void removeUploadByUploadNo(HttpServletRequest request, HttpServletResponse response);
 	
+	public void findUploadListByQuery(HttpServletRequest request, Model model);
 	
-	
-	
-//	public List<UploadDTO> getUploadListByOption();
 	
 }

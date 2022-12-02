@@ -5,7 +5,7 @@
 <c:set var="contextPath" value="${pageContext.request.contextPath}" />
 
 <jsp:include page="../layout/header.jsp">
-	<jsp:param value="블로그목록" name="title" />
+	<jsp:param value="게시글 목록" name="title" />
 </jsp:include>
 
 <script>
@@ -66,7 +66,6 @@
 			</div>
 			<div>
 				<button>작성완료</button>
-				<input type="reset" value="입력초기화">
 				<input type="button" value="목록" id="btn_list">
 			</div>
 		</form>

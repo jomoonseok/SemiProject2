@@ -29,7 +29,7 @@ public class PreventLoginInterceptor implements HandlerInterceptor {
 			PrintWriter out = response.getWriter();
 			
 			out.println("<script>");
-			out.println("alert('해당 기능은 사용할 수 없습니다.');");
+			out.println("alert('이미 로그인이 되었습니다.');");
 			out.println("location.href='" + request.getContextPath() + "';");
 			out.println("</script>");
 			out.close();

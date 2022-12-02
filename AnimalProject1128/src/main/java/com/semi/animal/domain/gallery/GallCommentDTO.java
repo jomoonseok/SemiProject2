@@ -12,11 +12,14 @@ import lombok.NoArgsConstructor;
 @Data
 @Builder
 public class GallCommentDTO {
-	private int cmtNo;
+	private int gallCmtNo;
 	private int gallNo;
 	private String id;
 	private String gallCmtContent;
 	private Date gallCmtCreateDate;
-	private Date gallCmtModifyDate;
-	private String gallCmtIp;
+	private int state;
+	private int depth;
+	private int groupNo;
+	//private Date gallCmtModifyDate;
+	//private String gallCmtIp;
 }

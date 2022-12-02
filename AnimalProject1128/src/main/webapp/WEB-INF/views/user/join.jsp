@@ -6,7 +6,7 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Insert title here</title>
+<title>회원가입</title>
 <script src="${contextPath}/resources/js/jquery-3.6.1.min.js"></script>
 <script>
 	
@@ -505,7 +505,7 @@
 			<!-- 버튼 -->
 			<div>
 				<button>가입하기</button>
-				<input type="button" value="취소하기" onclick="location.href='${contextPath}'">
+				<input type="button" value="취소하기" onclick="history.back(-2)">
 			</div>
 		
 		</form>
