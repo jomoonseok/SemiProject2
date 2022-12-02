@@ -41,7 +41,7 @@
         
         .left_article{
         	border: 1px solid gray;
-        	width: 50%;
+        	width: 100%;
         }
 
         .right_section {
@@ -59,28 +59,29 @@
             background-color: #888;
         }
 </style>
+<<<<<<< HEAD
 
 	<c:if test="${loginUser.id == 'admin'}">
 		<c:redirect url="/admin/main" />
 	</c:if>
 	
 
+=======
+	
+>>>>>>> main
 	<section class="main_section">
         <section class="left_section">
         	<section class="left_section_top">
 	            <article class="left_article">
-	                <h2>자유게시판</h2>
-	            </article>
-	            <article class="left_article">
-	                <h2>Title2</h2>
+	                <h2><a href="${contextPath}/freeboard/list">자유게시판</a></h2>
 	            </article>
             </section>
             <section class="left_section_bottom">
 	            <article class="left_article">
-	                <h2>갤러리게시판</h2>
+	                <h2><a href="${contextPath}/gall/list">갤러리게시판</a></h2>
 	            </article>
 	            <article class="left_article">
-	                <h2>파일게시판</h2>
+	                <h2><a href="${contextPath}/upload">파일게시판</a></h2>
 	            </article>
             </section>
         </section>
@@ -101,7 +102,7 @@
             <article class="right_article">
                 <h2>포인트</h2>
                 <ol>
-                	<li>홍길동</li>
+                	<li></li>
                 	<li>고길동</li>
                 	<li>김길동</li>
                 </ol>
@@ -116,7 +117,6 @@
     </section>
     
     
-
 
 </body>
 </html>

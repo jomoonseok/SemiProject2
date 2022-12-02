@@ -39,15 +39,15 @@ public class GallBrdController {
 		return "gall/write";
 	}
 	
-	@PostMapping("/gall/add")
-	public void add(HttpServletRequest request, HttpServletResponse response) {
-		gallBrdService.saveGallBrd(request, response);
-	}
-	
 	@ResponseBody
 	@PostMapping(value="/gall/uploadImage", produces="application/json")
 	public Map<String, Object> uploadImage(MultipartHttpServletRequest multipartRequest) {
 		return gallBrdService.saveSummernoteImage(multipartRequest);
+	}
+	
+	@PostMapping("/gall/add")
+	public void add(HttpServletRequest request, HttpServletResponse response) {
+		gallBrdService.saveGallBrd(request, response);
 	}
 	
 	@GetMapping("/gall/increase/hit")
@@ -60,9 +60,26 @@ public class GallBrdController {
 		}
 	}
 	
+	@GetMapping("/gall/detail")
+	public String detail(@RequestParam(value="gallNo", required=false, defaultValue="0") int gallNo, Model model) {
+		model.addAttribute("gall", gallBrdService.getGallbrdByNo(gallNo));
+		return "gall/detail";
+	}
 	
+	@PostMapping("/gall/edit")
+	public String edit(int gallNo, Model model) {
+		model.addAttribute("gall", gallBrdService.getGallbrdByNo(gallNo));
+		return "gall/edit";
+	}
 	
+	@PostMapping("/gall/modify")
+	public void modify(HttpServletRequest request, HttpServletResponse response) {
+		gallBrdService.modifyGallBrd(request, response);
+	}
 	
-	
+	@PostMapping("/gall/remove")
+	public void remove(HttpServletRequest request, HttpServletResponse response) {
+		gallBrdService.removeGallBrd(request, response);
+	}
 	
 }

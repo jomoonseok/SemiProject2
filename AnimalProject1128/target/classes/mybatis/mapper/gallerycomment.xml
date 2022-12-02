@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.semi.animal.mapper.gallery.GallCommentMapper">
+
+	<select id="selectGallCommentCount" parameterType="int" resultType="int">
+		SELECT COUNT(*)
+		  FROM ANI_BRD_GALL_COMMENT
+		 WHERE GALL_NO = #{gallNo}
+	</select>
+	
+	<insert id="insertGallComment" parameterType="GallCommentDTO">
+		INSERT INTO ANI_BRD_GALL_COMMENT
+			(GALL_CMT_NO, GALL_NO, ID, GALL_CMT_CONTENT, GALL_CMT_CREATE_DATE, STATE, DEPTH, GROUP_NO)
+		VALUES
+			(ANI_BRD_GALL_CMT_SEQ.NEXTVAL, #{gallNo}, #{id}, #{gallCmtContent}, SYSDATE, 1, 0, ANI_BRD_GALL_CMT_SEQ.NEXTVAL)
+	</insert>
+	
+	<select id="selectGallCommentList" parameterType="Map" resultType="GallCommentDTO">
+		SELECT A.ROW_NUM, A.GALL_CMT_NO, A.GALL_NO, ID, A.GALL_CMT_CONTENT, A.GALL_CMT_CREATE_DATE, A.STATE, A.DEPTH, A.GROUP_NO
+		  FROM (SELECT ROW_NUMBER() OVER(ORDER BY GROUP_NO DESC, DEPTH ASC, GALL_CMT_CREATE_DATE DESC) AS ROW_NUM, GALL_CMT_NO, GALL_NO, ID, GALL_CMT_CONTENT, GALL_CMT_CREATE_DATE, STATE, DEPTH, GROUP_NO
+		   		  FROM ANI_BRD_GALL_COMMENT 
+		   		 WHERE GALL_NO = #{gallNo}) A
+		 WHERE A.ROW_NUM BETWEEN #{begin} AND #{end}
+	</select>
+	
+	<update id="deleteGallComment" parameterType="int" >
+		UPDATE ANI_BRD_GALL_COMMENT
+		   SET STATE = -1
+		 WHERE GALL_CMT_NO = #{gallCmtNo}
+	</update>
+	
+	<insert id="insertGallCommentReply" parameterType="GallCommentDTO">
+		INSERT INTO GALL_CMT_CONTENT
+			(GALL_CMT_NO, GALL_NO, ID, GALL_CMT_CONTENT, GALL_CMT_CREATE_DATE, STATE, DEPTH, GROUP_NO)
+		VALUES
+			(ANI_BRD_GALL_CMT_SEQ.NEXTVAL, #{gallNo}, #{id}, #{gallCmtContent}, SYSDATE 1, 1, #{groupNo})
+	</insert>
+
+</mapper>

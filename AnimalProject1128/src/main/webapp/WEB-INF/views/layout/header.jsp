@@ -32,7 +32,7 @@
         font-weight: bold;
     }
     #navigation {
-        width: 500px;
+        width: 600px;
         border-top: 1px solid gray;
         border-bottom: 1px solid gray;
         list-style: none; /* 글머리기호 없애기*/
@@ -41,7 +41,7 @@
         margin: 0 auto 45px;
     }
     #navigation > li {
-        width: 125px;            /* 너비 */
+        width: 200px;            /* 너비 */
         height: 50px;           /* 높이 */
         text-align: center;     /* 가로 가운데 정렬 */
         line-height: 50px;      /* 세로 가운데 정렬 */
@@ -69,7 +69,6 @@
 			<li><a href="${contextPath}/freeboard/list">자유게시판</a></li>
 			<li><a href="${contextPath}/gall/list">사진게시판</a></li>
 			<li><a href="${contextPath}/upload">파일게시판</a></li>
-			<li><a href="${contextPath}/admin/main">관리자페이지</a></li>
 		</ul>
 	</header>	
 	

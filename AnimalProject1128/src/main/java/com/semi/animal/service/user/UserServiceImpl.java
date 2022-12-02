@@ -977,7 +977,10 @@ public class UserServiceImpl implements UserService {
 		model.addAttribute("loginUser", loginUser);
 
 	}
+<<<<<<< HEAD
 	
 
+=======
+>>>>>>> main
 
 }
