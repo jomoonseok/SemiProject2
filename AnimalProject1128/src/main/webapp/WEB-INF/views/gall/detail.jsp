@@ -15,10 +15,9 @@
 		display: none;
 	}
 	
-	.btn_edit_gallBrd,.btn_remove_gallBrd{
-		border-radius: 5px;
-		border:1px solid lightgrey;
-		background-color: white;
+	.dislike {
+		height: 30px;
+		width: 30px;
 	}
 	
 	
@@ -42,11 +41,11 @@
 	<hr>
 	
 	<div>
-		${gall.gallCmtContent}
+		${gall.gallContent}
 	</div>
 	
-	<div id="dislike" class="dislike">
-		<button><img src="../../../../resources/images/dislike"></button> 
+	<div>
+		<img class="dislike" src="${contextPath}/resources/images/dislike.png">
 	</div>
 	
 	<div>
@@ -93,7 +92,6 @@
 					<input type="text" name="gallCmtContent" id="gallCmtContent" placeholder="댓글을 작성하려면 로그인 해 주세요.">
 				</div>
 				<div class="add_gallComment_btn">
-					<!-- ajax로 할거라 submit필요없이 바로 button -->
 					<input type="button" value="작성완료" id="btn_add_gallComment">
 				</div>
 			</div>
@@ -101,7 +99,8 @@
 		</form>
 	</div>
 	
-	<!-- 현재 페이지 번호를 저장하고 있는 hidden -->
+
+
 	<input type="hidden" id="page" value="1">
 	
 	<script>
@@ -168,20 +167,15 @@
 				$.each(resData.gallCommentList, function(i, gallComment){
 					var div = '';
 					if(gallComment.depth == 0) {
-						// 0 이면 댓글
 						div += '<div>';
 					} else {
-						// 아니면(1) 답글
 						div += '<div style="margin-left: 40px;">';
 					}
 					if(gallComment.state == 1) {
-						// 1 이면 정상
 						div += '<div>';
-						div += gallComment.gallCmtContent;
-						//////////////// 작성자만 삭제할 수 있도록 if 처리 필요 ///////////////////
+						div += gallComment.gallCmtContent
 						div += '<input type="button" value="삭제" class="btn_gallComment_remove" data-gallCmtNo="' + gallComment.gallCmtNo + '">';
 						if(gallComment.depth == 0) {
-							// 댓글에만 답글을 달 수 있도록 if 처리 필요 (depth가 0이면 댓글 1이면 답글)
 							div += '<input type="button" value="답글" class="btn_gallReply_area">';
 						}
 						div += '</div>';
@@ -202,7 +196,7 @@
 					div += '<input type="hidden" name="groupNo" value="' + gallComment.gallCmtNo + '">';   // comment.groupNo 사용가능
 					div += '<input typt="text" name="gallCmtContent" placeholder="답글을 작성하려면 로그인을 해주세요.">';
 					// 로그인한 사용자만 볼 수 있도록 if 처리
-					div += '<input type="button" value="답글작성완료" class="btn_gallReply_add">'; // 서브밋안하고 ajax해야함(input type="submit" 금지)
+					div += '<input type="button" value="답글작성완료" class="btn_gallReply_add">';
 					div += '</form>';
 					div += '</div>';
 					div += '</div>';

@@ -10,6 +10,7 @@ import java.util.Optional;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -20,6 +21,7 @@ import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import com.semi.animal.domain.gallery.GallBoardDTO;
 import com.semi.animal.domain.gallery.SummernoteImageDTO;
+import com.semi.animal.domain.user.UserDTO;
 import com.semi.animal.mapper.gallery.GallBrdMapper;
 import com.semi.animal.util.MyFileUtil;
 import com.semi.animal.util.PageUtil;
@@ -108,12 +110,11 @@ public class GallBrdServiceImpl implements GallBrdService {
 	@Override
 	public void saveGallBrd(HttpServletRequest request, HttpServletResponse response) {
 		
-		// 여기서 오류납니다. sysout 찍어서 확인해보면 돼요. 제 생각에는 밑에 securityUtil 사용이 잘못된듯 합니다.
+		HttpSession session = request.getSession();
+		UserDTO loginUser = (UserDTO)session.getAttribute("loginUser");
 		
-		//String gallTitle = securityUtil.sha256(request.getParameter("gallTitle"));
 		String gallTitle = request.getParameter("gallTitle");
 		String id = request.getParameter("id");
-		//String gallContent = securityUtil.preventXSS(request.getParameter("gallContent"));
 		String gallContent = request.getParameter("gallContent");
 		
 		Optional<String> opt = Optional.ofNullable(request.getHeader("X-Forwarded-For"));
@@ -153,7 +154,7 @@ public class GallBrdServiceImpl implements GallBrdService {
 					System.out.println(gallBoard.getGallNo());
 				}
 				
-				out.println("alert('게시글이 등록되었습니다. 포인트적립작업필요')");
+				out.println("alert('게시글이 등록되었습니다.)");
 				out.println("location.href='" + request.getContextPath() + "/gall/list';");
 
 			} else {
