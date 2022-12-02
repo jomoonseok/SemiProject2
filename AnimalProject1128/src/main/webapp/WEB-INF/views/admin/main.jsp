@@ -21,14 +21,14 @@
 	});
 </script>
 	
-	<h1>메인페이지</h1>
+	<h1>관리자 메인페이지</h1>
 	
 	<div>
 		<div>
-			<a href="${contextPath}/admin/userList">회원관리</a>
-			<a href="${contextPath}/admin/freeList">게시판관리</a>
-			<a href="${contextPath}/admin/galleryList">갤러리관리</a>
-			<a href="${contextPath}/admin/fileList">파일관리</a>
+			<a href="${contextPath}/admin/userMain">회원관리</a>
+			<a href="${contextPath}/admin/freeMain">게시판관리</a>
+			<a href="${contextPath}/admin/galleryMain">갤러리관리</a>
+			<a href="${contextPath}/admin/fileMain">파일관리</a>
 		</div>
 	</div>
 	
