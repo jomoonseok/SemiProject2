@@ -852,16 +852,18 @@ public class UserServiceImpl implements UserService {
 	
 	}
 	
+
 	@Override
 	public UserDTO getNaverUserById(String id) {
-		
 		// 조회 조건으로 사용할 Map
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("id", id);
 		
 		return userMapper.selectUserByMap(map);
-		
 	}
+	
+
+	
 	
 	@Transactional
 	@Override
@@ -976,121 +978,6 @@ public class UserServiceImpl implements UserService {
 
 	}
 	
-	@Override
-	public UserDTO getNaverUserById(String id) {
-		
-		// 조회 조건으로 사용할 Map
-		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("id", id);
-		
-		return userMapper.selectUserByMap(map);
-		
-	}
-	
 
-	@Transactional
-	@Override
-	public void naverLogin(HttpServletRequest request, UserDTO naverUser) {
-		
-		// 로그인 처리를 위해서 session에 로그인 된 사용자 정보를 올려둠
-		request.getSession().setAttribute("loginUser", naverUser);
-		
-		// 로그인 기록 남기기
-		String id = naverUser.getId();
-		int updateResult = userMapper.updateAccessLog(id);
-		if(updateResult == 0) {
-			userMapper.insertAccessLog(id);
-		}
-		
-	}
-	
-	@Override
-	public void naverJoin(HttpServletRequest request, HttpServletResponse response) {
-		
-		// 파라미터
-		String id = request.getParameter("id");
-		String name = request.getParameter("name");
-		String gender = request.getParameter("gender");
-		String mobile = request.getParameter("mobile");
-		String birthyear = request.getParameter("birthyear");
-		String birthmonth = request.getParameter("birthmonth");
-		String birthdate = request.getParameter("birthdate");
-		String email = request.getParameter("email");
-		String location = request.getParameter("location");
-		String promotion = request.getParameter("promotion");
-		
-		// 일부 파라미터는 DB에 넣을 수 있도록 가공
-		name = securityUtil.preventXSS(name);
-		String birthday = birthmonth + birthdate;
-		String pw = securityUtil.sha256(birthyear + birthday);  // 생년월일을 초기비번 8자리로 제공하기로 함
-		
-		int agreeCode = 0;  // 필수 동의
-		if(location != null && promotion == null) {
-			agreeCode = 1;  // 필수 + 위치
-		} else if(location == null && promotion != null) {
-			agreeCode = 2;  // 필수 + 프로모션
-		} else if(location != null && promotion != null) {
-			agreeCode = 3;  // 필수 + 위치 + 프로모션
-		}
-		
-		// DB로 보낼 UserDTO 만들기
-		UserDTO user = UserDTO.builder()
-				.id(id)
-				.pw(pw)
-				.name(name)
-				.gender(gender)
-				.email(email)
-				.mobile(mobile)
-				.birthYear(birthyear)
-				.birthDay(birthday)
-				.agreeCode(agreeCode)
-				.snsType("naver")  // 네이버로그인으로 가입하면 naver를 저장해 두기로 함
-				.build();
-				
-		// 회원가입처리
-		int result = userMapper.insertNaverUser(user);
-		
-		// 응답
-		try {
-			
-			response.setContentType("text/html; charset=UTF-8");
-			PrintWriter out = response.getWriter();
-			
-			if(result > 0) {
-				
-				// 조회 조건으로 사용할 Map
-				Map<String, Object> map = new HashMap<String, Object>();
-				map.put("id", id);
-				
-				// 로그인 처리를 위해서 session에 로그인 된 사용자 정보를 올려둠
-				request.getSession().setAttribute("loginUser", userMapper.selectUserByMap(map));
-				
-				// 로그인 기록 남기기
-				int updateResult = userMapper.updateAccessLog(id);
-				if(updateResult == 0) {
-					userMapper.insertAccessLog(id);
-				}
-				
-				out.println("<script>");
-				out.println("alert('회원 가입되었습니다.');");
-				out.println("location.href='" + request.getContextPath() + "';");
-				out.println("</script>");
-				
-			} else {
-				
-				out.println("<script>");
-				out.println("alert('회원 가입에 실패했습니다.');");
-				out.println("history.go(-2);");
-				out.println("</script>");
-				
-			}
-			
-			out.close();
-			
-		} catch(Exception e) {
-			e.printStackTrace();
-		}
-		
-	}
 
 }
