@@ -12,7 +12,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Builder
 public class RetireUserDTO {
-	private int userNo;
+	private int retireNo;
 	private String id;
 	private Date joinDate;
 	private Date retireDate;

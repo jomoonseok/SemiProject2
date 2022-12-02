@@ -22,4 +22,5 @@ public class UploadDTO {
 	private Date uploadModifyDate;  // 수정일
 	private String uploadIp;  // 아이피
 	
+	private long point;
 }

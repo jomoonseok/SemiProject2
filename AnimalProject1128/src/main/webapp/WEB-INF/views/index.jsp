@@ -81,7 +81,17 @@
         </section>
         <section class="right_section">
             <article class="right_article">
-                <h2><a href="${contextPath}/user/login/form">로그인</a></h2>
+                <c:if test="${loginUser == null}">
+					<h2><a href="${contextPath}/user/login/form">로그인</a></h2>
+				</c:if>
+				<c:if test="${loginUser != null}">
+					<div>
+						<h2><a href="${contextPath}/user/check/form">${loginUser.name}</a> 님</h2>
+					</div>
+					<div style="text-align:center">
+					<a href="${contextPath}/user/logout">로그아웃</a>
+					</div>
+				</c:if>
             </article>
             <article class="right_article">
                 <h2>포인트</h2>
@@ -99,6 +109,9 @@
             </article>
         </section>
     </section>
+    
+    
+
 
 </body>
 </html>

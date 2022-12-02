@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import com.semi.animal.domain.upload.AttachDTO;
+import com.semi.animal.domain.upload.UploadDTO;
 import com.semi.animal.service.upload.UploadService;
 
 @Controller
@@ -34,17 +35,17 @@ public class UploadController {
 
 	@GetMapping("/upload")
 	public String upload(HttpServletRequest request ,Model model) {
-		model.addAttribute("uploadList", uploadService.getUploadList());
+		uploadService.getUploadList(request, model);
 		return "upload/upload_list";
 	}
 	
 	@GetMapping("/upload/write")
-	public String write() {
+	public String requiredLogin_write() {
 		return "upload/upload_write";
 	}
 	
 	@PostMapping("/upload/add")
-	public void add(MultipartHttpServletRequest request, HttpServletResponse response) {
+	public void requiredLogin_add(MultipartHttpServletRequest request, HttpServletResponse response) {
 		uploadService.addUpload(request, response);
 	}
 	
@@ -56,7 +57,7 @@ public class UploadController {
 	}
 	
 	@PostMapping("/upload/edit")
-	public String edit(@RequestParam(value="uploadNo", required=true) long uploadNo, Model model) {
+	public String requiredLogin_edit(@RequestParam(value="uploadNo", required=true) long uploadNo, Model model) {
 		uploadService.getUploadAttachByNo(uploadNo, model);
 		return "upload/upload_edit";
 	}
@@ -67,21 +68,43 @@ public class UploadController {
 		return uploadService.download(userAgent, attachNo);
 	}
 	
+	@ResponseBody
+	@GetMapping("/upload/downloadAll")
+	public ResponseEntity<Resource> downloadAll(@RequestHeader("User-Agent") String userAgent, @RequestParam("uploadNo") int uploadNo) {
+		return uploadService.downloadAll(userAgent, uploadNo);
+	}
+	
 	@PostMapping("/upload/modify")
-	public void modify(MultipartHttpServletRequest request, HttpServletResponse response) {
+	public void requiredLogin_modify(MultipartHttpServletRequest request, HttpServletResponse response) {
 		uploadService.modifyUpload(request, response);
 	}
 	
 	@ResponseBody
 	@PostMapping(value="/upload/attach/remove", produces = MediaType.APPLICATION_JSON_VALUE)
-	public List<AttachDTO> attachRemove(HttpServletRequest request) {
+	public List<AttachDTO> requiredLogin_attachRemove(HttpServletRequest request) {
 		return uploadService.removeAttachByAttachNo(request);
 	}
 	
 	@PostMapping("/upload/remove")
-	public void remove(HttpServletRequest request, HttpServletResponse response) {
+	public void requiredLogin_remove(HttpServletRequest request, HttpServletResponse response) {
 		uploadService.removeUploadByUploadNo(request, response);
 	}
+	
+	/*
+	 * @ResponseBody
+	 * 
+	 * @GetMapping(value="/upload/find", produces =
+	 * MediaType.APPLICATION_JSON_VALUE) public List<UploadDTO>
+	 * findUploadList(HttpServletRequest request, Model model) { return
+	 * uploadService.findUploadListByQuery(request, model); }
+	 */
+	
+	@GetMapping("/upload/find")
+	public String find(HttpServletRequest request, Model model) {
+		uploadService.findUploadListByQuery(request, model);
+		return "upload/upload_listQuery";
+	}
+	
 	
 	
 //	@PostMapping("/upload/find")
