@@ -5,7 +5,7 @@
 <c:set var="contextPath" value="${pageContext.request.contextPath}" />
 
 <jsp:include page="../layout/header.jsp">
-	<jsp:param value="게시글 목록" name="title" />
+	<jsp:param value="${free.freeNo}번 게시글 수정" name="title" />
 </jsp:include>
 
 <script>
@@ -54,18 +54,20 @@
 	<div>
 		<h1>작성 화면</h1>
 		
-		<form id="frm_write" action="${contextPath}/freeboard/add" method="post">
+		<form id="frm_write" action="${contextPath}/freeboard/modify" method="post">
+		
+			<input type="hidden" name="freeNo" value="${free.freeNo}">
 		
 			<div>
 				<label for="title">제목</label>
-				<input type="text" name="title" id="title">
+				<input type="text" name="freeTitle" id="title" value="${free.freeTitle}">
 			</div>
 			<div>
 				<label for="content">내용</label>
-    			<textarea name="content" id="content" ></textarea>
+    			<textarea name="freeContent" id="content" >${free.freeContent}</textarea>
 			</div>
 			<div>
-				<button>작성완료</button>
+				<button>수정완료</button>
 				<input type="button" value="목록" id="btn_list">
 			</div>
 		</form>

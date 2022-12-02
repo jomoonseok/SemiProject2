@@ -23,7 +23,7 @@
 	<!-- 3. 조회수 -->
 	<update id="updateHit" parameterType="int">
 		UPDATE ANI_BRD_FREE
-		   SET HIT = HIT + 1
+		   SET FREE_HIT = FREE_HIT + 1
 		 WHERE FREE_NO = #{freeNo}
 	</update>
 	
@@ -46,13 +46,21 @@
 		SELECT FREE_NO, ID, FREE_TITLE, FREE_CONTENT, FREE_CREATE_DATE, FREE_MODIFY_DATE, FREE_IP, FREE_HIT
 		  FROM ANI_BRD_FREE
 		 WHERE FREE_NO = #{freeNo}
-	
 	</select>
 	
-	<!-- . 게시글 삭제 -->
+	<!-- 6. 게시글 수정 -->
+	<update id="updateFreeBoard" parameterType="FreeBoardDTO">
+		UPDATE ANI_BRD_FREE
+		   SET FREE_TITLE = #{freeTitle}, 
+		   FREE_CONTENT = #{freeContent},
+		   FREE_MODIFY_DATE = SYSDATE
+		 WHERE FREE_NO = #{freeNo}
+	</update>
+	
+	<!-- 7. 게시글 삭제 -->
 	<delete id="deleteFreeBoard" parameterType="int">
 		DELETE
-		  FROM ANI_BOARD_FREE
+		  FROM ANI_BRD_FREE
 		 WHERE FREE_NO = #{freeNo}
 	
 	</delete>
