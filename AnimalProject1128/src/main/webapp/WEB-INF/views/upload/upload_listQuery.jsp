@@ -55,6 +55,18 @@
 		float: right;
 	}
 	
+	#result {
+		text-align: center;
+		margin: 0 auto;
+	}
+	
+	#result a {
+		color: blue;
+	}
+	
+	.myToggle {
+		disabled;
+	}
 	
 </style>
 
@@ -87,6 +99,7 @@
 			
 		});
 	}
+	
 	
 	/* function fn_query() {
 		$('#find_list').click(function() {
@@ -124,6 +137,12 @@
 	<div id="upload_list_body">
 	
 		<div id="upload_list_body_top">
+			<hr>
+				<div id="result">
+					<h2>검색 페이지</h2>
+					<h3><a href="${contextPath}/upload">원래 페이지로 돌아가기</a></h3>
+				</div>
+			<hr>
 			<div id="option">
 				<form id="frm_find" action="${contextPath}/upload/find">
 					<span id="option_left">
@@ -133,7 +152,7 @@
 							<option value="UPLOAD_TITLE">제목검색</option>
 							<!-- <option value="UPLOAD_CREATE_DATE">게시일자검색</option> -->
 						</select>
-						<input type="text" name="query">
+						<input type="text" name="query" id="query">
 						<input type="submit" id="find_list" value="검색">
 					</span>
 					<span id="option_right">

@@ -38,5 +38,7 @@ public class UserDTO {
 	private Date sessionLimitDate;  
 	private int point;
 
-	
+
+
 }
+

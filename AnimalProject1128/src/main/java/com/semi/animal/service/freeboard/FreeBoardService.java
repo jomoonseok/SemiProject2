@@ -10,8 +10,10 @@ import com.semi.animal.domain.freeboard.FreeBoardDTO;
 public interface FreeBoardService {
 	
 	public void getFreeList(Model model);
+	public int increseFreeBoardHit(int freeNo);
 	public void addFreeBoard(HttpServletRequest request, HttpServletResponse response);
-	public FreeBoardDTO getBlogByNo(int freeNo);
+	public FreeBoardDTO getFreeBoardByNo(int freeNo);
+	public void modifyFreeBoard(HttpServletRequest request, HttpServletResponse response);
 	public void removeFreeBoard(HttpServletRequest request, HttpServletResponse response);
 	
 }

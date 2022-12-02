@@ -91,6 +91,7 @@
 	</update>
 	
 	<!-- 마이페이지 : 비밀번호 수정 -->
+
 	<update id="updateUserData" parameterType="UserDTO">
 		UPDATE ANI_USER
 		   SET PW = #{pw}

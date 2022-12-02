@@ -27,9 +27,10 @@ public interface UserService {
 	public void sleepUserHandle();  // SleepUserScheduler에서 호출
 	public SleepUserDTO getSleepUserById(String id);
 	public void restoreUser(HttpServletRequest request, HttpServletResponse response);
+
 	public void getSessionForwardUser(HttpServletRequest request, Model model);
 	public SleepUserDTO findSleep(String email);
-	
+
 	
 	public String getNaverLoginApiURL(HttpServletRequest request);  // 네이버로그인-1
 	public String getNaverLoginToken(HttpServletRequest request);   // 네이버로그인-2
@@ -37,7 +38,7 @@ public interface UserService {
 	public UserDTO getNaverUserById(String id);
 	public void naverLogin(HttpServletRequest request, UserDTO naverUser);
 	public void naverJoin(HttpServletRequest request, HttpServletResponse response);
-	
+
 
 	
 }

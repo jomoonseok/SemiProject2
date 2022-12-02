@@ -7,6 +7,7 @@
 <head>
 <meta charset="UTF-8">
 <title>네이버 간편 가입</title>
+
 <script src="${contextPath}/resources/js/jquery-3.6.1.min.js"></script>
 <script src="${contextPath}/resources/js/agree.js"></script>
 <link rel="stylesheet" href="${contextPath}/resources/css/agree.css" />
@@ -158,7 +159,11 @@
 			<!-- 버튼 -->
 			<div>
 				<button>가입하기</button>
+<<<<<<< HEAD
 				<input type="button" value="취소하기" onclick="history.back(-4)">
+=======
+				<input type="button" value="취소하기" onclick="location.href='${contextPath}'">
+>>>>>>> main
 			</div>
 		
 		</form>
