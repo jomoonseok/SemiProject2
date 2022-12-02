@@ -59,7 +59,7 @@
             background-color: #888;
         }
 </style>
-
+	
 	<section class="main_section">
         <section class="left_section">
         	<section class="left_section_top">
@@ -108,7 +108,6 @@
     </section>
     
     
-
 
 </body>
 </html>

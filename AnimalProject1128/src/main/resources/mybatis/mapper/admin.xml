@@ -6,22 +6,105 @@
 
 <mapper namespace="com.semi.animal.mapper.admin.AdminMapper">
 
+	<!-- 유저 -->
+	
+	<!-- 유저 카운트 -->
 	<select id="selectUserListCount" resultType="int">
 		SELECT COUNT(*)
 		  FROM ANI_USER
 	</select>
 	
-	<select id="selectUserListByMap" parameterType="Map" resultType="AdminUserDTO">
-		SELECT A.ROW_NUM, A.USER_NO, A.ID, A.PW, A.NAME, A.GENDER, A.EMAIL, A.MOBILE, A.BIRTH_YEAR, A.BIRTH_DAY, A.POSTCODE, A.ROAD_ADDRESS, A.JIBUN_ADDRESS, A.DETAIL_ADDRESS, A.EXTRA_ADDRESS, A.PROFILE_PICTURE, A.NICKNAME, A.AGE, A.AGREE_CODE, A.SNS_TYPE, A.JOIN_DATE, A.PW_MODIFY_DATE, A.INFO_MODIFY_DATE, A.SESSION_ID, A.SESSION_LIMIT_DATE, A.POINT
-		  FROM (SELECT ROW_NUMBER() OVER(ORDER BY USER_NO DESC) AS ROW_NUM, USER_NO, ID, PW, NAME, GENDER, EMAIL, MOBILE, BIRTH_YEAR, BIRTH_DAY, POSTCODE, ROAD_ADDRESS, JIBUN_ADDRESS, DETAIL_ADDRESS, EXTRA_ADDRESS, PROFILE_PICTURE, NICKNAME, AGE, AGREE_CODE, SNS_TYPE, JOIN_DATE, PW_MODIFY_DATE, INFO_MODIFY_DATE, SESSION_ID, SESSION_LIMIT_DATE, POINT
+	<!-- 유저 목록 -->
+	<select id="selectUserListByMap" parameterType="Map" resultType="UserDTO">
+		SELECT A.ROW_NUM, A.USER_NO, A.ID, A.PW, A.NAME, A.GENDER, A.EMAIL, A.MOBILE, A.BIRTH_YEAR, A.BIRTH_DAY, A.POSTCODE, A.ROAD_ADDRESS, A.JIBUN_ADDRESS, A.DETAIL_ADDRESS, A.EXTRA_ADDRESS, A.AGREE_CODE, A.SNS_TYPE, A.JOIN_DATE, A.PW_MODIFY_DATE, A.INFO_MODIFY_DATE, A.SESSION_ID, A.SESSION_LIMIT_DATE, A.POINT
+		  FROM (SELECT ROW_NUMBER() OVER(ORDER BY USER_NO DESC) AS ROW_NUM, USER_NO, ID, PW, NAME, GENDER, EMAIL, MOBILE, BIRTH_YEAR, BIRTH_DAY, POSTCODE, ROAD_ADDRESS, JIBUN_ADDRESS, DETAIL_ADDRESS, EXTRA_ADDRESS, AGREE_CODE, SNS_TYPE, JOIN_DATE, PW_MODIFY_DATE, INFO_MODIFY_DATE, SESSION_ID, SESSION_LIMIT_DATE, POINT
 		          FROM ANI_USER) A
 		 WHERE A.ROW_NUM BETWEEN #{begin} AND #{end}
 	</select>
 	
-	<delete id="deleteUser" parameterType="String">
+	<!-- 유저 삭제(휴면, 탈퇴) -->
+	<delete id="deleteUser" parameterType="Map">
 		DELETE 
 		  FROM ANI_USER
-		 WHERE ID = #{id} 
+		  <where>
+		    <foreach item="item" collection="idList" open="ID in (" separator="," close=")">
+		    	#{item}
+		    </foreach>
+		  </where>
 	</delete>
+	
+	<!-- 유저 삭제2 : RETIRE_USERS 테이블에 추가 -->
+	<insert id="insertRetireUser" parameterType="Map">
+		INSERT INTO ANI_USER_RETIRE (RETIRE_NO, ID, JOIN_DATE, RETIRE_DATE)
+		SELECT ANI_USER_RETIRE_SEQ.NEXTVAL, A.* 
+		  FROM(
+			<foreach collection="retireUserList" item="item" separator="UNION ALL ">
+			SELECT #{item.id} AS ID, #{item.joinDate} AS JOIN_DATE, SYSDATE
+			  FROM DUAL
+			</foreach>) A 
+	</insert>
+	
+	<!-- 휴면 처리할 유저 찾기 -->
+	<select id="selectUserListById" parameterType="Map" resultType="UserDTO">
+		SELECT USER_NO, ID, PW, NAME, GENDER, EMAIL, MOBILE, BIRTH_YEAR, BIRTH_DAY, POSTCODE, ROAD_ADDRESS, JIBUN_ADDRESS, DETAIL_ADDRESS, EXTRA_ADDRESS, AGREE_CODE, SNS_TYPE, JOIN_DATE, PW_MODIFY_DATE, INFO_MODIFY_DATE, SESSION_ID, SESSION_LIMIT_DATE, POINT
+		  FROM ANI_USER
+		 	WHERE ID in
+		  <foreach item="item" collection="idList" open="(" separator="," close=")">
+		  		#{item}
+		  </foreach>
+	</select>
+	
+	<!-- 휴면 테이블에 휴면 처리 한 유저 저장 -->
+	<insert id="insertSleepUsers" parameterType="Map">
+		INSERT INTO ANI_USER_SLEEP (USER_NO, ID, PW, NAME, GENDER, EMAIL, MOBILE, BIRTH_YEAR, BIRTH_DAY, POSTCODE, ROAD_ADDRESS, JIBUN_ADDRESS, DETAIL_ADDRESS, EXTRA_ADDRESS, AGREE_CODE, SNS_TYPE, JOIN_DATE, LAST_LOGIN_DATE, SLEEP_DATE, POINT)
+			<foreach collection="sleepUsers" item="item" separator="UNION ALL ">
+			SELECT #{item.userNo} AS USER_NO, #{item.id} AS ID, #{item.pw} AS PW, #{item.name} AS NAME, #{item.gender} AS GENDER, #{item.email} AS EMAIL, #{item.mobile} AS MOBILE, #{item.birthYear} AS BIRTH_YEAR, #{item.birthDay} AS BIRTH_DAY, #{item.postcode} AS POSTCODE, #{item.roadAddress} AS ROAD_ADDRESS, #{item.jibunAddress} AS JIBUN_ADDRESS, #{item.detailAddress} AS DETAIL_ADDRESS, #{item.extraAddress} AS EXTRA_ADDRESS, #{item.agreeCode} AS AGREE_CODE, #{item.snsType} AS SNS_TYPE, #{item.joinDate} AS JOIN_DATE, #{item.lastLoginDate} AS LAST_LOGIN_DATE, SYSDATE, #{item.point} AS POINT
+			  FROM DUAL
+			</foreach>
+	</insert>
+	
+	<!-- 검색 결과로 나온 유저 카운트 -->
+	<select id="selectUsersByQueryCount" parameterType="Map" resultType="int">
+		SELECT COUNT(*)
+		  FROM ANI_USER
+		 WHERE ${column} LIKE '%' || #{searchText} || '%'
+	</select>
+	
+	<!-- 유저 검색 결과 -->
+	<select id="selectUsersByQuery" parameterType="Map" resultType="UserDTO">
+		SELECT B.USER_NO, B.ID, B.PW, B.NAME, B.GENDER, B.EMAIL, B.MOBILE, B.BIRTH_YEAR, B.BIRTH_DAY, B.POSTCODE, B.ROAD_ADDRESS, B.JIBUN_ADDRESS, B.DETAIL_ADDRESS, B.EXTRA_ADDRESS, B.AGREE_CODE, B.SNS_TYPE, B.JOIN_DATE, B.PW_MODIFY_DATE, B.INFO_MODIFY_DATE, B.SESSION_ID, B.SESSION_LIMIT_DATE, B.POINT
+          FROM (SELECT ROW_NUMBER() OVER(ORDER BY USER_NO DESC) AS ROW_NUM, A.USER_NO, A.ID, A.PW, A.NAME, A.GENDER, A.EMAIL, A.MOBILE, A.BIRTH_YEAR, A.BIRTH_DAY, A.POSTCODE, A.ROAD_ADDRESS, A.JIBUN_ADDRESS, A.DETAIL_ADDRESS, A.EXTRA_ADDRESS, A.AGREE_CODE, A.SNS_TYPE, A.JOIN_DATE, A.PW_MODIFY_DATE, A.INFO_MODIFY_DATE, A.SESSION_ID, A.SESSION_LIMIT_DATE, A.POINT
+                  FROM (SELECT USER_NO, ID, PW, NAME, GENDER, EMAIL, MOBILE, BIRTH_YEAR, BIRTH_DAY, POSTCODE, ROAD_ADDRESS, JIBUN_ADDRESS, DETAIL_ADDRESS, EXTRA_ADDRESS, AGREE_CODE, SNS_TYPE, JOIN_DATE, PW_MODIFY_DATE, INFO_MODIFY_DATE, SESSION_ID, SESSION_LIMIT_DATE, POINT
+                          FROM ANI_USER
+                         WHERE ${column} LIKE '%' || #{searchText} || '%') A) B
+         WHERE B.ROW_NUM BETWEEN #{begin} AND #{end}
+	</select>
+	
+	
+
+	
+	
+	
+	
+	
+	<!-- 자유게시판 -->
+	
+	<!-- 1. 게시글 카운트 -->
+	<select id="selectFreeListCount" resultType="int" parameterType="String">
+		SELECT COUNT(*)
+		  FROM ANI_USER U INNER JOIN ANI_BRD_FREE F
+		    ON U.ID = F.ID
+		 WHERE U.ID = #{id}    
+	</select>
+
+	<!-- 2. 게시글 조회 -->
+	<select id="selectFreeListByMap" parameterType="Map" resultType="FreeBoardDTO">
+		SELECT A.ROW_NUM, A.FREE_NO, A.ID, A.FREE_TITLE, A.FREE_CONTENT, A.FREE_CREATE_DATE, A.FREE_MODIFY_DATE, A.FREE_IP, A.FREE_HIT
+		  FROM (SELECT ROW_NUMBER() OVER(ORDER BY FREE_NO DESC) AS ROW_NUM, F.FREE_NO, F.ID, F.FREE_TITLE, F.FREE_CONTENT, F.FREE_CREATE_DATE, F.FREE_MODIFY_DATE, F.FREE_IP, F.FREE_HIT
+		  		  FROM ANI_USER U INNER JOIN ANI_BRD_FREE F
+		            ON U.ID = F.ID
+		         WHERE U.ID = #{id}) A
+		 WHERE A.ROW_NUM BETWEEN #{begin} AND #{end}
+	</select>
 
 </mapper>
