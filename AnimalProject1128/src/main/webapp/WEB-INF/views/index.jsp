@@ -93,7 +93,7 @@
             <article class="right_article">
                 <h2>포인트</h2>
                 <ol>
-                	<li>홍길동</li>
+                	<li></li>
                 	<li>고길동</li>
                 	<li>김길동</li>
                 </ol>
