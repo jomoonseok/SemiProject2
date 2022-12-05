@@ -119,7 +119,7 @@ public class AdminServiceImpl implements AdminService {
 					.detailAddress(users.get(i).getDetailAddress())
 					.extraAddress(users.get(i).getExtraAddress())
 					.agreeCode(users.get(i).getAgreeCode())
-					.snsType(users.get(i).getSnsType())
+					.snsType("none")
 					.joinDate(users.get(i).getJoinDate())
 					.lastLoginDate(lastDate)
 					.point(users.get(i).getPoint())
